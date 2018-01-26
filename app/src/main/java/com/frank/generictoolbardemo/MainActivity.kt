@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorResource(R.color.colorAccent)
                 .addCustomTitle(titleView)
-                .addLeftIcon(1, R.drawable.icon_back) {}// 响应左部图标的点击事件
-                .addLeftText(2, "Left") {}// 响应左部文本的点击事件
+                .addLeftIcon(1, R.drawable.icon_back, 30, 30) {}// 响应左部图标的点击事件
+                .addLeftText(2, "Left", 50f) {}// 响应左部文本的点击事件
                 .addRightText(3, "Right") {}// 响应右部文本的点击事件
                 .addRightIcon(4, R.drawable.icon_left) {}// 响应右部图标的点击事件
                 .setTextColor(Color.BLACK)// 会全局设置字体的颜色, 自定义标题除外
