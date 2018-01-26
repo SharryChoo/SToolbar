@@ -218,9 +218,7 @@ public class GenericToolbar extends Toolbar {
     }
 
     public void addLeftText(int tag, CharSequence text, /*sp*/float textSize, OnClickListener listener) {
-        if (mItemViews.get(tag) != null) {
-            throw new RuntimeException("请检查给View设置的Tag是否唯一");
-        }
+        ensure(tag);
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -243,9 +241,7 @@ public class GenericToolbar extends Toolbar {
     }
 
     public void addLeftIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        if (mItemViews.get(tag) != null) {
-            throw new RuntimeException("请检查给View设置的Tag是否唯一");
-        }
+        ensure(tag);
         int imageWidth = (width == -1) ? (int) (getActionBarHeight() * 0.4) : (int) dp2px(width);
         // 增大触控面积
         int imageVerticalPadding = (height == -1) ? (int) (getActionBarHeight() * 0.3)
@@ -272,9 +268,7 @@ public class GenericToolbar extends Toolbar {
     }
 
     public void addRightText(int tag, CharSequence text, /*sp*/float textSize, OnClickListener listener) {
-        if (mItemViews.get(tag) != null) {
-            throw new RuntimeException("请检查给View设置的Tag是否唯一");
-        }
+        ensure(tag);
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -297,9 +291,7 @@ public class GenericToolbar extends Toolbar {
     }
 
     public void addRightIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        if (mItemViews.get(tag) != null) {
-            throw new RuntimeException("请检查给View设置的Tag是否唯一");
-        }
+        ensure(tag);
         int imageWidth = (width == -1) ? (int) (getActionBarHeight() * 0.4) : (int) dp2px(width);
         // 这样处理是为了增大触控面积
         int imageVerticalPadding = (height == -1) ? (int) (getActionBarHeight() * 0.3)
@@ -387,6 +379,12 @@ public class GenericToolbar extends Toolbar {
         return 0;
     }
 
+    private void ensure(int tag) {
+        if (mItemViews.get(tag) != null) {
+            throw new IllegalArgumentException("GenericToolbar.ensure --> 请检查给View设置的Tag是否唯一");
+        }
+    }
+
     /**
      * 使用Builder动态构建Toolbar, 无需在Xml中写入布局
      * <p>
@@ -410,7 +408,8 @@ public class GenericToolbar extends Toolbar {
                 mContentParent = ((Activity) mContext).findViewById(Window.ID_ANDROID_CONTENT);
                 mToolbar = new GenericToolbar(mContext);
             } else {
-                throw new IllegalArgumentException("传入的Context不为Activity类型, 或该Context对应的Activity已销毁");
+                throw new IllegalArgumentException("GenericToolbar.Builder.Constructor --> " +
+                        "传入的Context不为Activity类型, 或该Context对应的Activity已销毁");
             }
         }
 
@@ -419,11 +418,12 @@ public class GenericToolbar extends Toolbar {
          */
         public Builder(View contentView) {
             if (contentView instanceof LinearLayout) {
-                mContext = new WeakReference<Context>(contentView.getContext()).get();
+                mContext = new WeakReference<>(contentView.getContext()).get();
                 mToolbar = new GenericToolbar(mContext);
                 mContentView = (ViewGroup) contentView;
             } else {
-                throw new IllegalArgumentException("传入的View不为LinearLayout, 无法将Toolbar放置正确的位置");
+                throw new IllegalArgumentException("GenericToolbar.Builder.Constructor --> " +
+                        "传入的View不为LinearLayout, 无法将Toolbar放置正确的位置");
             }
         }
 
