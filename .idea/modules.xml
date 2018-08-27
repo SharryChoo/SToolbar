@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GenericToolbarDemo.iml" filepath="$PROJECT_DIR$/GenericToolbarDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CommonToolbar.iml" filepath="$PROJECT_DIR$/CommonToolbar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" filepath="$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" />
     </modules>
   </component>
 </project>

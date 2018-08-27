@@ -1,32 +1,32 @@
-package com.frank.generictoolbardemo.toolbar;
+package com.frank.libtoolbar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
+
+import static com.frank.libtoolbar.Utils.alphaColor;
+import static com.frank.libtoolbar.Utils.isLollipop;
 
 /**
- * Created by FrankChoo on 2017/10/14.
- * Email: frankchoochina@gmail.com
- * Description: 改变风格的具体实现
+ * 改变风格的具体实现
+ *
+ * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @version 1.0
+ * @since 2018/8/27 23:41
  */
 public class AppBarHelper {
 
+    private static final int DEFAULT_OPTIONS = 0;
+    private int mOptions = DEFAULT_OPTIONS;
     private Window mWindow;
     private Activity mActivity;
-    private int mOptions = 0;
-
-    public static AppBarHelper with(Context context) {
-        return new AppBarHelper(context);
-    }
 
     private AppBarHelper(Context context) {
         mOptions = 0;
@@ -34,8 +34,12 @@ public class AppBarHelper {
             mActivity = new SoftReference<>((Activity) context).get();
             mWindow = mActivity.getWindow();
         } else {
-            throw new IllegalArgumentException("AppBarHelper.Constructor --> AppBarHelper只接收 Activity 类型的 Context");
+            throw new IllegalArgumentException("AppBarHelper.Constructor -> AppBarHelper 只接收 Activity 类型的 Context");
         }
+    }
+
+    public static AppBarHelper with(Context context) {
+        return new AppBarHelper(context);
     }
 
     /**
@@ -43,6 +47,7 @@ public class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setStatusBarStyle(Style style) {
+        if (!isLollipop()) return this;
         switch (style) {
             // 设置状态栏为全透明
             case TRANSPARENT: {
@@ -79,8 +84,9 @@ public class AppBarHelper {
         return this;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setStatusBarColor(int color) {
+        if (!isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setStatusBarColor(color);
         return this;
@@ -91,6 +97,7 @@ public class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setNavigationBarStyle(Style style) {
+        if (!isLollipop()) return this;
         switch (style) {
             // 设置导航栏为全透明
             case TRANSPARENT: {
@@ -126,8 +133,9 @@ public class AppBarHelper {
         return this;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setNavigationBarColor(int color) {
+        if (!isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setNavigationBarColor(color);
         return this;
@@ -136,7 +144,9 @@ public class AppBarHelper {
     /**
      * 隐藏所有Bar(全屏模式)
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setAllBarsHide() {
+        if (!isLollipop()) return this;
         int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -147,27 +157,13 @@ public class AppBarHelper {
         return this;
     }
 
-    public AppBarHelper apply() {
-        if (mOptions != 0) {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void apply() {
+        if (!isLollipop()) return;
+        if (mOptions != DEFAULT_OPTIONS) {
             View decorView = mWindow.getDecorView();
             decorView.setSystemUiVisibility(mOptions);
         }
-        return this;
     }
 
-    /**
-     * @param baseColor    需要进行透明的Color
-     * @param alphaPercent 透明图(0-1)
-     */
-    private int alphaColor(int baseColor, float alphaPercent) {
-        if (alphaPercent < 0) alphaPercent = 0f;
-        if (alphaPercent > 1) alphaPercent = 1f;
-        // 计算基础透明度
-        int baseAlpha = (baseColor & 0xff000000) >>> 24;
-        // 根基需求计算透明度
-        int alpha = (int) (baseAlpha * alphaPercent);
-        // 根基透明度拼接新的color
-        int color = alpha << 24 | (baseColor & 0xffffff);
-        return color;
-    }
 }

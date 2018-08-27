@@ -1,4 +1,4 @@
-package com.frank.generictoolbardemo.toolbar;
+package com.frank.libtoolbar;
 
 /**
  * Created by FrankChoo on 2017/10/10.
