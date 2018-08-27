@@ -1,4 +1,4 @@
-# GenericToolbar
+# CommonToolbar
 通用Toolbar, 支持 90% 的使用场景
 
 ### 效果展示
