@@ -27,10 +27,10 @@ import static com.frank.libtoolbar.Utils.getActionBarHeight;
 import static com.frank.libtoolbar.Utils.getStatusBarHeight;
 
 /**
- * Common 的最小高度为系统 ActionBar 的高度
+ * CommonToolbar 的最小高度为系统 ActionBar 的高度
  * <p>
  * 1. 可以直接在Xml文件中直接使用
- * 2. 可以使用Builder动态的植入 {@link Builder}
+ * 2. 可以使用 Builder 动态的植入 {@link Builder}
  *
  * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 3.0
@@ -38,18 +38,37 @@ import static com.frank.libtoolbar.Utils.getStatusBarHeight;
  */
 public class CommonToolbar extends Toolbar {
 
-    private final static int INVALIDATE_VALUE = -1;
-    private final static int DEFAULT_COLOR = Color.WHITE;
+    /**
+     * ImageLoader interface.
+     */
+    public interface TitleImageLoader {
+        void displayImage(Context context, ImageView titleImage);
+    }
 
+    /**
+     * Get Builder instance
+     * If U want create CommonToolbar dynamic, U should invoke this method.
+     */
     public static Builder Builder(Context context) {
         return new Builder(context);
     }
 
+    /**
+     * Get Builder instance
+     * If U want create CommonToolbar dynamic, U should invoke this method.
+     */
     public static Builder Builder(View contentView) {
         return new Builder(contentView);
     }
 
-    // Toolbar中的三个容器
+    private final static int INVALIDATE_VALUE = -1;
+    private final static float DEFAULT_TITLE_SIZE = 18f;
+    private final static int DEFAULT_COLOR = Color.WHITE;      // Default color will be using when set text color.
+    private final int mDefaultPadding;                         // Default padding will be using when create View.
+    private int mMinimumHeight;
+    private int mStatusBarHeight;
+
+    // Toolbar support container.
     private LinearLayout mLeftItemContainer;
     private LinearLayout mCenterItemContainer;
     private LinearLayout mRightItemContainer;
@@ -57,9 +76,8 @@ public class CommonToolbar extends Toolbar {
     // 提供的标题(文本/图片/自定义)
     private TextView mTitleText;
     private ImageView mTitleImage;
-    private int mTextColor = DEFAULT_COLOR;
 
-    // 添加的所有View的缓存, 方便用户通过getViewByTag()找到自己添加的View
+    // 添加的所有 View 的缓存, 方便用户通过 getViewByTag() 找到自己添加的View
     private SparseArray<View> mItemViews = new SparseArray<>();
 
     public CommonToolbar(Context context) {
@@ -72,47 +90,86 @@ public class CommonToolbar extends Toolbar {
 
     public CommonToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mDefaultPadding = (int) dp2px(context, 5);
+        mMinimumHeight = getActionBarHeight(context);
+        mStatusBarHeight = getStatusBarHeight(context);
         init();
     }
 
     private void init() {
         removeAllViews();
-        // 添加左部容器
+        // 1. Add left menu container associated with this toolbar.
         mLeftItemContainer = new LinearLayout(getContext());
         LayoutParams leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                getActionBarHeight(getContext()));
+                mMinimumHeight);
         leftParams.gravity = Gravity.START | Gravity.TOP;
         mLeftItemContainer.setLayoutParams(leftParams);
         mLeftItemContainer.setGravity(Gravity.CENTER_VERTICAL);
-        mLeftItemContainer.setPadding((int) dp2px(getContext(), 5),
-                0, (int) dp2px(getContext(), 5), 0);
+        mLeftItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
         addView(mLeftItemContainer);
-
-        // 添加右部容器
+        // 2. Add right menu container associated with this toolbar.
         mRightItemContainer = new LinearLayout(getContext());
         LayoutParams rightParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                getActionBarHeight(getContext()));
+                mMinimumHeight);
         rightParams.gravity = Gravity.END | Gravity.TOP;
         mRightItemContainer.setLayoutParams(rightParams);
         mRightItemContainer.setGravity(Gravity.CENTER_VERTICAL);
-        mRightItemContainer.setPadding((int) dp2px(getContext(), 5),
-                0, (int) dp2px(getContext(), 5), 0);
+        mRightItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
         addView(mRightItemContainer);
-
-        // 添加中间容器(最后添加, 它的Gravity不会影响其他位置Child的改变)
+        // 3. Add center item container associated with this toolbar.
         mCenterItemContainer = new LinearLayout(getContext());
         LayoutParams centerParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         centerParams.gravity = Gravity.CENTER | Gravity.TOP;
-        mCenterItemContainer.setPadding((int) dp2px(getContext(), 5), 0,
-                (int) dp2px(getContext(), 5), 0);
+        mCenterItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
         mCenterItemContainer.setLayoutParams(centerParams);
         mCenterItemContainer.setGravity(Gravity.CENTER);
         addView(mCenterItemContainer);
     }
 
+    /*=========================================  背景色与沉浸式状态栏 ======================================*/
+
     /**
-     * 设置标题的位置
+     * Set the view adjust to fit status bar.
+     *
+     * @param adjust if true is adjust transparent status bar.
+     */
+    public void setAdjustToTransparentStatusBar(boolean adjust) {
+        if (adjust && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewGroup.LayoutParams params = getLayoutParams();
+            if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                // Set the layout parameters associated with this view.
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                setLayoutParams(params);
+            }
+            // Setup padding.
+            setPadding(getPaddingLeft(), getPaddingTop() + mStatusBarHeight,
+                    getPaddingRight(), getPaddingBottom());
+        }
+    }
+
+    /**
+     * Sets the background color to a given resource. The colorResID should refer to
+     * a color int.
+     */
+    public void setBackgroundColorRes(@ColorRes int colorRes) {
+        setBackgroundColor(ContextCompat.getColor(getContext(), colorRes));
+    }
+
+    /**
+     * Set the background to a given resource. The resource should refer to
+     * a Drawable object or 0 to remove the background.
+     */
+    public void setBackgroundDrawableRes(@DrawableRes int drawableRes) {
+        setBackgroundResource(drawableRes);
+    }
+
+    /*========================================= 标题部分 ==================================================*/
+
+    /**
+     * Gravity for the title associated with these LayoutParams.
+     *
+     * @see android.view.Gravity
      */
     public void setTitleGravity(int gravity) {
         LayoutParams params = (LayoutParams) mCenterItemContainer.getLayoutParams();
@@ -121,80 +178,106 @@ public class CommonToolbar extends Toolbar {
     }
 
     /**
-     * 设置文本标题
+     * Set text title
      */
     @Override
     public void setTitle(@StringRes int stringResId) {
-        this.setTitle(getResources().getText(stringResId), 18f);
+        this.setTitle(getResources().getText(stringResId));
     }
 
     @Override
     public void setTitle(CharSequence text) {
-        this.setTitle(text, 18f);
+        this.setTitle(text, DEFAULT_TITLE_SIZE);
     }
 
     public void setTitle(CharSequence text, float textSize) {
-        if (mTitleText == null) {
-            initTitleText(textSize, DEFAULT_COLOR);
-        }
-        mTitleText.setText(text);
+        setTitle(text, textSize, DEFAULT_COLOR);
     }
 
     public void setTitle(CharSequence text, float textSize, @ColorInt int textColor) {
-        if (mTitleText == null) {
-            initTitleText(textSize, textColor);
-        }
-        mTitleText.setText(text);
-    }
-
-    public TextView getTitleText() {
-        if (mTitleText == null) {
-            initTitleText(18f, DEFAULT_COLOR);
-        }
-        return mTitleText;
+        getTitleText().setText(text);
+        getTitleText().setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        getTitleText().setTextColor(textColor);
     }
 
     /**
-     * 设置标题图片
+     * Set image title
      */
     public void setTitleImage(@DrawableRes int imageResId) {
-        this.setTitleImage(imageResId, INVALIDATE_VALUE, INVALIDATE_VALUE);
+        this.setTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE, imageResId);
     }
 
-    public void setTitleImage(@DrawableRes int imageResId, int width, int height) {
-        if (mTitleImage == null) {
-            initTitleImage(width, height);
-        }
-        mTitleImage.setImageResource(imageResId);
-    }
-
-    public void setTitleImage(@NonNull TitleImageLoader imageLoader, int width, int height) {
-        if (mTitleImage == null) {
-            initTitleImage(width, height);
-        }
-        imageLoader.displayImage(getContext(), mTitleImage);
-    }
-
-    public ImageView getTitleImage() {
-        if (mTitleImage == null) {
-            initTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE);
-        }
-        return mTitleImage;
-    }
-
-    public void setTitleImage(@NonNull TitleImageLoader imageLoader) {
-        this.setTitleImage(imageLoader, INVALIDATE_VALUE, INVALIDATE_VALUE);
+    public void setTitleImage(int width, int height, @DrawableRes int imageResId) {
+        // Completion layout params.
+        complementTitleImageParams(width, height);
+        // Setup image resource.
+        getTitleImage().setImageResource(imageResId);
     }
 
     /**
-     * 添加用户自定义的标题
+     * Set image title, the image view will load with TitleImageLoader.
+     */
+    public void setTitleImage(@NonNull TitleImageLoader imageLoader) {
+        this.setTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE, imageLoader);
+    }
+
+    public void setTitleImage(int width, int height, @NonNull TitleImageLoader imageLoader) {
+        // Completion layout params.
+        complementTitleImageParams(width, height);
+        // Load image.
+        imageLoader.displayImage(getContext(), getTitleImage());
+    }
+
+    /**
+     * Add custom title
      */
     public void addCustomTitle(@NonNull View titleView) {
         mCenterItemContainer.addView(titleView);
     }
 
     /**
-     * 添加左部文本
+     * Get text title.
+     */
+    public TextView getTitleText() {
+        if (null == mTitleText) {
+            mTitleText = new TextView(getContext());
+            // Set params for the view.
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.leftMargin = mDefaultPadding;
+            params.rightMargin = mDefaultPadding;
+            mTitleText.setLayoutParams(params);
+            // Config some fields.
+            mTitleText.setMaxEms(8);
+            mTitleText.setLines(1);
+            mTitleText.setEllipsize(TextUtils.TruncateAt.END);
+            // Add to center container.
+            mCenterItemContainer.addView(mTitleText);
+        }
+        return mTitleText;
+    }
+
+    /**
+     * Get image title.
+     */
+    public ImageView getTitleImage() {
+        if (null == mTitleImage) {
+            mTitleImage = new ImageView(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mTitleImage.setLayoutParams(params);
+            mTitleImage.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
+            addCustomTitle(mTitleImage);
+        }
+        return mTitleImage;
+    }
+
+    /* ========================================== 左部菜单 ====================================================*/
+
+    /**
+     * Add left menu text item.
      */
     public void addLeftText(int tag, CharSequence text, OnClickListener listener) {
         this.addLeftText(tag, text, 14f, listener);
@@ -205,83 +288,33 @@ public class CommonToolbar extends Toolbar {
     }
 
     public void addLeftText(int tag, CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
-        ensure(tag);
-        TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        textView.setPadding((int) dp2px(getContext(), 5), 0, (int) dp2px(getContext(), 5), 0);
-        textView.setLayoutParams(params);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(mTextColor);
-        textView.setText(text);
-        textView.setTextColor(textColor);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        textView.setOnClickListener(listener);
-        mItemViews.put(tag, textView);
-        mLeftItemContainer.addView(textView);
+        addLeftView(tag, createTextView(text, textSize, textColor, listener));
     }
 
     /**
-     * 添加左部图标
+     * Add left menu image item.
      */
     public void addLeftIcon(int tag, @DrawableRes int drawableRes, OnClickListener listener) {
         this.addLeftIcon(tag, drawableRes, INVALIDATE_VALUE, INVALIDATE_VALUE, listener);
     }
 
     public void addLeftIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        ensure(tag);
-        int destWidth = (width == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.4) : (int) dp2px(getContext(), width);
-        // 增大触控面积
-        int verticalPadding = (height == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.3) :
-                (getActionBarHeight(getContext()) - (int) dp2px(getContext(), height)) / 2;
-        ImageView imageView = new ImageView(getContext());
-        imageView.setPadding(
-                (int) dp2px(getContext(), 5),
-                verticalPadding,
-                (int) dp2px(getContext(), 5),
-                verticalPadding
-        );
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                destWidth + imageView.getPaddingRight() + imageView.getPaddingLeft(),
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        imageView.setLayoutParams(params);
-        imageView.setImageResource(drawableRes);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setOnClickListener(listener);
-        mItemViews.put(tag, imageView);
-        mLeftItemContainer.addView(imageView);
+        addLeftView(tag, createImageView(width, height, drawableRes, listener));
     }
 
     /**
-     * 添加左部的 View
+     * Add left menu custom item.
      */
-    public void addLeftView(int tag, View view, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
+    public void addLeftView(int tag, View view) {
         ensure(tag);
-        int destWidth = (width == INVALIDATE_VALUE) ? (int) (getActionBarHeight(getContext()) * 0.4) : (int) dp2px(getContext(), width);
-        // 这样处理是为了增大触控面积
-        int verticalPadding = (height == INVALIDATE_VALUE) ? (int) (getActionBarHeight(getContext()) * 0.3)
-                : (getActionBarHeight(getContext()) - (int) dp2px(getContext(), height)) / 2;
-        view.setPadding(
-                (int) dp2px(getContext(), 5),
-                verticalPadding,
-                (int) dp2px(getContext(), 5),
-                verticalPadding
-        );
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                destWidth + view.getPaddingRight() + view.getPaddingLeft(),
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        view.setLayoutParams(params);
-        view.setOnClickListener(listener);
         mItemViews.put(tag, view);
         mLeftItemContainer.addView(view);
     }
 
+    /* ========================================== 右部菜单 ====================================================*/
+
     /**
-     * 添加右部文本
+     * Add right menu text item.
      */
     public void addRightText(int tag, CharSequence text, OnClickListener listener) {
         this.addRightText(tag, text, 14f, listener);
@@ -292,104 +325,34 @@ public class CommonToolbar extends Toolbar {
     }
 
     public void addRightText(int tag, CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
-        ensure(tag);
-        TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        textView.setPadding((int) dp2px(getContext(), 5), 0,
-                (int) dp2px(getContext(), 5), 0);
-        textView.setLayoutParams(params);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(mTextColor);
-        textView.setText(text);
-        textView.setTextColor(textColor);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        textView.setOnClickListener(listener);
-        mItemViews.put(tag, textView);
-        mRightItemContainer.addView(textView);
+        addRightView(tag, createTextView(text, textSize, textColor, listener));
     }
 
     /**
-     * 添加右部图标
+     * Add right menu image item.
      */
     public void addRightIcon(int tag, @DrawableRes int drawableRes, OnClickListener listener) {
         this.addRightIcon(tag, drawableRes, INVALIDATE_VALUE, INVALIDATE_VALUE, listener);
     }
 
     public void addRightIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        ensure(tag);
-        int destWidth = (width == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.4) : (int) dp2px(getContext(), width);
-        // 这样处理是为了增大触控面积
-        int imageVerticalPadding = (height == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.3) :
-                (getActionBarHeight(getContext()) - (int) dp2px(getContext(), height)) / 2;
-        ImageView imageView = new ImageView(getContext());
-        imageView.setPadding(
-                (int) dp2px(getContext(), 5),
-                imageVerticalPadding,
-                (int) dp2px(getContext(), 5),
-                imageVerticalPadding
-        );
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                destWidth + imageView.getPaddingRight() + imageView.getPaddingLeft(),
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        imageView.setLayoutParams(params);
-        imageView.setImageResource(drawableRes);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setOnClickListener(listener);
-        mItemViews.put(tag, imageView);
-        mRightItemContainer.addView(imageView);
+        addRightView(tag, createImageView(width, height, drawableRes, listener));
     }
 
     /**
-     * 添加右部的 View
+     * Add right menu custom item.
      */
-    public void addRightView(int tag, View view, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
+    public void addRightView(int tag, View view) {
         ensure(tag);
-        int destWidth = (width == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.4) : (int) dp2px(getContext(), width);
-        // 这样处理是为了增大触控面积
-        int verticalPadding = (height == INVALIDATE_VALUE) ?
-                (int) (getActionBarHeight(getContext()) * 0.3) :
-                (getActionBarHeight(getContext()) - (int) dp2px(getContext(), height)) / 2;
-        view.setPadding(
-                (int) dp2px(getContext(), 5),
-                verticalPadding,
-                (int) dp2px(getContext(), 5),
-                verticalPadding
-        );
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                destWidth + view.getPaddingRight() + view.getPaddingLeft(),
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        view.setLayoutParams(params);
-        view.setOnClickListener(listener);
         mItemViews.put(tag, view);
         mRightItemContainer.addView(view);
     }
 
     /**
-     * 通过Tag获取View
+     * U can get view instance from tag.
      */
     public <T extends View> T getViewByTag(int tag) {
         return (T) mItemViews.get(tag);
-    }
-
-    /**
-     * 调整适应沉浸式状态栏
-     */
-    public void setAdjustToTransparentStatusBar(boolean adjust) {
-        if (adjust && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ViewGroup.LayoutParams params = getLayoutParams();
-            if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                // 强制将Toolbar设置为wrap_content, 用来适应padding
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
-            }
-            setPadding(0, getStatusBarHeight(getContext()), 0, 0);
-        }
     }
 
     @Override
@@ -404,70 +367,84 @@ public class CommonToolbar extends Toolbar {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         // 测量完毕后, 判断我们中间标题布局的高度是否小于ActionBar的高度
-        if (mCenterItemContainer.getHeight() >= getActionBarHeight(getContext())) return;
+        if (mCenterItemContainer.getHeight() >= mMinimumHeight) return;
         LayoutParams params = (LayoutParams) mCenterItemContainer.getLayoutParams();
-        params.height = getActionBarHeight(getContext());
+        params.height = mMinimumHeight;
         mCenterItemContainer.setLayoutParams(params);
     }
 
     /**
-     * 设置背景色
-     *
-     * @param colorRes color 的 ID
+     * Get TextView instance.
      */
-    public void setBackgroundColorRes(@ColorRes int colorRes) {
-        setBackgroundColor(ContextCompat.getColor(getContext(), colorRes));
+    private TextView createTextView(CharSequence text, float textSize, int textColor, OnClickListener listener) {
+        TextView textView = new TextView(getContext());
+        // Set the padding associated with this textView.
+        textView.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
+        // Set the layout parameters associated with this imageView.
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        textView.setLayoutParams(params);
+        textView.setGravity(Gravity.CENTER);
+        // Set some fields associated with this textView.
+        textView.setText(text);
+        textView.setTextColor(textColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        // Set OnClickListener.
+        if (null != listener) {
+            textView.setOnClickListener(listener);
+        }
+        return textView;
     }
 
     /**
-     * 设置背景图片
-     *
-     * @param drawableRes Drawable 的 ID
+     * Get ImageView instance.
      */
-    public void setBackgroundDrawableRes(@DrawableRes int drawableRes) {
-        setBackgroundResource(drawableRes);
+    private ImageView createImageView(int width, int height, int drawableResID, OnClickListener listener) {
+        // Create ImageView instance.
+        ImageView imageView = new ImageView(getContext());
+        // Set the padding associated with this imageView.
+        int verticalPadding = (height == INVALIDATE_VALUE) ? (int) (mMinimumHeight * 0.3) :
+                (mMinimumHeight - (int) dp2px(getContext(), height)) / 2;
+        imageView.setPadding(mDefaultPadding, verticalPadding, mDefaultPadding, verticalPadding);
+        // Set the layout parameters associated with this imageView.
+        int destWidth = (width == INVALIDATE_VALUE) ?
+                (int) (mMinimumHeight * 0.4) : (int) dp2px(getContext(), width);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                destWidth + imageView.getPaddingRight() + imageView.getPaddingLeft(),
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        // Set some fields associated with this imageView.
+        imageView.setLayoutParams(params);
+        imageView.setImageResource(drawableResID);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        // Set OnClickListener
+        if (null != listener) {
+            imageView.setOnClickListener(listener);
+        }
+        return imageView;
     }
 
-    private void initTitleText(float textSize, int textColor) {
-        mTitleText = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = (int) dp2px(getContext(), 5);
-        params.rightMargin = (int) dp2px(getContext(), 5);
-        mTitleText.setLayoutParams(params);
-        mTitleText.setTextColor(mTextColor);
-        mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        mTitleText.setMaxEms(8);
-        mTitleText.setLines(1);
-        mTitleText.setEllipsize(TextUtils.TruncateAt.END);
-        mTitleText.setTextColor(textColor);
-        mCenterItemContainer.addView(mTitleText);
-    }
-
-    private void initTitleImage(int width, int height) {
-        mTitleImage = new ImageView(getContext());
-        int imageWidth = width == INVALIDATE_VALUE ? (int) (getActionBarHeight(getContext()) * 0.6)
+    /**
+     * Set layout params from width and height associated with the title image.
+     */
+    private void complementTitleImageParams(int width, int height) {
+        int imageWidth = width == INVALIDATE_VALUE ? (int) (mMinimumHeight * 0.6)
                 : (int) dp2px(getContext(), width);
-        int imageHeight = height == INVALIDATE_VALUE ? (int) (getActionBarHeight(getContext()) * 0.6)
+        int imageHeight = height == INVALIDATE_VALUE ? (int) (mMinimumHeight * 0.6)
                 : (int) dp2px(getContext(), height);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(imageWidth, imageHeight);
-        params.leftMargin = (int) dp2px(getContext(), 5);
-        params.rightMargin = (int) dp2px(getContext(), 5);
-        mTitleImage.setLayoutParams(params);
-        mCenterItemContainer.addView(mTitleImage);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getTitleImage().getLayoutParams();
+        params.width = imageWidth;
+        params.height = imageHeight;
+        getTitleImage().setLayoutParams(params);
     }
 
+    /**
+     * Validate tag is usable.
+     */
     private void ensure(int tag) {
-        if (mItemViews.get(tag) != null) {
+        if (null != mItemViews.get(tag)) {
             throw new IllegalArgumentException("CommonToolbar.ensure --> 请检查给View设置的Tag是否唯一");
         }
-    }
-
-    /**
-     * 图片加载接口, 用户自己实现加载策略
-     */
-    public interface TitleImageLoader {
-        void displayImage(Context context, ImageView titleImage);
     }
 
 }

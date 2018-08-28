@@ -29,7 +29,6 @@ public class AppBarHelper {
     private Activity mActivity;
 
     private AppBarHelper(Context context) {
-        mOptions = 0;
         if (context instanceof Activity) {
             mActivity = new SoftReference<>((Activity) context).get();
             mWindow = mActivity.getWindow();

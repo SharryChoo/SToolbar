@@ -40,8 +40,7 @@ public class Builder {
             mContentParent = ((Activity) mContext).findViewById(Window.ID_ANDROID_CONTENT);
             mToolbar = new CommonToolbar(mContext);
         } else {
-            throw new IllegalArgumentException("GenericToolbar.Builder.Constructor --> " +
-                    "传入的Context不为Activity类型, 或该Context对应的Activity已销毁");
+            throw new IllegalArgumentException("Please ensure context is instanceof Activity.");
         }
     }
 
@@ -121,8 +120,8 @@ public class Builder {
         return this;
     }
 
-    public Builder addTitleImage(CommonToolbar.TitleImageLoader loader, int width, int height) {
-        mToolbar.setTitleImage(loader, width, height);
+    public Builder addTitleImage(int width, int height, CommonToolbar.TitleImageLoader loader) {
+        mToolbar.setTitleImage(width, height, loader);
         return this;
     }
 
@@ -254,7 +253,7 @@ public class Builder {
         int toolbarCurHeight = mToolbar.getHeight();
         if (isAdjustTransparentStatusBar(mStyle)) {
             // 若设置了沉浸式状态栏
-            // toolbar的高度最小为getStatusBarHeight() + getActionBarHeight()
+            // toolbar 的高度最小为 getStatusBarHeight() + getActionBarHeight()
             if (toolbarCurHeight < getStatusBarHeight(mContext) + getActionBarHeight(mContext)) {
                 toolbarCurHeight = getStatusBarHeight(mContext) + getActionBarHeight(mContext);
             }
