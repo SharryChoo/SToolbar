@@ -41,8 +41,8 @@ public class CommonToolbar extends Toolbar {
     /**
      * ImageLoader interface.
      */
-    public interface TitleImageLoader {
-        void displayImage(Context context, ImageView titleImage);
+    public interface OnImageLoaderListener {
+        void imageLoader(Context context, ImageView titleImage);
     }
 
     /**
@@ -215,17 +215,17 @@ public class CommonToolbar extends Toolbar {
     }
 
     /**
-     * Set image title, the image view will load with TitleImageLoader.
+     * Set image title, the image view will load with OnImageLoaderListener.
      */
-    public void setTitleImage(@NonNull TitleImageLoader imageLoader) {
+    public void setTitleImage(@NonNull OnImageLoaderListener imageLoader) {
         this.setTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE, imageLoader);
     }
 
-    public void setTitleImage(int width, int height, @NonNull TitleImageLoader imageLoader) {
+    public void setTitleImage(int width, int height, @NonNull OnImageLoaderListener imageLoader) {
         // Completion layout params.
         complementTitleImageParams(width, height);
         // Load image.
-        imageLoader.displayImage(getContext(), getTitleImage());
+        imageLoader.imageLoader(getContext(), getTitleImage());
     }
 
     /**

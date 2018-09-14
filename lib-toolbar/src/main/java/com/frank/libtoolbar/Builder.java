@@ -115,12 +115,12 @@ public class Builder {
         return this;
     }
 
-    public Builder addTitleImage(CommonToolbar.TitleImageLoader loader) {
+    public Builder addTitleImage(CommonToolbar.OnImageLoaderListener loader) {
         mToolbar.setTitleImage(loader);
         return this;
     }
 
-    public Builder addTitleImage(int width, int height, CommonToolbar.TitleImageLoader loader) {
+    public Builder addTitleImage(int width, int height, CommonToolbar.OnImageLoaderListener loader) {
         mToolbar.setTitleImage(width, height, loader);
         return this;
     }

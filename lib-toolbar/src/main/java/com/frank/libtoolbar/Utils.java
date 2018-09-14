@@ -11,6 +11,15 @@ import android.util.TypedValue;
  */
 class Utils {
 
+    Utils() {
+        throw new UnsupportedOperationException(this + " cannot be instantiated");
+    }
+
+    /**
+     * 判断是否为 5.0 以上的系统
+     *
+     * @return if true is over Lollipop, false is below Lollipop.
+     */
     static boolean isLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
@@ -30,13 +39,18 @@ class Utils {
         return alpha << 24 | (baseColor & 0xffffff);
     }
 
-
-    public static float dp2px(Context context, float dp) {
+    /**
+     * Dip convert 2 pixel
+     */
+    static float dp2px(Context context, float dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
-    public static int getActionBarHeight(Context context) {
+    /**
+     * Get action bar height associated with the app.
+     */
+    static int getActionBarHeight(Context context) {
         TypedValue typedValue = new TypedValue();
         // 将属性解析到TypedValue中
         context.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true);
@@ -44,7 +58,10 @@ class Utils {
                 context.getResources().getDisplayMetrics());
     }
 
-    public static int getStatusBarHeight(Context context) {
+    /**
+     * Get status bar height associated with the app.
+     */
+    static int getStatusBarHeight(Context context) {
         int resourceId = context.getResources().getIdentifier("status_bar_height",
                 "dimen", "android");
         return resourceId > 0 ? context.getResources()
