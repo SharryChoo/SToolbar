@@ -1,4 +1,4 @@
-package com.frank.libtoolbar;
+package com.sharry.libtoolbar;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -22,21 +22,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import static com.frank.libtoolbar.Utils.dp2px;
-import static com.frank.libtoolbar.Utils.getActionBarHeight;
-import static com.frank.libtoolbar.Utils.getStatusBarHeight;
+import static com.sharry.libtoolbar.Utils.dp2px;
+import static com.sharry.libtoolbar.Utils.getActionBarHeight;
+import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
 
 /**
- * Common 的最小高度为系统 ActionBar 的高度
+ * SToolbar 的最小高度为系统 ActionBar 的高度
  * <p>
  * 1. 可以直接在Xml文件中直接使用
  * 2. 可以使用Builder动态的植入 {@link Builder}
  *
- * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 3.0
  * @since 2018/8/27 23:20
  */
-public class CommonToolbar extends Toolbar {
+public class SToolbar extends Toolbar {
 
     private final static int INVALIDATE_VALUE = -1;
     private final static int DEFAULT_COLOR = Color.WHITE;
@@ -62,15 +62,15 @@ public class CommonToolbar extends Toolbar {
     // 添加的所有View的缓存, 方便用户通过getViewByTag()找到自己添加的View
     private SparseArray<View> mItemViews = new SparseArray<>();
 
-    public CommonToolbar(Context context) {
+    public SToolbar(Context context) {
         this(context, null);
     }
 
-    public CommonToolbar(Context context, AttributeSet attrs) {
+    public SToolbar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CommonToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

@@ -1,10 +1,10 @@
-package com.frank.generictoolbardemo
+package com.sharry.generictoolbardemo
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.frank.libtoolbar.CommonToolbar
+import com.sharry.libtoolbar.SToolbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
     private fun initTitle() {
         val titleView = LayoutInflater.from(this).inflate(R.layout.toolbar_title,
                 window.decorView as ViewGroup, false)
-        CommonToolbar.Builder(this)
-                .setStatusBarStyle(com.frank.libtoolbar.Style.TRANSPARENT)
+        SToolbar.Builder(this)
+                .setStatusBarStyle(com.sharry.libtoolbar.Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
                 .addCustomTitle(titleView)
                 .addLeftIcon(1, R.drawable.icon_back, 30, 30) {}// 响应左部图标的点击事件

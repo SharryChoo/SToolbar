@@ -1,4 +1,4 @@
-package com.frank.libtoolbar;
+package com.sharry.libtoolbar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -11,13 +11,13 @@ import android.view.Window;
 
 import java.lang.ref.SoftReference;
 
-import static com.frank.libtoolbar.Utils.alphaColor;
-import static com.frank.libtoolbar.Utils.isLollipop;
+import static com.sharry.libtoolbar.Utils.alphaColor;
+import static com.sharry.libtoolbar.Utils.isLollipop;
 
 /**
  * 改变风格的具体实现
  *
- * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/8/27 23:41
  */

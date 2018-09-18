@@ -1,11 +1,11 @@
-package com.frank.libtoolbar;
+package com.sharry.libtoolbar;
 
 import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
 
 /**
- * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/8/27 23:21
  */
