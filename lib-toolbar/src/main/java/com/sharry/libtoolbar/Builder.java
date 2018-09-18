@@ -1,4 +1,4 @@
-package com.frank.libtoolbar;
+package com.sharry.libtoolbar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,20 +12,20 @@ import android.widget.LinearLayout;
 
 import java.lang.ref.WeakReference;
 
-import static com.frank.libtoolbar.Utils.getActionBarHeight;
-import static com.frank.libtoolbar.Utils.getStatusBarHeight;
+import static com.sharry.libtoolbar.Utils.getActionBarHeight;
+import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
 
 /**
  * Build common toolbar more easy.
  *
- * @author Frank <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/8/27 23:36
  */
 public class Builder {
 
     private Context mContext;
-    private CommonToolbar mToolbar;
+    private SToolbar mToolbar;
     private ViewGroup mContentParent;
     private ViewGroup mContentView;
     private Style mStyle = Style.DEFAULT;
@@ -38,7 +38,7 @@ public class Builder {
             mContext = context;
             // 通过安卓源码中的id拿到mContentParent, 这个就是我们的setContentView的直接父容器
             mContentParent = ((Activity) mContext).findViewById(Window.ID_ANDROID_CONTENT);
-            mToolbar = new CommonToolbar(mContext);
+            mToolbar = new SToolbar(mContext);
         } else {
             throw new IllegalArgumentException("Please ensure context is instanceof Activity.");
         }
@@ -50,7 +50,7 @@ public class Builder {
     Builder(View contentView) {
         if (contentView instanceof LinearLayout) {
             mContext = new WeakReference<>(contentView.getContext()).get();
-            mToolbar = new CommonToolbar(mContext);
+            mToolbar = new SToolbar(mContext);
             mContentView = (ViewGroup) contentView;
         } else {
             throw new IllegalArgumentException("GenericToolbar.Builder.Constructor --> " +
@@ -115,13 +115,22 @@ public class Builder {
         return this;
     }
 
+<<<<<<< HEAD:lib-toolbar/src/main/java/com/frank/libtoolbar/Builder.java
     public Builder addTitleImage(CommonToolbar.OnImageLoaderListener loader) {
+=======
+    public Builder addTitleImage(SToolbar.TitleImageLoader loader) {
+>>>>>>> c5b4493df2fff65928ea11125650fa362187545f:lib-toolbar/src/main/java/com/sharry/libtoolbar/Builder.java
         mToolbar.setTitleImage(loader);
         return this;
     }
 
+<<<<<<< HEAD:lib-toolbar/src/main/java/com/frank/libtoolbar/Builder.java
     public Builder addTitleImage(int width, int height, CommonToolbar.OnImageLoaderListener loader) {
         mToolbar.setTitleImage(width, height, loader);
+=======
+    public Builder addTitleImage(SToolbar.TitleImageLoader loader, int width, int height) {
+        mToolbar.setTitleImage(loader, width, height);
+>>>>>>> c5b4493df2fff65928ea11125650fa362187545f:lib-toolbar/src/main/java/com/sharry/libtoolbar/Builder.java
         return this;
     }
 
@@ -217,7 +226,7 @@ public class Builder {
      * 将Toolbar添加到当前Window的DecorView中
      * 调整当前Window中其他View的位置, 以适应Toolbar的插入
      */
-    public CommonToolbar apply() {
+    public SToolbar apply() {
         // 添加自定义标题的View
         mToolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
