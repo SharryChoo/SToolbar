@@ -115,22 +115,13 @@ public class Builder {
         return this;
     }
 
-<<<<<<< HEAD:lib-toolbar/src/main/java/com/frank/libtoolbar/Builder.java
-    public Builder addTitleImage(CommonToolbar.OnImageLoaderListener loader) {
-=======
-    public Builder addTitleImage(SToolbar.TitleImageLoader loader) {
->>>>>>> c5b4493df2fff65928ea11125650fa362187545f:lib-toolbar/src/main/java/com/sharry/libtoolbar/Builder.java
-        mToolbar.setTitleImage(loader);
+    public Builder addTitleImage(SToolbar.OnImageLoaderListener listener) {
+        mToolbar.setTitleImage(listener);
         return this;
     }
 
-<<<<<<< HEAD:lib-toolbar/src/main/java/com/frank/libtoolbar/Builder.java
-    public Builder addTitleImage(int width, int height, CommonToolbar.OnImageLoaderListener loader) {
-        mToolbar.setTitleImage(width, height, loader);
-=======
-    public Builder addTitleImage(SToolbar.TitleImageLoader loader, int width, int height) {
-        mToolbar.setTitleImage(loader, width, height);
->>>>>>> c5b4493df2fff65928ea11125650fa362187545f:lib-toolbar/src/main/java/com/sharry/libtoolbar/Builder.java
+    public Builder addTitleImage(int width, int height, SToolbar.OnImageLoaderListener listener) {
+        mToolbar.setTitleImage(width, height, listener);
         return this;
     }
 
