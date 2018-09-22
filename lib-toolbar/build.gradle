@@ -3,14 +3,16 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.SharryChoo'
 android {
-    compileSdkVersion rootProject.ext.COMPILE_SDK_VERSION
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        minSdkVersion rootProject.ext.MIN_SDK_VERSION
-        targetSdkVersion rootProject.ext.TARGET_SDK_VERSION
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        vectorDrawables.useSupportLibrary true
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    // App compat 包
+    api "androidx.appcompat:appcompat:$supportLibraryVersion"
 }
