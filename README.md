@@ -23,3 +23,5 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$supportLibraryVersion"
 }
 ```
+# How to use
+https://www.jianshu.com/p/552d8b9688ea
