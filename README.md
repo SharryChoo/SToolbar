@@ -20,6 +20,6 @@ dependencies {
     ...
     implementation 'com.github.SharryChoo:SToolbar:+'
     // Dependencies
-    implementation "com.google.android.material:material:$supportLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$supportLibraryVersion"
 }
 ```
