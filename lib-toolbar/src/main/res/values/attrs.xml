@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SToolbar">
+        <!--Toolbar-->
+        <attr name="minHeight" format="dimension" />
+        <!--Title-->
+        <attr name="titleText" format="string" />
+        <attr name="titleTextColor" format="color" />
+        <attr name="titleTextSize" format="dimension" />
+        <attr name="titleImage" format="reference" />
+        <attr name="titleGravity" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="center" value="2" />
+        </attr>
+        <!--Menu-->
+        <attr name="menuHorizontalPadding" format="dimension" />
+        <attr name="menuTextSize" format="dimension" />
+        <attr name="menuTextColor" format="color" />
+        <attr name="menuLeftText" format="string" />
+        <attr name="menuLeftImage" format="reference" />
+        <attr name="menuRightText" format="string" />
+        <attr name="menuRightImage" format="reference" />
+    </declare-styleable>
+
+</resources>

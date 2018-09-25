@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.sharry.libtoolbar.SToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:menuHorizontalPadding="10dp"
+        app:menuLeftImage="@drawable/icon_back"
+        app:menuLeftText="返回"
+        app:menuRightImage="@drawable/icon_right"
+        app:menuRightText="确认"
+        app:menuTextSize="12dp"
+        app:minHeight="50dp"
+        app:titleGravity="center"
+        app:titleImage="@drawable/icon_right"
+        app:titleText="Sharry"
+        app:titleTextColor="@color/colorAccent"
+        app:titleTextSize="18dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_gravity="center"
-        android:text="Hello World!"/>
+        android:gravity="center"
+        android:text="Hello World!" />
 
 </LinearLayout>

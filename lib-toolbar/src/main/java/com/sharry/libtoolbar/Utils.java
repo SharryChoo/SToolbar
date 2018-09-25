@@ -48,6 +48,14 @@ class Utils {
     }
 
     /**
+     * pixel convert 2 dip
+     */
+    static float px2dp(Context context, float px) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
+
+    /**
      * Get action bar height associated with the app.
      */
     static int getActionBarHeight(Context context) {

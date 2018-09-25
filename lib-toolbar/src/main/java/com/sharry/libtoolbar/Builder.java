@@ -89,17 +89,17 @@ public class Builder {
      * 文本标题
      */
     public Builder addTitleText(CharSequence text) {
-        mToolbar.setTitle(text);
+        mToolbar.setTitleText(text);
         return this;
     }
 
     public Builder addTitleText(CharSequence text, float textSize) {
-        mToolbar.setTitle(text, textSize);
+        mToolbar.setTitleText(text, textSize);
         return this;
     }
 
     public Builder addTitleText(CharSequence text, float textSize, @ColorInt int textColor) {
-        mToolbar.setTitle(text, textSize, textColor);
+        mToolbar.setTitleText(text, textSize, textColor);
         return this;
     }
 
@@ -135,7 +135,7 @@ public class Builder {
     }
 
     public Builder addBackIcon(int IconRes) {
-        addLeftIcon(0xBBBBBBB, IconRes, new View.OnClickListener() {
+        addLeftIcon(IconRes, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((Activity) mContext).finish();
@@ -147,62 +147,62 @@ public class Builder {
     /**
      * 左部图标
      */
-    public Builder addLeftIcon(int tag, @DrawableRes int drawableRes, final View.OnClickListener listener) {
-        mToolbar.addLeftIcon(tag, drawableRes, listener);
+    public Builder addLeftIcon(@DrawableRes int drawableRes, final View.OnClickListener listener) {
+        mToolbar.addLeftIcon(drawableRes, listener);
         return this;
     }
 
-    public Builder addLeftIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
-        mToolbar.addLeftIcon(tag, drawableRes, width, height, listener);
+    public Builder addLeftIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
+        mToolbar.addLeftIcon(drawableRes, width, height, listener);
         return this;
     }
 
     /**
      * 左部文本
      */
-    public Builder addLeftText(int tag, CharSequence text, final View.OnClickListener listener) {
-        mToolbar.addLeftText(tag, text, listener);
+    public Builder addLeftText(CharSequence text, final View.OnClickListener listener) {
+        mToolbar.addLeftText(text, listener);
         return this;
     }
 
-    public Builder addLeftText(int tag, CharSequence text, /*sp*/float textSize, View.OnClickListener listener) {
-        mToolbar.addLeftText(tag, text, textSize, listener);
+    public Builder addLeftText(CharSequence text, /*sp*/float textSize, View.OnClickListener listener) {
+        mToolbar.addLeftText(text, textSize, listener);
         return this;
     }
 
-    public Builder addLeftText(int tag, CharSequence text,/*sp*/float textSize, @ColorInt int textColor, View.OnClickListener listener) {
-        mToolbar.addLeftText(tag, text, textSize, textColor, listener);
+    public Builder addLeftText(CharSequence text,/*sp*/float textSize, @ColorInt int textColor, View.OnClickListener listener) {
+        mToolbar.addLeftText(text, textSize, textColor, listener);
         return this;
     }
 
     /**
      * 右部图标
      */
-    public Builder addRightIcon(int tag, @DrawableRes int drawableRes, final View.OnClickListener listener) {
-        mToolbar.addRightIcon(tag, drawableRes, listener);
+    public Builder addRightIcon(@DrawableRes int drawableRes, final View.OnClickListener listener) {
+        mToolbar.addRightIcon(drawableRes, listener);
         return this;
     }
 
-    public Builder addRightIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
-        mToolbar.addRightIcon(tag, drawableRes, width, height, listener);
+    public Builder addRightIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
+        mToolbar.addRightIcon(drawableRes, width, height, listener);
         return this;
     }
 
     /**
      * 右部文本
      */
-    public Builder addRightText(int tag, CharSequence text, final View.OnClickListener listener) {
-        mToolbar.addRightText(tag, text, listener);
+    public Builder addRightText(CharSequence text, final View.OnClickListener listener) {
+        mToolbar.addRightText(text, listener);
         return this;
     }
 
-    public Builder addRightText(int tag, CharSequence text, /*sp*/float textSize, View.OnClickListener listener) {
-        mToolbar.addRightText(tag, text, textSize, listener);
+    public Builder addRightText(CharSequence text, /*sp*/float textSize, View.OnClickListener listener) {
+        mToolbar.addRightText(text, textSize, listener);
         return this;
     }
 
-    public Builder addRightText(int tag, CharSequence text,/*sp*/float textSize, @ColorInt int textColor, View.OnClickListener listener) {
-        mToolbar.addRightText(tag, text, textSize, textColor, listener);
+    public Builder addRightText(CharSequence text,/*sp*/float textSize, @ColorInt int textColor, View.OnClickListener listener) {
+        mToolbar.addRightText(text, textSize, textColor, listener);
         return this;
     }
 

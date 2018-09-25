@@ -1,11 +1,11 @@
 package com.sharry.libtoolbar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.getActionBarHeight;
 import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
+import static com.sharry.libtoolbar.Utils.px2dp;
 
 /**
  * SToolbar 的最小高度为系统 ActionBar 的高度
@@ -43,7 +44,7 @@ public class SToolbar extends Toolbar {
      * ImageLoader interface.
      */
     public interface OnImageLoaderListener {
-        void imageLoader(Context context, ImageView titleImage);
+        void onImageLoader(Context context, ImageView titleImage);
     }
 
     /**
@@ -62,24 +63,28 @@ public class SToolbar extends Toolbar {
         return new Builder(contentView);
     }
 
+    /*
+      Constants.
+     */
     private final static int INVALIDATE_VALUE = -1;
-    private final static float DEFAULT_TITLE_SIZE = 18f;
-    private final static int DEFAULT_COLOR = Color.WHITE;      // Default color will be using when set text color.
-    private final int mDefaultPadding;                         // Default padding will be using when create View.
-    private int mMinimumHeight;
-    private int mStatusBarHeight;
+    private final static int DEFAULT_TEXT_COLOR = Color.WHITE;   // Default color will be using when set text color.
+
+    private float mTitleTextSize = 18f;
+    private int mTitleTextColor = DEFAULT_TEXT_COLOR;
+    private float mMenuTextSize = 15f;
+    private int mMenuTextColor = DEFAULT_TEXT_COLOR;
+    private int mMenuHorizontalPadding;                    // Default padding will be using when create View.
+    private int mStatusBarHeight;                          // Status bar height.
+    private int mMinimumHeight;                            // Minimum Toolbar height.
 
     // Toolbar support container.
-    private LinearLayout mLeftItemContainer;
-    private LinearLayout mCenterItemContainer;
-    private LinearLayout mRightItemContainer;
+    private LinearLayout mLeftMenuContainer;
+    private LinearLayout mCenterContainer;
+    private LinearLayout mRightMenuContainer;
 
     // 提供的标题(文本/图片/自定义)
     private TextView mTitleText;
     private ImageView mTitleImage;
-
-    // 添加的所有 View 的缓存, 方便用户通过 getViewByTag() 找到自己添加的View
-    private SparseArray<View> mItemViews = new SparseArray<>();
 
     public SToolbar(Context context) {
         this(context, null);
@@ -91,41 +96,84 @@ public class SToolbar extends Toolbar {
 
     public SToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mDefaultPadding = (int) dp2px(context, 5);
-        mMinimumHeight = getActionBarHeight(context);
         mStatusBarHeight = getStatusBarHeight(context);
-        init();
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SToolbar);
+        // 获取相关变量初始化视图
+        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, getActionBarHeight(context));
+        mMenuHorizontalPadding = array.getDimensionPixelSize(R.styleable.SToolbar_menuHorizontalPadding,
+                (int) dp2px(context, 5));
+        mTitleTextColor = array.getColor(R.styleable.SToolbar_titleTextColor, mTitleTextColor);
+        mTitleTextSize = px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_titleTextSize,
+                (int) dp2px(context, mTitleTextSize)));
+        mMenuTextSize = px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_menuTextSize,
+                (int) dp2px(context, mMenuTextSize)));
+        mMenuTextColor = array.getColor(R.styleable.SToolbar_menuTextColor, mMenuTextColor);
+        initViews();
+        // 添加菜单选项
+        switch (array.getInt(R.styleable.SToolbar_titleGravity, -1)) {
+            case 0:
+                setTitleGravity(Gravity.LEFT | Gravity.TOP);
+                break;
+            case 1:
+                setTitleGravity(Gravity.RIGHT | Gravity.TOP);
+                break;
+            default:
+                setTitleGravity(Gravity.CENTER | Gravity.TOP);
+                break;
+        }
+        if (null != array.getString(R.styleable.SToolbar_titleText)) {
+            setTitleText(array.getString(R.styleable.SToolbar_titleText), mTitleTextSize, mTitleTextColor);
+        }
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID)) {
+            setTitleImage(array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID));
+        }
+        // 添加左部菜单
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID)) {
+            addLeftIcon(array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID), null);
+        }
+        if (null != array.getString(R.styleable.SToolbar_menuLeftText)) {
+            addLeftText(array.getString(R.styleable.SToolbar_menuLeftText), mMenuTextSize, mMenuTextColor, null);
+        }
+        // 添加右部菜单
+        if (null != array.getString(R.styleable.SToolbar_menuRightText)) {
+            addRightText(array.getString(R.styleable.SToolbar_menuRightText), mMenuTextSize, mMenuTextColor, null);
+        }
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuRightImage, View.NO_ID)) {
+            addRightIcon(array.getResourceId(R.styleable.SToolbar_menuRightImage, View.NO_ID), null);
+        }
+        array.recycle();
     }
 
-    private void init() {
+    private void initViews() {
         removeAllViews();
         // 1. Add left menu container associated with this toolbar.
-        mLeftItemContainer = new LinearLayout(getContext());
+        mLeftMenuContainer = new LinearLayout(getContext());
         LayoutParams leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 mMinimumHeight);
         leftParams.gravity = Gravity.START | Gravity.TOP;
-        mLeftItemContainer.setLayoutParams(leftParams);
-        mLeftItemContainer.setGravity(Gravity.CENTER_VERTICAL);
-        mLeftItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
-        addView(mLeftItemContainer);
+        mLeftMenuContainer.setLayoutParams(leftParams);
+        mLeftMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
+        mLeftMenuContainer.setPadding(mMenuHorizontalPadding, 0, mMenuHorizontalPadding, 0);
+        addView(mLeftMenuContainer);
         // 2. Add right menu container associated with this toolbar.
-        mRightItemContainer = new LinearLayout(getContext());
+        mRightMenuContainer = new LinearLayout(getContext());
         LayoutParams rightParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 mMinimumHeight);
         rightParams.gravity = Gravity.END | Gravity.TOP;
-        mRightItemContainer.setLayoutParams(rightParams);
-        mRightItemContainer.setGravity(Gravity.CENTER_VERTICAL);
-        mRightItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
-        addView(mRightItemContainer);
+        mRightMenuContainer.setLayoutParams(rightParams);
+        mRightMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
+        mRightMenuContainer.setPadding(mMenuHorizontalPadding, 0, mMenuHorizontalPadding, 0);
+        addView(mRightMenuContainer);
         // 3. Add center item container associated with this toolbar.
-        mCenterItemContainer = new LinearLayout(getContext());
+        mCenterContainer = new LinearLayout(getContext());
         LayoutParams centerParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         centerParams.gravity = Gravity.CENTER | Gravity.TOP;
-        mCenterItemContainer.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
-        mCenterItemContainer.setLayoutParams(centerParams);
-        mCenterItemContainer.setGravity(Gravity.CENTER);
-        addView(mCenterItemContainer);
+        mCenterContainer.setMinimumHeight(mMinimumHeight);
+        mCenterContainer.setPadding(mMenuHorizontalPadding, 0, mMenuHorizontalPadding, 0);
+        mCenterContainer.setLayoutParams(centerParams);
+        mCenterContainer.setGravity(Gravity.CENTER_VERTICAL);
+        addView(mCenterContainer);
     }
 
     /*=========================================  背景色与沉浸式状态栏 ======================================*/
@@ -173,29 +221,27 @@ public class SToolbar extends Toolbar {
      * @see android.view.Gravity
      */
     public void setTitleGravity(int gravity) {
-        LayoutParams params = (LayoutParams) mCenterItemContainer.getLayoutParams();
+        LayoutParams params = (LayoutParams) mCenterContainer.getLayoutParams();
         params.gravity = gravity;
-        mCenterItemContainer.setLayoutParams(params);
+        mCenterContainer.setLayoutParams(params);
     }
 
     /**
      * Set text title
      */
-    @Override
-    public void setTitle(@StringRes int stringResId) {
-        this.setTitle(getResources().getText(stringResId));
+    public void setTitleText(@StringRes int stringResId) {
+        this.setTitleText(getResources().getText(stringResId));
     }
 
-    @Override
-    public void setTitle(CharSequence text) {
-        this.setTitle(text, DEFAULT_TITLE_SIZE);
+    public void setTitleText(CharSequence text) {
+        this.setTitleText(text, mTitleTextSize);
     }
 
-    public void setTitle(CharSequence text, float textSize) {
-        setTitle(text, textSize, DEFAULT_COLOR);
+    public void setTitleText(CharSequence text, float textSize) {
+        this.setTitleText(text, textSize, DEFAULT_TEXT_COLOR);
     }
 
-    public void setTitle(CharSequence text, float textSize, @ColorInt int textColor) {
+    public void setTitleText(CharSequence text, float textSize, @ColorInt int textColor) {
         getTitleText().setText(text);
         getTitleText().setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         getTitleText().setTextColor(textColor);
@@ -210,7 +256,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(int width, int height, @DrawableRes int imageResId) {
         // Completion layout params.
-        complementTitleImageParams(width, height);
+        complementImageParams(getTitleImage(), width, height);
         // Setup image resource.
         getTitleImage().setImageResource(imageResId);
     }
@@ -218,22 +264,22 @@ public class SToolbar extends Toolbar {
     /**
      * Set image title, the image view will load with OnImageLoaderListener.
      */
-    public void setTitleImage(@NonNull OnImageLoaderListener imageLoader) {
-        this.setTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE, imageLoader);
+    public void setTitleImage(@NonNull OnImageLoaderListener listener) {
+        this.setTitleImage(INVALIDATE_VALUE, INVALIDATE_VALUE, listener);
     }
 
-    public void setTitleImage(int width, int height, @NonNull OnImageLoaderListener imageLoader) {
+    public void setTitleImage(int width, int height, @NonNull OnImageLoaderListener listener) {
         // Completion layout params.
-        complementTitleImageParams(width, height);
+        complementImageParams(getTitleImage(), width, height);
         // Load image.
-        imageLoader.imageLoader(getContext(), getTitleImage());
+        listener.onImageLoader(getContext(), getTitleImage());
     }
 
     /**
      * Add custom title
      */
     public void addCustomTitle(@NonNull View titleView) {
-        mCenterItemContainer.addView(titleView);
+        mCenterContainer.addView(titleView);
     }
 
     /**
@@ -247,15 +293,14 @@ public class SToolbar extends Toolbar {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            params.leftMargin = mDefaultPadding;
-            params.rightMargin = mDefaultPadding;
             mTitleText.setLayoutParams(params);
+            mTitleText.setPadding(mMenuHorizontalPadding, 0, mMenuHorizontalPadding, 0);
             // Config some fields.
             mTitleText.setMaxEms(8);
             mTitleText.setLines(1);
             mTitleText.setEllipsize(TextUtils.TruncateAt.END);
             // Add to center container.
-            mCenterItemContainer.addView(mTitleText);
+            mCenterContainer.addView(mTitleText);
         }
         return mTitleText;
     }
@@ -269,7 +314,7 @@ public class SToolbar extends Toolbar {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mTitleImage.setLayoutParams(params);
-            mTitleImage.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
+            mTitleImage.setPadding(mMenuHorizontalPadding, 0, mMenuHorizontalPadding, 0);
             addCustomTitle(mTitleImage);
         }
         return mTitleImage;
@@ -280,80 +325,120 @@ public class SToolbar extends Toolbar {
     /**
      * Add left menu text item.
      */
-    public void addLeftText(int tag, CharSequence text, OnClickListener listener) {
-        this.addLeftText(tag, text, 14f, listener);
+    public void addLeftText(CharSequence text, OnClickListener listener) {
+        this.addLeftText(text, mMenuTextSize, listener);
     }
 
-    public void addLeftText(int tag, CharSequence text, /*sp*/float textSize, OnClickListener listener) {
-        this.addLeftText(tag, text, textSize, DEFAULT_COLOR, listener);
+    public void addLeftText(CharSequence text, /*sp*/float textSize, OnClickListener listener) {
+        this.addLeftText(text, textSize, DEFAULT_TEXT_COLOR, listener);
     }
 
-    public void addLeftText(int tag, CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
-        addLeftView(tag, createTextView(text, textSize, textColor, listener));
+    public void addLeftText(CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
+        this.addLeftText(
+                new Options.Builder()
+                        .setText(text)
+                        .setTextSize(textSize)
+                        .setTextColor(textColor)
+                        .setPaddingRight(mMenuHorizontalPadding)
+                        .setListener(listener)
+                        .build()
+        );
+    }
+
+    public void addLeftText(Options options) {
+        ensure(options);
+        addLeftView(createTextView(options));
     }
 
     /**
      * Add left menu image item.
      */
-    public void addLeftIcon(int tag, @DrawableRes int drawableRes, OnClickListener listener) {
-        this.addLeftIcon(tag, drawableRes, INVALIDATE_VALUE, INVALIDATE_VALUE, listener);
+    public void addLeftIcon(@DrawableRes int drawableRes, OnClickListener listener) {
+        this.addLeftIcon(drawableRes, Options.INVALIDATE_VALUE, Options.INVALIDATE_VALUE, listener);
     }
 
-    public void addLeftIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        addLeftView(tag, createImageView(width, height, drawableRes, listener));
+    public void addLeftIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
+        addLeftIcon(
+                new Options.Builder()
+                        .setWidth(width)
+                        .setHeight(height)
+                        .setResId(drawableRes)
+                        .setPaddingRight(mMenuHorizontalPadding)
+                        .setListener(listener)
+                        .build()
+        );
+    }
+
+    public void addLeftIcon(Options options) {
+        addLeftView(createImageView(options));
     }
 
     /**
      * Add left menu custom item.
      */
-    public void addLeftView(int tag, View view) {
-        ensure(tag);
-        mItemViews.put(tag, view);
-        mLeftItemContainer.addView(view);
+    public void addLeftView(View view) {
+        mLeftMenuContainer.addView(view);
     }
+
 
     /* ========================================== 右部菜单 ====================================================*/
 
     /**
      * Add right menu text item.
      */
-    public void addRightText(int tag, CharSequence text, OnClickListener listener) {
-        this.addRightText(tag, text, 14f, listener);
+    public void addRightText(CharSequence text, @Nullable OnClickListener listener) {
+        this.addRightText(text, mMenuTextSize, listener);
     }
 
-    public void addRightText(int tag, CharSequence text, /*sp*/float textSize, OnClickListener listener) {
-        this.addRightText(tag, text, textSize, DEFAULT_COLOR, listener);
+    public void addRightText(CharSequence text, /*sp*/float textSize, @Nullable OnClickListener listener) {
+        this.addRightText(text, textSize, DEFAULT_TEXT_COLOR, listener);
     }
 
-    public void addRightText(int tag, CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
-        addRightView(tag, createTextView(text, textSize, textColor, listener));
+    public void addRightText(CharSequence text, /*sp*/float textSize, @ColorInt int textColor, @Nullable OnClickListener listener) {
+        this.addRightText(
+                new Options.Builder()
+                        .setText(text)
+                        .setTextSize(textSize)
+                        .setTextColor(textColor)
+                        .setPaddingLeft(mMenuHorizontalPadding)
+                        .setListener(listener)
+                        .build()
+        );
+    }
+
+    public void addRightText(Options options) {
+        ensure(options);
+        addRightView(createTextView(options));
     }
 
     /**
      * Add right menu image item.
      */
-    public void addRightIcon(int tag, @DrawableRes int drawableRes, OnClickListener listener) {
-        this.addRightIcon(tag, drawableRes, INVALIDATE_VALUE, INVALIDATE_VALUE, listener);
+    public void addRightIcon(@DrawableRes int drawableRes, OnClickListener listener) {
+        this.addRightIcon(drawableRes, Options.INVALIDATE_VALUE, Options.INVALIDATE_VALUE, listener);
     }
 
-    public void addRightIcon(int tag, @DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
-        addRightView(tag, createImageView(width, height, drawableRes, listener));
+    public void addRightIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, OnClickListener listener) {
+        addRightIcon(
+                new Options.Builder()
+                        .setWidth(width)
+                        .setHeight(height)
+                        .setPaddingLeft(mMenuHorizontalPadding)
+                        .setResId(drawableRes)
+                        .setListener(listener)
+                        .build()
+        );
+    }
+
+    private void addRightIcon(Options options) {
+        addRightView(createImageView(options));
     }
 
     /**
      * Add right menu custom item.
      */
-    public void addRightView(int tag, View view) {
-        ensure(tag);
-        mItemViews.put(tag, view);
-        mRightItemContainer.addView(view);
-    }
-
-    /**
-     * U can get view instance from tag.
-     */
-    public <T extends View> T getViewByTag(int tag) {
-        return (T) mItemViews.get(tag);
+    public void addRightView(View view) {
+        mRightMenuContainer.addView(view);
     }
 
     @Override
@@ -364,35 +449,42 @@ public class SToolbar extends Toolbar {
         super.addView(child, index, params);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        // 测量完毕后, 判断我们中间标题布局的高度是否小于ActionBar的高度
-        if (mCenterItemContainer.getHeight() >= mMinimumHeight) return;
-        LayoutParams params = (LayoutParams) mCenterItemContainer.getLayoutParams();
-        params.height = mMinimumHeight;
-        mCenterItemContainer.setLayoutParams(params);
+    /**
+     * Get view index of left menu.
+     */
+    public <T extends View> T getLeftMenuView(int index) {
+        return (T) mLeftMenuContainer.getChildAt(index);
+    }
+
+    /**
+     * Get view index of right menu.
+     */
+    public <T extends View> T getRightMenuView(int index) {
+        return (T) mRightMenuContainer.getChildAt(index);
     }
 
     /**
      * Get TextView instance.
      */
-    private TextView createTextView(CharSequence text, float textSize, int textColor, OnClickListener listener) {
+    private View createTextView(Options options) {
         TextView textView = new TextView(getContext());
         // Set the padding associated with this textView.
-        textView.setPadding(mDefaultPadding, 0, mDefaultPadding, 0);
+        textView.setPadding(options.paddingLeft, options.paddingTop, options.paddingRight, options.paddingBottom);
         // Set the layout parameters associated with this imageView.
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                Options.INVALIDATE_VALUE == options.width ? ViewGroup.LayoutParams.WRAP_CONTENT :
+                        (int) dp2px(getContext(), options.width),
+                Options.INVALIDATE_VALUE == options.height ? ViewGroup.LayoutParams.MATCH_PARENT :
+                        (int) dp2px(getContext(), options.height));
         textView.setLayoutParams(params);
         textView.setGravity(Gravity.CENTER);
         // Set some fields associated with this textView.
-        textView.setText(text);
-        textView.setTextColor(textColor);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        textView.setText(options.text);
+        textView.setTextColor(options.textColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, options.textSize);
         // Set OnClickListener.
-        if (null != listener) {
-            textView.setOnClickListener(listener);
+        if (null != options.listener) {
+            textView.setOnClickListener(options.listener);
         }
         return textView;
     }
@@ -400,51 +492,44 @@ public class SToolbar extends Toolbar {
     /**
      * Get ImageView instance.
      */
-    private ImageView createImageView(int width, int height, int drawableResID, OnClickListener listener) {
+    private ImageView createImageView(Options options) {
         // Create ImageView instance.
         ImageView imageView = new ImageView(getContext());
         // Set the padding associated with this imageView.
-        int verticalPadding = (height == INVALIDATE_VALUE) ? (int) (mMinimumHeight * 0.3) :
-                (mMinimumHeight - (int) dp2px(getContext(), height)) / 2;
-        imageView.setPadding(mDefaultPadding, verticalPadding, mDefaultPadding, verticalPadding);
+        imageView.setPadding(options.paddingLeft, options.paddingTop, options.paddingRight, options.paddingBottom);
         // Set the layout parameters associated with this imageView.
-        int destWidth = (width == INVALIDATE_VALUE) ?
-                (int) (mMinimumHeight * 0.4) : (int) dp2px(getContext(), width);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                destWidth + imageView.getPaddingRight() + imageView.getPaddingLeft(),
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
+        complementImageParams(imageView, options.width, options.height);
         // Set some fields associated with this imageView.
-        imageView.setLayoutParams(params);
-        imageView.setImageResource(drawableResID);
+        imageView.setImageResource(options.resId);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         // Set OnClickListener
-        if (null != listener) {
-            imageView.setOnClickListener(listener);
+        if (null != options.listener) {
+            imageView.setOnClickListener(options.listener);
         }
         return imageView;
     }
 
     /**
-     * Set layout params from width and height associated with the title image.
+     * Set layout params from width and height associated with the image view.
      */
-    private void complementTitleImageParams(int width, int height) {
-        int imageWidth = width == INVALIDATE_VALUE ? (int) (mMinimumHeight * 0.6)
-                : (int) dp2px(getContext(), width);
-        int imageHeight = height == INVALIDATE_VALUE ? (int) (mMinimumHeight * 0.6)
+    private void complementImageParams(ImageView imageView, int width, int height) {
+        int destWidth = INVALIDATE_VALUE == width ? ViewGroup.LayoutParams.WRAP_CONTENT :
+                (int) dp2px(getContext(), width);
+        int destHeight = INVALIDATE_VALUE == height ? ViewGroup.LayoutParams.WRAP_CONTENT
                 : (int) dp2px(getContext(), height);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getTitleImage().getLayoutParams();
-        params.width = imageWidth;
-        params.height = imageHeight;
-        getTitleImage().setLayoutParams(params);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+        if (null == params) {
+            params = new LinearLayout.LayoutParams(destWidth, destHeight);
+        } else {
+            params.width = destWidth;
+            params.height = destHeight;
+        }
+        imageView.setLayoutParams(params);
     }
 
-    /**
-     * Validate tag is usable.
-     */
-    private void ensure(int tag) {
-        if (null != mItemViews.get(tag)) {
-            throw new IllegalArgumentException("CommonToolbar.ensure --> 请检查给View设置的Tag是否唯一");
+    private void ensure(Options options) {
+        if (null == options) {
+            throw new NullPointerException("Please ensure parameter options nonnull.");
         }
     }
 
