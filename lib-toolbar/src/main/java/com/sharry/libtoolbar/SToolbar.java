@@ -3,7 +3,6 @@ package com.sharry.libtoolbar;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -26,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.getActionBarHeight;
 import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
+import static com.sharry.libtoolbar.Utils.isLollipop;
 import static com.sharry.libtoolbar.Utils.px2dp;
 
 /**
@@ -35,7 +35,7 @@ import static com.sharry.libtoolbar.Utils.px2dp;
  * 2. 可以使用 Builder 动态的植入 {@link Builder}
  *
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
- * @version 3.0
+ * @version 3.1
  * @since 2018/8/27 23:20
  */
 public class SToolbar extends Toolbar {
@@ -74,7 +74,6 @@ public class SToolbar extends Toolbar {
     private float mMenuTextSize = 15f;
     private int mMenuTextColor = DEFAULT_TEXT_COLOR;
     private int mMenuHorizontalPadding;                    // Default padding will be using when create View.
-    private int mStatusBarHeight;                          // Status bar height.
     private int mMinimumHeight;                            // Minimum Toolbar height.
 
     // Toolbar support container.
@@ -96,7 +95,6 @@ public class SToolbar extends Toolbar {
 
     public SToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mStatusBarHeight = getStatusBarHeight(context);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SToolbar);
         // 获取相关变量初始化视图
         mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, getActionBarHeight(context));
@@ -184,7 +182,7 @@ public class SToolbar extends Toolbar {
      * @param adjust if true is adjust transparent status bar.
      */
     public void setAdjustToTransparentStatusBar(boolean adjust) {
-        if (adjust && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (adjust && isLollipop()) {
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
                 // Set the layout parameters associated with this view.
@@ -192,7 +190,7 @@ public class SToolbar extends Toolbar {
                 setLayoutParams(params);
             }
             // Setup padding.
-            setPadding(getPaddingLeft(), getPaddingTop() + mStatusBarHeight,
+            setPadding(getPaddingLeft(), getPaddingTop() + getStatusBarHeight(getContext()),
                     getPaddingRight(), getPaddingBottom());
         }
     }
@@ -238,7 +236,7 @@ public class SToolbar extends Toolbar {
     }
 
     public void setTitleText(CharSequence text, float textSize) {
-        this.setTitleText(text, textSize, DEFAULT_TEXT_COLOR);
+        this.setTitleText(text, textSize, mTitleTextColor);
     }
 
     public void setTitleText(CharSequence text, float textSize, @ColorInt int textColor) {
@@ -330,7 +328,7 @@ public class SToolbar extends Toolbar {
     }
 
     public void addLeftText(CharSequence text, /*sp*/float textSize, OnClickListener listener) {
-        this.addLeftText(text, textSize, DEFAULT_TEXT_COLOR, listener);
+        this.addLeftText(text, textSize, mMenuTextColor, listener);
     }
 
     public void addLeftText(CharSequence text, /*sp*/float textSize, @ColorInt int textColor, OnClickListener listener) {
@@ -391,7 +389,7 @@ public class SToolbar extends Toolbar {
     }
 
     public void addRightText(CharSequence text, /*sp*/float textSize, @Nullable OnClickListener listener) {
-        this.addRightText(text, textSize, DEFAULT_TEXT_COLOR, listener);
+        this.addRightText(text, textSize, mMenuTextColor, listener);
     }
 
     public void addRightText(CharSequence text, /*sp*/float textSize, @ColorInt int textColor, @Nullable OnClickListener listener) {
@@ -441,14 +439,6 @@ public class SToolbar extends Toolbar {
         mRightMenuContainer.addView(view);
     }
 
-    @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (getChildCount() == 3) {
-            return;
-        }
-        super.addView(child, index, params);
-    }
-
     /**
      * Get view index of left menu.
      */
@@ -461,6 +451,14 @@ public class SToolbar extends Toolbar {
      */
     public <T extends View> T getRightMenuView(int index) {
         return (T) mRightMenuContainer.getChildAt(index);
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        if (getChildCount() == 3) {
+            return;
+        }
+        super.addView(child, index, params);
     }
 
     /**

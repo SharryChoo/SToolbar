@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 
 /**
+ * 用于封装 TextView/ImageView 相关属性的类
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/25 22:20

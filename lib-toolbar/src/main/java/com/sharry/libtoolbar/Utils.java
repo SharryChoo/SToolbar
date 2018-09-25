@@ -48,7 +48,7 @@ class Utils {
     }
 
     /**
-     * pixel convert 2 dip
+     * Pixel convert 2 dip
      */
     static float px2dp(Context context, float px) {
         float scale = context.getResources().getDisplayMetrics().density;
