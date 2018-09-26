@@ -113,8 +113,8 @@ public class SToolbar extends Toolbar {
         if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_backIcon, View.NO_ID)) {
             addBackIcon(array.getResourceId(R.styleable.SToolbar_backIcon, View.NO_ID));
         }
-        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID)) {
-            addLeftIcon(array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID), null);
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID)) {
+            addLeftIcon(array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID), null);
         }
         if (null != array.getString(R.styleable.SToolbar_menuLeftText)) {
             addLeftText(array.getString(R.styleable.SToolbar_menuLeftText), mMenuTextSize, mMenuTextColor, null);
@@ -123,8 +123,8 @@ public class SToolbar extends Toolbar {
         if (null != array.getString(R.styleable.SToolbar_menuRightText)) {
             addRightText(array.getString(R.styleable.SToolbar_menuRightText), mMenuTextSize, mMenuTextColor, null);
         }
-        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuRightImage, View.NO_ID)) {
-            addRightIcon(array.getResourceId(R.styleable.SToolbar_menuRightImage, View.NO_ID), null);
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID)) {
+            addRightIcon(array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID), null);
         }
         array.recycle();
     }

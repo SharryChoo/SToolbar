@@ -20,9 +20,9 @@
         <attr name="menuTextSize" format="dimension" />
         <attr name="menuTextColor" format="color" />
         <attr name="menuLeftText" format="string" />
-        <attr name="menuLeftImage" format="reference" />
+        <attr name="menuLeftIcon" format="reference" />
         <attr name="menuRightText" format="string" />
-        <attr name="menuRightImage" format="reference" />
+        <attr name="menuRightIcon" format="reference" />
     </declare-styleable>
 
 </resources>
