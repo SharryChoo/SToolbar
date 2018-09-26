@@ -328,6 +328,9 @@ public class Builder {
         return toolbar;
     }
 
+    /**
+     * Inject data to toolbar.
+     */
     private void completion(SToolbar toolbar) {
         // 1. Set layout params associated with the toolbar.
         toolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -405,9 +408,12 @@ public class Builder {
         mContentParent.addView(toolbar, 0);
     }
 
+    /**
+     * Adjust origin content to comfort position.
+     */
     private void adjustLayout(SToolbar toolbar) {
         if (null != mContentParent && !(mContentParent instanceof LinearLayout)) {
-            // 将我们的主体布局移动到 Toolbar 的下方
+            // Move origin content under the SToolbar.
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)
                     mContentParent.getChildAt(1).getLayoutParams();
             params.topMargin += toolbar.getHeight();
@@ -428,4 +434,5 @@ public class Builder {
     private boolean isTextOption(Option option) {
         return INVALIDATE == option.drawableResId;
     }
+
 }

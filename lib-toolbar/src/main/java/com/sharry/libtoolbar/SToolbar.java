@@ -65,7 +65,7 @@ public class SToolbar extends Toolbar {
     private int mMenuTextSize = DEFAULT_MENU_TEXT_SIZE;
     private int mMenuTextColor = DEFAULT_TEXT_COLOR;
     private int mItemHorizontalInterval;                    // Default padding will be using when create View.
-    private int mMinimumHeight;                            // Minimum Toolbar height.
+    private int mMinimumHeight;                             // Minimum Toolbar height.
 
     // Toolbar support container.
     private LinearLayout mLeftMenuContainer;

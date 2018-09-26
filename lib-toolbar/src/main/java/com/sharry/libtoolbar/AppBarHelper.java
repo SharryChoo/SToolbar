@@ -15,7 +15,7 @@ import static com.sharry.libtoolbar.Utils.alphaColor;
 import static com.sharry.libtoolbar.Utils.isLollipop;
 
 /**
- * 改变风格的具体实现
+ * 变更 App bar 的风格的帮助类
  *
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 1.0
@@ -23,22 +23,25 @@ import static com.sharry.libtoolbar.Utils.isLollipop;
  */
 public class AppBarHelper {
 
+    /**
+     * Get AppBarHelper instance with this factory method.
+     */
+    public static AppBarHelper with(Context context) {
+        return new AppBarHelper(context);
+    }
+
     private static final int DEFAULT_OPTIONS = 0;
     private int mOptions = DEFAULT_OPTIONS;
-    private Window mWindow;
     private Activity mActivity;
+    private Window mWindow;
 
     private AppBarHelper(Context context) {
         if (context instanceof Activity) {
             mActivity = new SoftReference<>((Activity) context).get();
             mWindow = mActivity.getWindow();
         } else {
-            throw new IllegalArgumentException("AppBarHelper.Constructor -> AppBarHelper 只接收 Activity 类型的 Context");
+            throw new IllegalArgumentException("Please ensure context instance of Activity.");
         }
-    }
-
-    public static AppBarHelper with(Context context) {
-        return new AppBarHelper(context);
     }
 
     /**
