@@ -10,17 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:menuHorizontalPadding="10dp"
+        app:itemHorizontalInterval="10dp"
         app:menuLeftImage="@drawable/icon_back"
-        app:menuLeftText="返回"
+        app:menuLeftText="left"
         app:menuRightImage="@drawable/icon_right"
-        app:menuRightText="确认"
+        app:menuRightText="right"
         app:menuTextSize="12dp"
         app:minHeight="50dp"
         app:titleGravity="center"
         app:titleImage="@drawable/icon_right"
         app:titleText="Sharry"
-        app:titleTextColor="@color/colorAccent"
         app:titleTextSize="18dp" />
 
     <TextView

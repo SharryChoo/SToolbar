@@ -4,6 +4,7 @@
     <declare-styleable name="SToolbar">
         <!--Toolbar-->
         <attr name="minHeight" format="dimension" />
+        <attr name="itemHorizontalInterval" format="dimension" />
         <!--Title-->
         <attr name="titleText" format="string" />
         <attr name="titleTextColor" format="color" />
@@ -15,7 +16,6 @@
             <enum name="center" value="2" />
         </attr>
         <!--Menu-->
-        <attr name="menuHorizontalPadding" format="dimension" />
         <attr name="menuTextSize" format="dimension" />
         <attr name="menuTextColor" format="color" />
         <attr name="menuLeftText" format="string" />

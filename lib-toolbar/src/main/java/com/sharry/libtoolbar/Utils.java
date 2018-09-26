@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
 
+import java.util.Collection;
+
 /**
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 1.0
@@ -24,6 +26,10 @@ class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    static boolean isNotEmpty(Collection collection) {
+        return null != collection && collection.size() != 0;
+    }
+
     /**
      * @param baseColor    需要进行透明的Color
      * @param alphaPercent 透明图(0-1)
@@ -42,15 +48,15 @@ class Utils {
     /**
      * Dip convert 2 pixel
      */
-    static float dp2px(Context context, float dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+    static int dp2px(Context context, float dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
     /**
      * Pixel convert 2 dip
      */
-    static float px2dp(Context context, float px) {
+    static int px2dp(Context context, float px) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
