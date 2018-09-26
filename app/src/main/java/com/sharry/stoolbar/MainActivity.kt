@@ -1,4 +1,4 @@
-package com.sharry.generictoolbardemo
+package com.sharry.stoolbar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
                 .setItemHorizontalInterval(10)
                 .setTitleText(Option.Builder().setText("1223").setPaddingRight(10).build())
                 .setTitleImage(R.drawable.icon_right, 20, 20)
+                .setCustomTitle(titleView)
                 .addLeftIcon(Option.Builder().setDrawableResId(R.drawable.icon_back).setPaddingLeft(10).build())
                 .addLeftText("Left1") {}// 响应左部文本的点击事件
                 .addLeftText("Left2") {}// 响应左部文本的点击事件
@@ -33,4 +34,5 @@ class MainActivity : AppCompatActivity() {
                 .addRightIcon(R.drawable.icon_right, 20, 20) {}// 响应右部图标的点击事件
                 .apply()
     }
+
 }

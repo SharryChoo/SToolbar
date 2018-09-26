@@ -27,7 +27,6 @@ import static com.sharry.libtoolbar.Option.DEFAULT_TEXT_COLOR;
 import static com.sharry.libtoolbar.Option.DEFAULT_TITLE_TEXT_SIZE;
 import static com.sharry.libtoolbar.Option.INVALIDATE;
 import static com.sharry.libtoolbar.Utils.dp2px;
-import static com.sharry.libtoolbar.Utils.getActionBarHeight;
 import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
 import static com.sharry.libtoolbar.Utils.isLollipop;
 import static com.sharry.libtoolbar.Utils.px2dp;
@@ -65,8 +64,8 @@ public class SToolbar extends Toolbar {
     private int mTitleTextColor = DEFAULT_TEXT_COLOR;
     private int mMenuTextSize = DEFAULT_MENU_TEXT_SIZE;
     private int mMenuTextColor = DEFAULT_TEXT_COLOR;
+    private int mMinimumHeight = INVALIDATE;                // Minimum Toolbar height.
     private int mItemHorizontalInterval;                    // Default padding will be using when create View.
-    private int mMinimumHeight;                             // Minimum Toolbar height.
 
     // Toolbar support container.
     private LinearLayout mLeftMenuContainer;
@@ -143,7 +142,7 @@ public class SToolbar extends Toolbar {
     }
 
     private void initArgs(Context context, TypedArray array) {
-        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, getActionBarHeight(context));
+        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, dp2px(context, 56));
         mItemHorizontalInterval = px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_itemHorizontalInterval,
                 dp2px(context, DEFAULT_INTERVAL)));
         mTitleTextColor = array.getColor(R.styleable.SToolbar_titleTextColor, mTitleTextColor);
@@ -155,6 +154,7 @@ public class SToolbar extends Toolbar {
     }
 
     private void initViews(Context context) {
+        // Set initialize layout params.
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         removeAllViews();
@@ -184,6 +184,15 @@ public class SToolbar extends Toolbar {
         mCenterContainer.setLayoutParams(centerParams);
         mCenterContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(mCenterContainer);
+    }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        // Lock height always is WRAP_CONTENT.
+        if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        super.setLayoutParams(params);
     }
 
     /*=========================================  背景色与沉浸式状态栏 ======================================*/

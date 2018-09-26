@@ -21,6 +21,8 @@ import static com.sharry.libtoolbar.Option.DEFAULT_TEXT_COLOR;
 import static com.sharry.libtoolbar.Option.DEFAULT_TITLE_TEXT_SIZE;
 import static com.sharry.libtoolbar.Option.INVALIDATE;
 import static com.sharry.libtoolbar.SToolbar.DEFAULT_INTERVAL;
+import static com.sharry.libtoolbar.Utils.dp2px;
+import static com.sharry.libtoolbar.Utils.getActionBarHeight;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
 
 /**
@@ -34,6 +36,7 @@ public class Builder {
 
     private Context mContext;
     private ViewGroup mContentParent;
+    private int mMinimumHeight = INVALIDATE;
     private Style mStyle = Style.DEFAULT;
 
     private int mBgColor = INVALIDATE;
