@@ -17,7 +17,8 @@
         app:menuRightText="right"
         app:menuTextSize="12dp"
         app:minHeight="50dp"
-        app:titleGravity="center"
+        app:titleGravity="Center"
+        app:statusBarStyle="Transparent"
         app:titleImage="@drawable/icon_right"
         app:titleText="Sharry"
         app:titleTextSize="18dp" />

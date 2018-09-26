@@ -91,6 +91,20 @@ public class SToolbar extends Toolbar {
         // 初始化参数和视图
         initArgs(context, array);
         initViews(context);
+        // 设置沉浸式状态栏
+        switch (array.getInt(R.styleable.SToolbar_statusBarStyle, Style.DEFAULT.getVal())) {
+            case 0:
+                setStatusBarStyle(Style.TRANSPARENT);
+                break;
+            case 1:
+                setStatusBarStyle(Style.TRANSLUCENCE);
+                break;
+            case 2:
+                setStatusBarStyle(Style.HIDE);
+                break;
+            default:
+                break;
+        }
         // 添加菜单选项
         switch (array.getInt(R.styleable.SToolbar_titleGravity, -1)) {
             case 0:
@@ -103,9 +117,8 @@ public class SToolbar extends Toolbar {
                 setTitleGravity(Gravity.CENTER | Gravity.TOP);
                 break;
         }
-        if (null != array.getString(R.styleable.SToolbar_titleText)) {
-            setTitleText(array.getString(R.styleable.SToolbar_titleText), mTitleTextSize, mTitleTextColor);
-        }
+        setTitleText(TextUtils.isEmpty(array.getString(R.styleable.SToolbar_titleText)) ? ""
+                : array.getString(R.styleable.SToolbar_titleText), mTitleTextSize, mTitleTextColor);
         if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID)) {
             setTitleImage(array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID));
         }
@@ -142,6 +155,8 @@ public class SToolbar extends Toolbar {
     }
 
     private void initViews(Context context) {
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         removeAllViews();
         // 1. Add left menu container associated with this toolbar.
         mLeftMenuContainer = new LinearLayout(context);
@@ -174,18 +189,11 @@ public class SToolbar extends Toolbar {
     /*=========================================  背景色与沉浸式状态栏 ======================================*/
 
     /**
-     * Set the view adjust to fit status bar.
-     *
-     * @param adjust if true is adjust transparent status bar.
+     * Set app bar style associated with this Activity.
      */
-    public void setAdjustToTransparentStatusBar(boolean adjust) {
-        if (adjust && isLollipop()) {
-            ViewGroup.LayoutParams params = getLayoutParams();
-            if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                // Set the layout parameters associated with this view.
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
-            }
+    public void setStatusBarStyle(final Style style) {
+        AppBarHelper.with(getContext()).setStatusBarStyle(style).apply();
+        if (isLollipop() && (style == Style.TRANSPARENT || style == Style.TRANSLUCENCE)) {
             // Setup padding.
             setPadding(getPaddingLeft(), getPaddingTop() + getStatusBarHeight(getContext()),
                     getPaddingRight(), getPaddingBottom());
@@ -213,7 +221,7 @@ public class SToolbar extends Toolbar {
     /**
      * Gravity for the title associated with these LayoutParams.
      *
-     * @see android.view.Gravity
+     * @see Gravity
      */
     public void setTitleGravity(int gravity) {
         LayoutParams params = (LayoutParams) mCenterContainer.getLayoutParams();
@@ -570,8 +578,8 @@ public class SToolbar extends Toolbar {
         if (null == option) {
             throw new NullPointerException("Please ensureText parameter option nonnull.");
         }
-        if (TextUtils.isEmpty(option.text)) {
-            throw new IllegalArgumentException("Please ensureText option.text not empty.");
+        if (null == option.text) {
+            throw new IllegalArgumentException("Please ensureText option.text nonnull.");
         }
     }
 

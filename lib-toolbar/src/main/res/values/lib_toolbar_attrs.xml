@@ -3,6 +3,12 @@
 
     <declare-styleable name="SToolbar">
         <!--Toolbar-->
+        <attr name="statusBarStyle" format="enum">
+            <enum name="Transparent" value="0" />
+            <enum name="Translucence" value="1" />
+            <enum name="Hide" value="2" />
+            <enum name="Default" value="3" />
+        </attr>
         <attr name="minHeight" format="dimension" />
         <attr name="itemHorizontalInterval" format="dimension" />
         <!--Title-->
@@ -11,9 +17,9 @@
         <attr name="titleTextSize" format="dimension" />
         <attr name="titleImage" format="reference" />
         <attr name="titleGravity" format="enum">
-            <enum name="left" value="0" />
-            <enum name="right" value="1" />
-            <enum name="center" value="2" />
+            <enum name="Left" value="0" />
+            <enum name="Right" value="1" />
+            <enum name="Center" value="2" />
         </attr>
         <!--Menu-->
         <attr name="backIcon" format="reference" />

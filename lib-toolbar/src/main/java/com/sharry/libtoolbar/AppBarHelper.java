@@ -21,7 +21,7 @@ import static com.sharry.libtoolbar.Utils.isLollipop;
  * @version 1.0
  * @since 2018/8/27 23:41
  */
-public class AppBarHelper {
+class AppBarHelper {
 
     /**
      * Get AppBarHelper instance with this factory method.

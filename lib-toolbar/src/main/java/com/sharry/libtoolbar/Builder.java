@@ -336,14 +336,18 @@ public class Builder {
         // 1. Set layout params associated with the toolbar.
         toolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        // 2. Set background associated with the toolbar.
+        // 2. Set status bar style.
+        if (Style.DEFAULT != mStyle) {
+            toolbar.setStatusBarStyle(mStyle);
+        }
+        // 3. Set background associated with the toolbar.
         if (INVALIDATE != mBgColor) {
             toolbar.setBackgroundColor(mBgColor);
         }
         if (INVALIDATE != mBgDrawableResId) {
             toolbar.setBackgroundDrawableRes(mBgDrawableResId);
         }
-        // 3. Set title associated with the toolbar.
+        // 4. Set title associated with the toolbar.
         toolbar.setTitleGravity(mTitleGravity);
         if (null != mTitleTextOp) {
             toolbar.setTitleText(
@@ -364,7 +368,7 @@ public class Builder {
         if (null != mCustomTitleView) {
             toolbar.setCustomTitle(mCustomTitleView);
         }
-        // 4. Add left menu item associated with the toolbar.
+        // 5. Add left menu item associated with the toolbar.
         if (isNotEmpty(mMenuLeftOps)) {
             for (Option leftOp : mMenuLeftOps) {
                 if (isTextOption(leftOp)) {
@@ -382,7 +386,7 @@ public class Builder {
                 }
             }
         }
-        // 5. Add right menu item associated with the toolbar.
+        // 6. Add right menu item associated with the toolbar.
         if (isNotEmpty(mMenuRightOps)) {
             for (Option rightOp : mMenuRightOps) {
                 if (isTextOption(rightOp)) {
@@ -399,11 +403,6 @@ public class Builder {
                     );
                 }
             }
-        }
-        // 6. Adjust Transparent status bar.
-        AppBarHelper.with(mContext).setStatusBarStyle(mStyle).apply();
-        if (Style.TRANSLUCENCE == mStyle || Style.TRANSPARENT == mStyle) {
-            toolbar.setAdjustToTransparentStatusBar(true);
         }
         // 7. Add to container.
         mContentParent.addView(toolbar, 0);
