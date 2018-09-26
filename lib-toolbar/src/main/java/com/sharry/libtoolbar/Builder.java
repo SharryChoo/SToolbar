@@ -178,15 +178,6 @@ public class Builder {
 
     /* ======================================== 左部菜单相关 =========================================*/
 
-    public Builder addBackIcon(@DrawableRes int resId) {
-        addLeftIcon(resId, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Activity) mContext).finish();
-            }
-        });
-        return this;
-    }
 
     /**
      * 左部文本
@@ -224,6 +215,16 @@ public class Builder {
     /**
      * 左部图标
      */
+    public Builder addBackIcon(@DrawableRes int drawableRes) {
+        addLeftIcon(drawableRes, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Activity) mContext).finish();
+            }
+        });
+        return this;
+    }
+
     public Builder addLeftIcon(@DrawableRes int drawableRes, final View.OnClickListener listener) {
         this.addLeftIcon(drawableRes, INVALIDATE, INVALIDATE, listener);
         return this;

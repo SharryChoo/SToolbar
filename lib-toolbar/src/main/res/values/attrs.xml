@@ -16,6 +16,7 @@
             <enum name="center" value="2" />
         </attr>
         <!--Menu-->
+        <attr name="backIcon" format="reference" />
         <attr name="menuTextSize" format="dimension" />
         <attr name="menuTextColor" format="color" />
         <attr name="menuLeftText" format="string" />

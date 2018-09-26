@@ -1,5 +1,6 @@
 package com.sharry.libtoolbar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
@@ -109,6 +110,9 @@ public class SToolbar extends Toolbar {
             setTitleImage(array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID));
         }
         // 添加左部菜单
+        if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_backIcon, View.NO_ID)) {
+            addBackIcon(array.getResourceId(R.styleable.SToolbar_backIcon, View.NO_ID));
+        }
         if (View.NO_ID != array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID)) {
             addLeftIcon(array.getResourceId(R.styleable.SToolbar_menuLeftImage, View.NO_ID), null);
         }
@@ -339,6 +343,17 @@ public class SToolbar extends Toolbar {
     /**
      * Add left menu image item.
      */
+    public void addBackIcon(@DrawableRes int drawableRes) {
+        this.addLeftIcon(drawableRes, new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).onBackPressed();
+                }
+            }
+        });
+    }
+
     public void addLeftIcon(@DrawableRes int drawableRes, OnClickListener listener) {
         this.addLeftIcon(drawableRes, INVALIDATE, INVALIDATE, listener);
     }
