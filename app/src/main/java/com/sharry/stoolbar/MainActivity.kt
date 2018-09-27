@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.sharry.libtoolbar.ImageOptions
 import com.sharry.libtoolbar.SToolbar
 import com.sharry.libtoolbar.Style
-import com.sharry.libtoolbar.ImageOptions
 import com.sharry.libtoolbar.TextOptions
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
                 .setItemHorizontalInterval(10)
-                .addCustomTitle(titleView)
+                .setTitleText("Sharry")
                 .addBackIcon(R.drawable.icon_back)
                 .addLeftMenu(
                         TextOptions.Builder()
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                                 .build()
                 )
                 .apply()
+
     }
 
     private fun showMsg(msg: CharSequence) {

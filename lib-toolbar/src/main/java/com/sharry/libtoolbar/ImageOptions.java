@@ -45,8 +45,8 @@ public class ImageOptions extends Options {
     }
 
     @Override
-    protected void apply(Options other) {
-        super.apply(other);
+    void from(Options other) {
+        super.from(other);
         if (other instanceof ImageOptions) {
             ImageOptions op = (ImageOptions) other;
             this.drawableResId = op.drawableResId;
@@ -69,7 +69,7 @@ public class ImageOptions extends Options {
 
         private Builder(@NonNull ImageOptions other) {
             this();
-            op.apply(other);
+            op.from(other);
         }
 
         public Builder setDrawableResId(@DrawableRes int drawableResId) {

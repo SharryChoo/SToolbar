@@ -62,8 +62,8 @@ public class TextOptions extends Options {
     }
 
     @Override
-    protected void apply(Options other) {
-        super.apply(other);
+    void from(Options other) {
+        super.from(other);
         if (other instanceof TextOptions) {
             TextOptions op = (TextOptions) other;
             this.text = op.text;
@@ -90,7 +90,7 @@ public class TextOptions extends Options {
 
         private Builder(@NonNull TextOptions other) {
             this();
-            op.apply(other);
+            op.from(other);
         }
 
         public Builder setText(CharSequence text) {

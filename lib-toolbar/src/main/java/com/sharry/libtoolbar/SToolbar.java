@@ -135,44 +135,20 @@ public class SToolbar extends Toolbar {
         }
         int leftMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID);
         if (View.NO_ID != leftMenuIconResId) {
-            addLeftMenuImage(
-                    ImageOptions.Builder()
-                            .setDrawableResId(leftMenuIconResId)
-                            .setPaddingLeft(mItemHorizontalInterval)
-                            .build()
-            );
+            addLeftMenuImage(ImageOptions.Builder().setDrawableResId(leftMenuIconResId).build());
         }
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
-            addLeftMenuText(
-                    TextOptions.Builder()
-                            .setText(leftMenuText)
-                            .setTextSize(mMenuTextSize)
-                            .setTextColor(mMenuTextColor)
-                            .setPaddingLeft(mItemHorizontalInterval)
-                            .build()
-            );
+            addLeftMenuText(TextOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         // 添加右部菜单
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
-            addRightMenuText(
-                    TextOptions.Builder()
-                            .setText(rightMenuText)
-                            .setTextSize(mMenuTextSize)
-                            .setTextColor(mMenuTextColor)
-                            .setPaddingRight(mItemHorizontalInterval)
-                            .build()
-            );
+            addRightMenuText(TextOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
-            addRightMenuImage(
-                    ImageOptions.Builder()
-                            .setDrawableResId(rightMenuIconResId)
-                            .setPaddingRight(mItemHorizontalInterval)
-                            .build()
-            );
+            addRightMenuImage(ImageOptions.Builder().setDrawableResId(rightMenuIconResId).build());
         }
         array.recycle();
     }
@@ -286,15 +262,7 @@ public class SToolbar extends Toolbar {
     }
 
     public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
-        this.setTitleText(
-                TextOptions.Builder()
-                        .setText(text)
-                        .setTextSize(textSize)
-                        .setTextColor(textColor)
-                        .setPaddingLeft(mItemHorizontalInterval)
-                        .setPaddingRight(mItemHorizontalInterval)
-                        .build()
-        );
+        this.setTitleText(TextOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
     }
 
     public void setTitleText(TextOptions options) {
@@ -311,19 +279,12 @@ public class SToolbar extends Toolbar {
      * Set image associated with this toolbar title.
      */
     public void setTitleImage(@DrawableRes int resId) {
-        this.setTitleImage(resId, ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setTitleImage(resId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
-        this.setTitleImage(
-                ImageOptions.Builder()
-                        .setDrawableResId(resId)
-                        .setWidth(width)
-                        .setHeight(height)
-                        .build()
-        );
+        this.setTitleImage(ImageOptions.Builder().setDrawableResId(resId).setWidth(width).setHeight(height).build());
     }
 
     public void setTitleImage(ImageOptions options) {
@@ -388,25 +349,29 @@ public class SToolbar extends Toolbar {
      * Add text sub item associated with this toolbar left menu.
      */
     public void addLeftMenuText(TextOptions options) {
-        TextView textView = createTextView();
-        options = TextOptions.Builder(options)
+        addLeftView(createTextView(), TextOptions.Builder(options)
                 .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
-                .build();
-        complementTextView(textView, options);
-        addLeftView(textView);
+                .build());
     }
 
     /**
      * Add image sub item associated with this toolbar left menu.
      */
     public void addLeftMenuImage(ImageOptions options) {
-        ImageView imageView = createImageView();
-        options = ImageOptions.Builder(options)
+        addLeftView(createImageView(), ImageOptions.Builder(options)
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
-                .build();
-        complementImageView(imageView, options);
-        addLeftView(imageView);
+                .build());
+    }
+
+    /**
+     * Add custom sub item associated with this toolbar left menu.
+     * U can set View params more easier when use options.
+     */
+    public void addLeftView(View view, Options options) {
+        ensure(options);
+        completion(view, options);
+        addLeftView(view);
     }
 
     /**
@@ -420,29 +385,33 @@ public class SToolbar extends Toolbar {
      * Add text sub item associated with this toolbar right menu.
      */
     public void addRightMenuText(TextOptions options) {
-        TextView textView = createTextView();
-        options = TextOptions.Builder(options)
+        addRightView(createTextView(), TextOptions.Builder(options)
                 .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
                 .setPaddingRight(0 != options.paddingRight ? options.paddingRight : mItemHorizontalInterval)
-                .build();
-        complementTextView(textView, options);
-        addRightView(textView);
+                .build());
     }
 
     /**
      * Add image sub item associated with this toolbar right menu.
      */
     public void addRightMenuImage(ImageOptions options) {
-        ImageView imageView = createImageView();
-        options = ImageOptions.Builder(options)
+        addRightView(createImageView(), ImageOptions.Builder(options)
                 .setPaddingRight(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
-                .build();
-        complementImageView(imageView, options);
-        addRightView(imageView);
+                .build());
     }
 
     /**
      * Add custom sub item associated with this toolbar right menu.
+     * U can set View params more easier when use options.
+     */
+    public void addRightView(View view, Options options) {
+        ensure(options);
+        completion(view, options);
+        addRightView(view);
+    }
+
+    /**
+     * Add custom sub item associated with this toolbar left menu.
      */
     public void addRightView(View view) {
         mRightMenuContainer.addView(view);
@@ -514,6 +483,16 @@ public class SToolbar extends Toolbar {
         );
         imageView.setLayoutParams(params);
         return imageView;
+    }
+
+    private void completion(View view, Options options) {
+        if (view instanceof TextView && options instanceof TextOptions) {
+            complementTextView((TextView) view, (TextOptions) options);
+        } else if (view instanceof ImageView && options instanceof ImageOptions) {
+            complementImageView((ImageView) view, (ImageOptions) options);
+        } else {
+            completionView(view, options);
+        }
     }
 
     /**
