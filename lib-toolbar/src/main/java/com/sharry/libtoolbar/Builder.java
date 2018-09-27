@@ -238,11 +238,21 @@ public class Builder {
     }
 
     /**
-     * Inject U set field, and return a instance of SToolbar.
+     * Instantiation SToolbar.
      */
-    public SToolbar apply() {
+    public SToolbar build() {
         final SToolbar toolbar = new SToolbar(mContext);
         completion(toolbar);
+        return toolbar;
+    }
+
+    /**
+     * Instantiation SToolbar, and then add it to suitable position.
+     */
+    public SToolbar apply() {
+        final SToolbar toolbar = build();
+        // Add to container.
+        mContentParent.addView(toolbar, 0);
         // 等待 View 的 performTraversal 完成
         toolbar.post(new Runnable() {
             @Override
@@ -299,8 +309,6 @@ public class Builder {
                 toolbar.addRightMenu(rightOp);
             }
         }
-        // 6. Add to container.
-        mContentParent.addView(toolbar, 0);
     }
 
     /**
