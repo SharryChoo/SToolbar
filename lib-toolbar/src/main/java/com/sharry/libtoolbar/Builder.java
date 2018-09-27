@@ -8,23 +8,28 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 
+import com.sharry.libtoolbar.options.ImageOption;
+import com.sharry.libtoolbar.options.Option;
+import com.sharry.libtoolbar.options.TextOption;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.Dimension;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import static com.sharry.libtoolbar.Option.DEFAULT_MENU_TEXT_SIZE;
-import static com.sharry.libtoolbar.Option.DEFAULT_TEXT_COLOR;
-import static com.sharry.libtoolbar.Option.DEFAULT_TITLE_TEXT_SIZE;
-import static com.sharry.libtoolbar.Option.INVALIDATE;
+import static androidx.annotation.Dimension.DP;
+import static androidx.annotation.Dimension.SP;
 import static com.sharry.libtoolbar.SToolbar.DEFAULT_INTERVAL;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
+import static com.sharry.libtoolbar.options.Option.INVALIDATE;
 
 /**
- * Build common toolbar more easy.
+ * Build SToolbar more easy.
  *
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 2.0
@@ -34,7 +39,6 @@ public class Builder {
 
     private Context mContext;
     private ViewGroup mContentParent;
-    private int mMinimumHeight = INVALIDATE;
     private Style mStyle = Style.DEFAULT;
 
     private int mBgColor = INVALIDATE;
@@ -75,7 +79,15 @@ public class Builder {
     }
 
     /**
-     * 设置状态栏的样式
+     * Set interval associated with this toolbar sub item.
+     */
+    public Builder setItemHorizontalInterval(@Dimension(unit = DP) int horizontalInterval) {
+        mItemHorizontalInterval = horizontalInterval;
+        return this;
+    }
+
+    /**
+     * Set style associated with bind activity status bar.
      */
     public Builder setStatusBarStyle(Style statusBarStyle) {
         mStyle = statusBarStyle;
@@ -83,27 +95,33 @@ public class Builder {
     }
 
     /**
-     * 背景色
+     * Set the background color to a given resource. The colorResId should refer to
+     * a color int.
+     */
+    public Builder setBackgroundColorRes(@ColorRes int colorResId) {
+        mBgColor = ContextCompat.getColor(mContext, colorResId);
+        return this;
+    }
+
+    /**
+     * Set the background color associated with this toolbar.
      */
     public Builder setBackgroundColor(@ColorInt int color) {
         mBgColor = color;
         return this;
     }
 
-    public Builder setBackgroundColorRes(@ColorRes int colorResId) {
-        mBgColor = ContextCompat.getColor(mContext, colorResId);
-        return this;
-    }
-
+    /**
+     * Set the background to a given resource. The resource should refer to
+     * a Drawable object or 0 to remove the background.
+     */
     public Builder setBackgroundDrawableRes(@DrawableRes int drawableResId) {
         mBgDrawableResId = drawableResId;
         return this;
     }
 
-    /* ======================================== 标题相关 =========================================*/
-
     /**
-     * 标题位置
+     * Set gravity associated with this toolbar title.
      */
     public Builder setTitleGravity(int gravity) {
         mTitleGravity = gravity;
@@ -111,21 +129,21 @@ public class Builder {
     }
 
     /**
-     * 文本标题
+     * Set text associated with this toolbar title.
      */
     public Builder setTitleText(CharSequence text) {
-        this.setTitleText(text, DEFAULT_TITLE_TEXT_SIZE);
+        this.setTitleText(text, TextOption.DEFAULT_TITLE_TEXT_SIZE);
         return this;
     }
 
-    public Builder setTitleText(CharSequence text, int textSize) {
-        this.setTitleText(text, textSize, DEFAULT_TEXT_COLOR);
+    public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize) {
+        this.setTitleText(text, textSize, TextOption.DEFAULT_TEXT_COLOR);
         return this;
     }
 
-    public Builder setTitleText(CharSequence text, int textSize, @ColorInt int textColor) {
+    public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                new Option.Builder()
+                new TextOption.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -134,13 +152,13 @@ public class Builder {
         return this;
     }
 
-    public Builder setTitleText(Option option) {
+    public Builder setTitleText(@NonNull Option option) {
         mTitleTextOp = option;
         return this;
     }
 
     /**
-     * 图片标题
+     * Set image associated with this toolbar title.
      */
     public Builder setTitleImage(@DrawableRes int drawableRes) {
         this.setTitleImage(drawableRes, INVALIDATE, INVALIDATE);
@@ -149,7 +167,7 @@ public class Builder {
 
     public Builder setTitleImage(@DrawableRes int drawableRes, int width, int height) {
         this.setTitleImage(
-                new Option.Builder()
+                new ImageOption.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidth(width)
                         .setHeight(height)
@@ -158,92 +176,40 @@ public class Builder {
         return this;
     }
 
-    public Builder setTitleImage(Option option) {
+    public Builder setTitleImage(@NonNull Option option) {
         mTitleImageOp = option;
         return this;
     }
 
     /**
-     * 自定义标题
+     * Set add custom view associated with this toolbar title.
      */
-    public Builder setCustomTitle(View titleView) {
+    public Builder addCustomTitle(View titleView) {
         mCustomTitleView = titleView;
         return this;
     }
 
-    /* ======================================== 菜单相关 =========================================*/
-    public Builder setItemHorizontalInterval(/*dp*/int horizontalInterval) {
-        mItemHorizontalInterval = horizontalInterval;
-        return this;
-    }
-
-    /* ======================================== 左部菜单相关 =========================================*/
-
-
     /**
-     * 左部文本
-     */
-    public Builder addLeftText(CharSequence text, final View.OnClickListener listener) {
-        this.addLeftText(text, DEFAULT_MENU_TEXT_SIZE, listener);
-        return this;
-    }
-
-    public Builder addLeftText(CharSequence text, /*sp*/int textSize, View.OnClickListener listener) {
-        this.addLeftText(text, textSize, DEFAULT_TEXT_COLOR, listener);
-        return this;
-    }
-
-    public Builder addLeftText(CharSequence text,/*sp*/int textSize, @ColorInt int textColor, View.OnClickListener listener) {
-        this.addLeftText(
-                new Option.Builder()
-                        .setText(text)
-                        .setTextSize(textSize)
-                        .setTextColor(textColor)
-                        .setListener(listener)
-                        .build()
-        );
-        return this;
-    }
-
-    public Builder addLeftText(Option option) {
-        if (null == mMenuLeftOps) {
-            mMenuLeftOps = new ArrayList<>();
-        }
-        mMenuLeftOps.add(option);
-        return this;
-    }
-
-    /**
-     * 左部图标
+     * Add back icon associated with this toolbar left menu.
      */
     public Builder addBackIcon(@DrawableRes int drawableRes) {
-        addLeftIcon(drawableRes, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Activity) mContext).finish();
-            }
-        });
-        return this;
-    }
-
-    public Builder addLeftIcon(@DrawableRes int drawableRes, final View.OnClickListener listener) {
-        this.addLeftIcon(drawableRes, INVALIDATE, INVALIDATE, listener);
-        return this;
-    }
-
-    public Builder addLeftIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
-        this.addLeftIcon(
-                new Option.Builder()
+        return addLeftMenu(
+                new ImageOption.Builder()
                         .setDrawableResId(drawableRes)
-                        .setWidth(width)
-                        .setHeight(height)
-                        .setListener(listener)
+                        .setListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((Activity) mContext).finish();
+                            }
+                        })
                         .build()
         );
-        return this;
     }
 
-    public Builder addLeftIcon(Option option) {
+    /**
+     * Add sub item associated with this toolbar left menu.
+     */
+    public Builder addLeftMenu(@NonNull Option option) {
         if (null == mMenuLeftOps) {
             mMenuLeftOps = new ArrayList<>();
         }
@@ -251,62 +217,10 @@ public class Builder {
         return this;
     }
 
-    /* ======================================== 右部菜单相关 =========================================*/
-
     /**
-     * 右部文本
+     * Add sub item associated with this toolbar right menu.
      */
-    public Builder addRightText(CharSequence text, final View.OnClickListener listener) {
-        this.addRightText(text, DEFAULT_MENU_TEXT_SIZE, listener);
-        return this;
-    }
-
-    public Builder addRightText(CharSequence text, /*sp*/int textSize, View.OnClickListener listener) {
-        this.addRightText(text, textSize, DEFAULT_TEXT_COLOR, listener);
-        return this;
-    }
-
-    public Builder addRightText(CharSequence text,/*sp*/int textSize, @ColorInt int textColor, View.OnClickListener listener) {
-        this.addRightText(
-                new Option.Builder()
-                        .setText(text)
-                        .setTextSize(textSize)
-                        .setTextColor(textColor)
-                        .setListener(listener)
-                        .build()
-        );
-        return this;
-    }
-
-    public Builder addRightText(Option option) {
-        if (null == mMenuRightOps) {
-            mMenuRightOps = new ArrayList<>();
-        }
-        mMenuRightOps.add(option);
-        return this;
-    }
-
-    /**
-     * 右部图标
-     */
-    public Builder addRightIcon(@DrawableRes int drawableRes, final View.OnClickListener listener) {
-        this.addRightIcon(drawableRes, INVALIDATE, INVALIDATE, listener);
-        return this;
-    }
-
-    public Builder addRightIcon(@DrawableRes int drawableRes, /*dp*/int width, /*dp*/int height, View.OnClickListener listener) {
-        this.addRightIcon(
-                new Option.Builder()
-                        .setDrawableResId(drawableRes)
-                        .setWidth(width)
-                        .setHeight(height)
-                        .setListener(listener)
-                        .build()
-        );
-        return this;
-    }
-
-    public Builder addRightIcon(Option option) {
+    public Builder addRightMenu(Option option) {
         if (null == mMenuRightOps) {
             mMenuRightOps = new ArrayList<>();
         }
@@ -337,75 +251,41 @@ public class Builder {
         // 1. Set layout params associated with the toolbar.
         toolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        // 2. Set status bar style.
+        // 2. Set arguments.
+        toolbar.setItemHorizontalInterval(mItemHorizontalInterval);
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);
         }
-        // 3. Set background associated with the toolbar.
         if (INVALIDATE != mBgColor) {
             toolbar.setBackgroundColor(mBgColor);
         }
         if (INVALIDATE != mBgDrawableResId) {
             toolbar.setBackgroundDrawableRes(mBgDrawableResId);
         }
-        // 4. Set title associated with the toolbar.
+        // 3. Set title associated with the toolbar.
         toolbar.setTitleGravity(mTitleGravity);
         if (null != mTitleTextOp) {
-            toolbar.setTitleText(
-                    isCustomOption(mTitleTextOp) ? mTitleTextOp : new Option.Builder(mTitleTextOp)
-                            .setPaddingLeft(mItemHorizontalInterval)
-                            .setPaddingRight(mItemHorizontalInterval)
-                            .build()
-            );
+            toolbar.setTitleText(mTitleTextOp);
         }
         if (null != mTitleImageOp) {
-            toolbar.setTitleImage(
-                    isCustomOption(mTitleImageOp) ? mTitleImageOp : new Option.Builder(mTitleImageOp)
-                            .setPaddingLeft(mItemHorizontalInterval)
-                            .setPaddingRight(mItemHorizontalInterval)
-                            .build()
-            );
+            toolbar.setTitleImage(mTitleImageOp);
         }
         if (null != mCustomTitleView) {
-            toolbar.setCustomTitle(mCustomTitleView);
+            toolbar.addCustomTitle(mCustomTitleView);
         }
-        // 5. Add left menu item associated with the toolbar.
+        // 4. Add left menu item associated with the toolbar.
         if (isNotEmpty(mMenuLeftOps)) {
             for (Option leftOp : mMenuLeftOps) {
-                if (isTextOption(leftOp)) {
-                    toolbar.addLeftText(
-                            isCustomOption(leftOp) ? leftOp : new Option.Builder(leftOp)
-                                    .setPaddingLeft(mItemHorizontalInterval)
-                                    .build()
-                    );
-                } else {
-                    toolbar.addLeftIcon(
-                            isCustomOption(leftOp) ? leftOp : new Option.Builder(leftOp)
-                                    .setPaddingLeft(mItemHorizontalInterval)
-                                    .build()
-                    );
-                }
+                toolbar.addLeftMenu(leftOp);
             }
         }
-        // 6. Add right menu item associated with the toolbar.
+        // 5. Add right menu item associated with the toolbar.
         if (isNotEmpty(mMenuRightOps)) {
             for (Option rightOp : mMenuRightOps) {
-                if (isTextOption(rightOp)) {
-                    toolbar.addRightText(
-                            isCustomOption(rightOp) ? rightOp : new Option.Builder(rightOp)
-                                    .setPaddingRight(mItemHorizontalInterval)
-                                    .build()
-                    );
-                } else {
-                    toolbar.addRightIcon(
-                            isCustomOption(rightOp) ? rightOp : new Option.Builder(rightOp)
-                                    .setPaddingRight(mItemHorizontalInterval)
-                                    .build()
-                    );
-                }
+                toolbar.addRightMenu(rightOp);
             }
         }
-        // 7. Add to container.
+        // 6. Add to container.
         mContentParent.addView(toolbar, 0);
     }
 
@@ -420,20 +300,6 @@ public class Builder {
             params.topMargin += toolbar.getHeight();
             mContentParent.getChildAt(1).setLayoutParams(params);
         }
-    }
-
-    /**
-     * 判断是否是用户传入的 Option
-     */
-    private boolean isCustomOption(Option option) {
-        return 0 != option.paddingLeft || 0 != option.paddingRight;
-    }
-
-    /**
-     * 是否为文本类型的 Option
-     */
-    private boolean isTextOption(Option option) {
-        return INVALIDATE == option.drawableResId;
     }
 
 }

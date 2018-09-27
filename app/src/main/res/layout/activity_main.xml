@@ -15,7 +15,7 @@
         app:menuLeftText="left"
         app:menuRightIcon="@drawable/icon_right"
         app:menuRightText="right"
-        app:menuTextSize="12dp"
+        app:menuTextSize="13dp"
         app:titleGravity="Center"
         app:statusBarStyle="Default"
         app:titleImage="@drawable/icon_right"

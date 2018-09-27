@@ -23,4 +23,5 @@ public enum Style {
     int getVal() {
         return val;
     }
+
 }
