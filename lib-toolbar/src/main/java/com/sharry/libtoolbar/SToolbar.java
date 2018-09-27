@@ -138,7 +138,7 @@ public class SToolbar extends Toolbar {
         int leftMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID);
         if (View.NO_ID != leftMenuIconResId) {
             addLeftMenu(
-                    new ImageOption.Builder()
+                    ImageOption.Builder()
                             .setDrawableResId(leftMenuIconResId)
                             .setPaddingLeft(mItemHorizontalInterval)
                             .build()
@@ -147,7 +147,7 @@ public class SToolbar extends Toolbar {
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
             addLeftMenu(
-                    new TextOption.Builder()
+                    TextOption.Builder()
                             .setText(leftMenuText)
                             .setTextSize(mMenuTextSize)
                             .setTextColor(mMenuTextColor)
@@ -159,7 +159,7 @@ public class SToolbar extends Toolbar {
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
             addRightMenu(
-                    new TextOption.Builder()
+                    TextOption.Builder()
                             .setText(rightMenuText)
                             .setTextSize(mMenuTextSize)
                             .setTextColor(mMenuTextColor)
@@ -170,7 +170,7 @@ public class SToolbar extends Toolbar {
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
             addRightMenu(
-                    new ImageOption.Builder()
+                    ImageOption.Builder()
                             .setDrawableResId(rightMenuIconResId)
                             .setPaddingRight(mItemHorizontalInterval)
                             .build()
@@ -222,11 +222,6 @@ public class SToolbar extends Toolbar {
         mCenterContainer.setLayoutParams(centerParams);
         mCenterContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(mCenterContainer);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
     }
 
     @Override
@@ -298,7 +293,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                new TextOption.Builder()
+                TextOption.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -310,7 +305,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleText(Option option) {
         ensureText(option);
-        option = isUserSetOptionPadding(option) ? option : new TextOption.Builder(option)
+        option = isUserSetOptionPadding(option) ? option : TextOption.Builder(option)
                 .setPaddingLeft(mItemHorizontalInterval)
                 .setPaddingRight(mItemHorizontalInterval)
                 .build();
@@ -327,7 +322,7 @@ public class SToolbar extends Toolbar {
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
         this.setTitleImage(
-                new ImageOption.Builder()
+                ImageOption.Builder()
                         .setDrawableResId(resId)
                         .setWidth(width)
                         .setHeight(height)
@@ -337,7 +332,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(Option option) {
         ensureImage(option);
-        option = isUserSetOptionPadding(option) ? option : new ImageOption.Builder(option)
+        option = isUserSetOptionPadding(option) ? option : ImageOption.Builder(option)
                 .setPaddingLeft(mItemHorizontalInterval)
                 .setPaddingRight(mItemHorizontalInterval)
                 .build();
@@ -382,7 +377,7 @@ public class SToolbar extends Toolbar {
      */
     public void addBackIcon(@DrawableRes int drawableRes) {
         this.addLeftMenu(
-                new ImageOption.Builder()
+                ImageOption.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new OnClickListener() {
                             @Override
@@ -404,14 +399,14 @@ public class SToolbar extends Toolbar {
         if (option instanceof TextOption) {
             leftMenuView = createTextView();
             complementTextView((TextView) leftMenuView, isUserSetOptionPadding(option) ?
-                    (TextOption) option : new TextOption.Builder(option)
+                    (TextOption) option : TextOption.Builder(option)
                     .setPaddingLeft(mItemHorizontalInterval)
                     .build()
             );
         } else if (option instanceof ImageOption) {
             leftMenuView = createImageView();
             complementImageView((ImageView) leftMenuView, isUserSetOptionPadding(option) ?
-                    (ImageOption) option : new ImageOption.Builder(option)
+                    (ImageOption) option : ImageOption.Builder(option)
                     .setPaddingLeft(mItemHorizontalInterval)
                     .build()
             );
@@ -439,14 +434,14 @@ public class SToolbar extends Toolbar {
         if (option instanceof TextOption) {
             rightMenuView = createTextView();
             complementTextView((TextView) rightMenuView, isUserSetOptionPadding(option) ?
-                    (TextOption) option : new TextOption.Builder(option)
+                    (TextOption) option : TextOption.Builder(option)
                     .setPaddingRight(mItemHorizontalInterval)
                     .build()
             );
         } else if (option instanceof ImageOption) {
             rightMenuView = createImageView();
             complementImageView((ImageView) rightMenuView, isUserSetOptionPadding(option) ?
-                    (ImageOption) option : new ImageOption.Builder(option)
+                    (ImageOption) option : ImageOption.Builder(option)
                     .setPaddingRight(mItemHorizontalInterval)
                     .build()
             );
@@ -579,7 +574,7 @@ public class SToolbar extends Toolbar {
         );
         // Set some fields associated with this imageView.
         imageView.setImageResource(option.drawableResId);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setScaleType(option.scaleType);
         // Set OnClickListener
         if (null != option.listener) {
             imageView.setOnClickListener(option.listener);

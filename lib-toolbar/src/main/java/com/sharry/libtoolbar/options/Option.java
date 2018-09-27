@@ -40,6 +40,9 @@ public class Option {
     }
 
     protected void apply(Option other) {
+        if (null == other) {
+            throw new NullPointerException("Please ensure parameter other nonnull.");
+        }
         this.paddingLeft = other.paddingLeft;
         this.paddingRight = other.paddingRight;
         this.paddingTop = other.paddingTop;

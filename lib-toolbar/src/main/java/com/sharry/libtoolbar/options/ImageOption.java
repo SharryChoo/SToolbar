@@ -1,9 +1,11 @@
 package com.sharry.libtoolbar.options;
 
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.Dimension;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import static androidx.annotation.Dimension.DP;
 
@@ -14,9 +16,23 @@ import static androidx.annotation.Dimension.DP;
  */
 public class ImageOption extends Option {
 
-    // Widget resource
+    /**
+     * U can get ImageOption.Builder from this factory method.
+     */
+    public static Builder Builder() {
+        return new Builder();
+    }
+
+    public static Builder Builder(@NonNull Option other) {
+        return new Builder(other);
+    }
+
+    /*
+      Fields associated with image menu.
+    */
     @DrawableRes
     public int drawableResId = INVALIDATE;
+    public ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
 
     /**
      * U can get ImageOption instance from {@link Builder#build()}
@@ -29,7 +45,9 @@ public class ImageOption extends Option {
     protected void apply(Option other) {
         super.apply(other);
         if (other instanceof ImageOption) {
-            this.drawableResId = ((ImageOption) other).drawableResId;
+            ImageOption op = (ImageOption) other;
+            this.drawableResId = op.drawableResId;
+            this.scaleType = op.scaleType;
         }
     }
 
@@ -40,13 +58,23 @@ public class ImageOption extends Option {
 
         private ImageOption op;
 
-        public Builder() {
+        private Builder() {
             op = new ImageOption();
         }
 
-        public Builder(Option other) {
+        private Builder(@NonNull Option other) {
             this();
             op.apply(other);
+        }
+
+        public Builder setDrawableResId(@DrawableRes int drawableResId) {
+            op.drawableResId = drawableResId;
+            return this;
+        }
+
+        public Builder setScaleType(ImageView.ScaleType scaleType) {
+            op.scaleType = scaleType;
+            return this;
         }
 
         public Builder setPaddingLeft(@Dimension(unit = DP) int paddingLeft) {
@@ -76,11 +104,6 @@ public class ImageOption extends Option {
 
         public Builder setHeight(@Dimension(unit = DP) int height) {
             op.height = height;
-            return this;
-        }
-
-        public Builder setDrawableResId(@DrawableRes int drawableResId) {
-            op.drawableResId = drawableResId;
             return this;
         }
 

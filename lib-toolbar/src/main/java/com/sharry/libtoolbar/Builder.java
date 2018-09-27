@@ -143,7 +143,7 @@ public class Builder {
 
     public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                new TextOption.Builder()
+                TextOption.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -167,7 +167,7 @@ public class Builder {
 
     public Builder setTitleImage(@DrawableRes int drawableRes, int width, int height) {
         this.setTitleImage(
-                new ImageOption.Builder()
+                ImageOption.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidth(width)
                         .setHeight(height)
@@ -194,7 +194,7 @@ public class Builder {
      */
     public Builder addBackIcon(@DrawableRes int drawableRes) {
         return addLeftMenu(
-                new ImageOption.Builder()
+                ImageOption.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new View.OnClickListener() {
                             @Override

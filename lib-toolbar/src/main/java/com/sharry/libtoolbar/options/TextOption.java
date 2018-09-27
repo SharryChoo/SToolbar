@@ -18,6 +18,20 @@ import static androidx.annotation.Dimension.SP;
  */
 public class TextOption extends Option {
 
+    /**
+     * U can get ImageOption.Builder from this factory method.
+     */
+    public static Builder Builder() {
+        return new Builder();
+    }
+
+    public static Builder Builder(@NonNull Option other) {
+        return new Builder(other);
+    }
+
+    /*
+      Constants
+     */
     @ColorInt
     public static final int DEFAULT_TEXT_COLOR = Color.WHITE;
     @Dimension(unit = SP)
@@ -25,12 +39,14 @@ public class TextOption extends Option {
     @Dimension(unit = SP)
     public static final int DEFAULT_MENU_TEXT_SIZE = 13;
 
-    // text
+    /*
+      Fields associated with text menu.
+     */
     public CharSequence text;
     @Dimension(unit = SP)
-    public int textSize;
+    public int textSize = DEFAULT_MENU_TEXT_SIZE;
     @ColorInt
-    public int textColor;
+    public int textColor = DEFAULT_TEXT_COLOR;
     public int maxEms = 8;
     public int lines = 1;
     public TextUtils.TruncateAt ellipsize = TextUtils.TruncateAt.END;
@@ -63,11 +79,11 @@ public class TextOption extends Option {
 
         private TextOption op;
 
-        public Builder() {
+        private Builder() {
             op = new TextOption();
         }
 
-        public Builder(@NonNull Option other) {
+        private Builder(@NonNull Option other) {
             this();
             op.apply(other);
         }

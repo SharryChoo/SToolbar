@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private fun initTitle() {
         val titleView = LayoutInflater.from(this).inflate(R.layout.toolbar_title,
                 window.decorView as ViewGroup, false)
-
         SToolbar.Builder(this)
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
@@ -31,25 +30,19 @@ class MainActivity : AppCompatActivity() {
                 .addLeftMenu(
                         TextOption.Builder()
                                 .setText("left")
-                                .setTextSize(12)
-                                .setPaddingLeft(10)
-                                .setListener { showMsg("U click left") }
+                                .setListener { showMsg("U click left text") }
                                 .build()
                 )
                 .addRightMenu(
                         TextOption.Builder()
                                 .setText("right")
-                                .setTextSize(12)
-                                .setListener { showMsg("U click Right1") }
+                                .setListener { showMsg("U click right text") }
                                 .build()
                 )
                 .addRightMenu(
                         ImageOption.Builder()
                                 .setDrawableResId(R.drawable.icon_right)
-                                .setWidth(20)
-                                .setHeight(20)
-                                .setPaddingRight(30)
-                                .setListener { showMsg("U click Right Icon") }
+                                .setListener { showMsg("U click right image") }
                                 .build()
                 )
                 .apply()
