@@ -1,6 +1,7 @@
-package com.sharry.libtoolbar.options;
+package com.sharry.libtoolbar;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.Dimension;
@@ -25,7 +26,7 @@ public class ImageOptions extends Options {
         return new Builder();
     }
 
-    public static Builder Builder(@NonNull Options other) {
+    public static Builder Builder(@NonNull ImageOptions other) {
         return new Builder(other);
     }
 
@@ -33,8 +34,8 @@ public class ImageOptions extends Options {
       Fields associated with image menu.
     */
     @DrawableRes
-    public int drawableResId = INVALIDATE;
-    public ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
+    int drawableResId = View.NO_ID;
+    ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
 
     /**
      * U can get ImageOptions instance from {@link Builder#build()}
@@ -62,9 +63,11 @@ public class ImageOptions extends Options {
 
         private Builder() {
             op = new ImageOptions();
+            op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            op.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
-        private Builder(@NonNull Options other) {
+        private Builder(@NonNull ImageOptions other) {
             this();
             op.apply(other);
         }

@@ -13,10 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sharry.libtoolbar.options.ImageOptions;
-import com.sharry.libtoolbar.options.Options;
-import com.sharry.libtoolbar.options.TextOptions;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.Dimension;
@@ -34,7 +30,6 @@ import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
 import static com.sharry.libtoolbar.Utils.isLollipop;
 import static com.sharry.libtoolbar.Utils.px2dp;
-import static com.sharry.libtoolbar.options.Options.INVALIDATE;
 
 /**
  * SToolbar 的最小高度为系统 ActionBar 的高度
@@ -140,7 +135,7 @@ public class SToolbar extends Toolbar {
         }
         int leftMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID);
         if (View.NO_ID != leftMenuIconResId) {
-            addLeftMenu(
+            addLeftMenuImage(
                     ImageOptions.Builder()
                             .setDrawableResId(leftMenuIconResId)
                             .setPaddingLeft(mItemHorizontalInterval)
@@ -149,7 +144,7 @@ public class SToolbar extends Toolbar {
         }
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
-            addLeftMenu(
+            addLeftMenuText(
                     TextOptions.Builder()
                             .setText(leftMenuText)
                             .setTextSize(mMenuTextSize)
@@ -161,7 +156,7 @@ public class SToolbar extends Toolbar {
         // 添加右部菜单
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
-            addRightMenu(
+            addRightMenuText(
                     TextOptions.Builder()
                             .setText(rightMenuText)
                             .setTextSize(mMenuTextSize)
@@ -172,7 +167,7 @@ public class SToolbar extends Toolbar {
         }
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
-            addRightMenu(
+            addRightMenuImage(
                     ImageOptions.Builder()
                             .setDrawableResId(rightMenuIconResId)
                             .setPaddingRight(mItemHorizontalInterval)
@@ -282,15 +277,15 @@ public class SToolbar extends Toolbar {
         this.setTitleText(getResources().getText(stringResId));
     }
 
-    public void setTitleText(CharSequence text) {
+    public void setTitleText(@NonNull CharSequence text) {
         this.setTitleText(text, mTitleTextSize);
     }
 
-    public void setTitleText(CharSequence text, @Dimension(unit = SP) int textSize) {
+    public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize) {
         this.setTitleText(text, textSize, mTitleTextColor);
     }
 
-    public void setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
+    public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
                 TextOptions.Builder()
                         .setText(text)
@@ -316,7 +311,8 @@ public class SToolbar extends Toolbar {
      * Set image associated with this toolbar title.
      */
     public void setTitleImage(@DrawableRes int resId) {
-        this.setTitleImage(resId, INVALIDATE, INVALIDATE);
+        this.setTitleImage(resId, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
@@ -373,7 +369,7 @@ public class SToolbar extends Toolbar {
      * Add back icon associated with this toolbar left menu.
      */
     public void addBackIcon(@DrawableRes int drawableRes) {
-        this.addLeftMenu(
+        this.addLeftMenuImage(
                 ImageOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new OnClickListener() {
@@ -389,14 +385,28 @@ public class SToolbar extends Toolbar {
     }
 
     /**
-     * Add text/image sub item associated with this toolbar left menu.
+     * Add text sub item associated with this toolbar left menu.
      */
-    public void addLeftMenu(Options options) {
-        ensure(options);
-        View leftMenuView = createLeftMenuViewByOptions(options);
-        if (null != leftMenuView) {
-            addLeftView(leftMenuView);
-        }
+    public void addLeftMenuText(TextOptions options) {
+        TextView textView = createTextView();
+        options = TextOptions.Builder(options)
+                .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
+                .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
+                .build();
+        complementTextView(textView, options);
+        addLeftView(textView);
+    }
+
+    /**
+     * Add image sub item associated with this toolbar left menu.
+     */
+    public void addLeftMenuImage(ImageOptions options) {
+        ImageView imageView = createImageView();
+        options = ImageOptions.Builder(options)
+                .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
+                .build();
+        complementImageView(imageView, options);
+        addLeftView(imageView);
     }
 
     /**
@@ -407,14 +417,28 @@ public class SToolbar extends Toolbar {
     }
 
     /**
-     * Add text/image sub item associated with this toolbar right menu.
+     * Add text sub item associated with this toolbar right menu.
      */
-    public void addRightMenu(Options options) {
-        ensure(options);
-        View rightMenuView = createRightMenuViewByOptions(options);
-        if (null != rightMenuView) {
-            addRightView(rightMenuView);
-        }
+    public void addRightMenuText(TextOptions options) {
+        TextView textView = createTextView();
+        options = TextOptions.Builder(options)
+                .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
+                .setPaddingRight(0 != options.paddingRight ? options.paddingRight : mItemHorizontalInterval)
+                .build();
+        complementTextView(textView, options);
+        addRightView(textView);
+    }
+
+    /**
+     * Add image sub item associated with this toolbar right menu.
+     */
+    public void addRightMenuImage(ImageOptions options) {
+        ImageView imageView = createImageView();
+        options = ImageOptions.Builder(options)
+                .setPaddingRight(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
+                .build();
+        complementImageView(imageView, options);
+        addRightView(imageView);
     }
 
     /**
@@ -463,66 +487,6 @@ public class SToolbar extends Toolbar {
     }
 
     /**
-     * Create left menu view from here.
-     */
-    private View createLeftMenuViewByOptions(Options options) {
-        if (options instanceof TextOptions) {
-            TextView textView = createTextView();
-            complementTextView(
-                    textView,
-                    TextOptions.Builder(options)
-                            .setTextSize(0 != ((TextOptions) options).textSize ?
-                                    ((TextOptions) options).textSize : mMenuTextSize)
-                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-            return textView;
-        } else if (options instanceof ImageOptions) {
-            ImageView imageView = createImageView();
-            complementImageView(
-                    imageView,
-                    ImageOptions.Builder(options)
-                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-            return imageView;
-        }
-        return null;
-    }
-
-    /**
-     * Create right menu view from here.
-     */
-    private View createRightMenuViewByOptions(Options options) {
-        if (options instanceof TextOptions) {
-            TextView textView = createTextView();
-            complementTextView(
-                    textView,
-                    TextOptions.Builder(options)
-                            .setTextSize(0 != ((TextOptions) options).textSize ?
-                                    ((TextOptions) options).textSize : mMenuTextSize)
-                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-            return textView;
-        } else if (options instanceof ImageOptions) {
-            ImageView imageView = createImageView();
-            complementImageView(
-                    imageView,
-                    ImageOptions.Builder(options)
-                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-            return imageView;
-        }
-        return null;
-    }
-
-    /**
      * Get TextView instance.
      */
     private TextView createTextView() {
@@ -533,6 +497,7 @@ public class SToolbar extends Toolbar {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         textView.setLayoutParams(params);
+        textView.setGravity(Gravity.CENTER);
         return textView;
     }
 
@@ -544,10 +509,10 @@ public class SToolbar extends Toolbar {
         ImageView imageView = new ImageView(getContext());
         // Set default layout params.
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
         imageView.setLayoutParams(params);
-        // Set scale type associated with this imageView.
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         return imageView;
     }
 
@@ -556,20 +521,7 @@ public class SToolbar extends Toolbar {
      */
     private void complementTextView(TextView textView, TextOptions option) {
         // Set the layout parameters associated with this textView.
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                INVALIDATE == option.width ? ViewGroup.LayoutParams.WRAP_CONTENT :
-                        dp2px(getContext(), option.width),
-                INVALIDATE == option.height ? ViewGroup.LayoutParams.MATCH_PARENT :
-                        dp2px(getContext(), option.height));
-        textView.setLayoutParams(params);
-        textView.setGravity(Gravity.CENTER);
-        // Set the padding associated with this textView.
-        textView.setPadding(
-                dp2px(getContext(), option.paddingLeft),
-                dp2px(getContext(), option.paddingTop),
-                dp2px(getContext(), option.paddingRight),
-                dp2px(getContext(), option.paddingBottom)
-        );
+        completionView(textView, option);
         // Set some fields associated with this textView.
         textView.setText(option.text);
         textView.setTextColor(option.textColor);
@@ -577,10 +529,6 @@ public class SToolbar extends Toolbar {
         textView.setMaxEms(option.maxEms);
         textView.setLines(option.lines);
         textView.setEllipsize(option.ellipsize);
-        // Set OnClickListener.
-        if (null != option.listener) {
-            textView.setOnClickListener(option.listener);
-        }
     }
 
     /**
@@ -588,18 +536,7 @@ public class SToolbar extends Toolbar {
      */
     private void complementImageView(ImageView imageView, ImageOptions option) {
         // Set the layout params associated with this imageView.
-        int destWidth = INVALIDATE == option.width ? ViewGroup.LayoutParams.WRAP_CONTENT :
-                dp2px(getContext(), option.width + option.paddingLeft + option.paddingRight);
-        int destHeight = INVALIDATE == option.height ? ViewGroup.LayoutParams.WRAP_CONTENT :
-                dp2px(getContext(), option.height + option.paddingTop + option.paddingTop);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
-        if (null == params) {
-            params = new LinearLayout.LayoutParams(destWidth, destHeight);
-        } else {
-            params.width = destWidth;
-            params.height = destHeight;
-        }
-        imageView.setLayoutParams(params);
+        completionView(imageView, option);
         // Set the padding associated with this imageView.
         imageView.setPadding(
                 dp2px(getContext(), option.paddingLeft),
@@ -610,9 +547,35 @@ public class SToolbar extends Toolbar {
         // Set some fields associated with this imageView.
         imageView.setImageResource(option.drawableResId);
         imageView.setScaleType(option.scaleType);
+    }
+
+    /**
+     * Set fields from option associated with the view.
+     */
+    private void completionView(View view, Options option) {
+        // Set padding.
+        view.setPadding(
+                dp2px(getContext(), option.paddingLeft),
+                dp2px(getContext(), option.paddingTop),
+                dp2px(getContext(), option.paddingRight),
+                dp2px(getContext(), option.paddingBottom)
+        );
+        // Set the layout parameters associated with this textView.
+        int validWidth = isLayoutParamsSpecialValue(option.width) ? option.width :
+                dp2px(getContext(), option.width) + view.getPaddingLeft() + view.getPaddingRight();
+        int validHeight = isLayoutParamsSpecialValue(option.height) ? option.height :
+                dp2px(getContext(), option.height) + view.getPaddingTop() + view.getPaddingBottom();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+        if (null == params) {
+            params = new LinearLayout.LayoutParams(validWidth, validHeight);
+        } else {
+            params.width = validWidth;
+            params.height = validHeight;
+        }
+        view.setLayoutParams(params);
         // Set OnClickListener
         if (null != option.listener) {
-            imageView.setOnClickListener(option.listener);
+            view.setOnClickListener(option.listener);
         }
     }
 
@@ -623,18 +586,16 @@ public class SToolbar extends Toolbar {
         if (null == options) {
             throw new NullPointerException("Please ensure parameter options nonnull.");
         }
-        if (options instanceof TextOptions) {
-            if (null == ((TextOptions) options).text) {
-                throw new NullPointerException("Please ensure TextOptions.text nonnull.");
-            }
-        } else if (options instanceof ImageOptions) {
-            if (INVALIDATE == ((ImageOptions) options).drawableResId) {
-                throw new IllegalArgumentException("Please ensure ImageOptions.drawableResId is valuable.");
-            }
-        } else {
-            throw new IllegalArgumentException("Please options instance of TextOptions, now is: "
-                    + options.getClass().getName());
+        if (options instanceof TextOptions && null == ((TextOptions) options).text) {
+            throw new NullPointerException("Please ensure TextOptions.text nonnull.");
+        } else if (options instanceof ImageOptions && View.NO_ID == ((ImageOptions) options).drawableResId) {
+            throw new IllegalArgumentException("Please ensure ImageOptions.drawableResId is valuable.");
         }
+    }
+
+    private boolean isLayoutParamsSpecialValue(int paramsValue) {
+        return ViewGroup.LayoutParams.MATCH_PARENT == paramsValue
+                || ViewGroup.LayoutParams.WRAP_CONTENT == paramsValue;
     }
 
 }

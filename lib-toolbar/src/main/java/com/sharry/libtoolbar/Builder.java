@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import com.sharry.libtoolbar.options.ImageOptions;
-import com.sharry.libtoolbar.options.Options;
-import com.sharry.libtoolbar.options.TextOptions;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +22,6 @@ import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.SP;
 import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
-import static com.sharry.libtoolbar.options.Options.INVALIDATE;
 
 /**
  * Build SToolbar more easy.
@@ -36,6 +31,8 @@ import static com.sharry.libtoolbar.options.Options.INVALIDATE;
  * @since 2018/8/27 23:36
  */
 public class Builder {
+
+    private static final int INVALIDATE = -1;
 
     private Context mContext;
     private ViewGroup mContentParent;
@@ -300,13 +297,21 @@ public class Builder {
         // 4. Add left menu item associated with the toolbar.
         if (isNotEmpty(mMenuLeftOpsSet)) {
             for (Options leftOp : mMenuLeftOpsSet) {
-                toolbar.addLeftMenu(leftOp);
+                if (leftOp instanceof TextOptions) {
+                    toolbar.addLeftMenuText((TextOptions) leftOp);
+                } else {
+                    toolbar.addLeftMenuImage((ImageOptions) leftOp);
+                }
             }
         }
         // 5. Add right menu item associated with the toolbar.
         if (isNotEmpty(mMenuRightOpsSet)) {
             for (Options rightOp : mMenuRightOpsSet) {
-                toolbar.addRightMenu(rightOp);
+                if (rightOp instanceof TextOptions) {
+                    toolbar.addRightMenuText((TextOptions) rightOp);
+                } else {
+                    toolbar.addRightMenuImage((ImageOptions) rightOp);
+                }
             }
         }
     }

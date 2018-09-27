@@ -1,8 +1,9 @@
-package com.sharry.libtoolbar.options;
+package com.sharry.libtoolbar;
 
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
@@ -20,6 +21,16 @@ import static androidx.annotation.Dimension.SP;
  */
 public class TextOptions extends Options {
 
+    /*
+      Constants
+     */
+    static final int DEFAULT_TEXT_COLOR = Color.WHITE;
+    static final int DEFAULT_TITLE_TEXT_SIZE = 18;
+    static final int DEFAULT_MENU_TEXT_SIZE = 13;
+    static final int DEFAULT_MAX_EMS = 8;
+    static final int DEFAULT_LINES = 1;
+    static final TextUtils.TruncateAt DEFAULT_ELLIPSIZE = TextUtils.TruncateAt.END;
+
     /**
      * U can get ImageOptions.Builder from this factory method.
      */
@@ -27,31 +38,21 @@ public class TextOptions extends Options {
         return new Builder();
     }
 
-    public static Builder Builder(@NonNull Options other) {
+    static Builder Builder(@NonNull TextOptions other) {
         return new Builder(other);
     }
 
     /*
-      Constants
-     */
-    @ColorInt
-    public static final int DEFAULT_TEXT_COLOR = Color.WHITE;
-    @Dimension(unit = SP)
-    public static final int DEFAULT_TITLE_TEXT_SIZE = 18;
-    @Dimension(unit = SP)
-    public static final int DEFAULT_MENU_TEXT_SIZE = 13;
-
-    /*
       Fields associated with text menu.
      */
-    public CharSequence text;
+    CharSequence text;
     @Dimension(unit = SP)
-    public int textSize;
+    int textSize;
     @ColorInt
-    public int textColor = DEFAULT_TEXT_COLOR;
-    public int maxEms = 8;
-    public int lines = 1;
-    public TextUtils.TruncateAt ellipsize = TextUtils.TruncateAt.END;
+    int textColor = DEFAULT_TEXT_COLOR;
+    int maxEms = DEFAULT_MAX_EMS;
+    int lines = DEFAULT_LINES;
+    TextUtils.TruncateAt ellipsize = DEFAULT_ELLIPSIZE;
 
     /**
      * U can get TextOptions instance from {@link Builder#build()}
@@ -83,9 +84,11 @@ public class TextOptions extends Options {
 
         private Builder() {
             op = new TextOptions();
+            op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            op.height = ViewGroup.LayoutParams.MATCH_PARENT;
         }
 
-        private Builder(@NonNull Options other) {
+        private Builder(@NonNull TextOptions other) {
             this();
             op.apply(other);
         }

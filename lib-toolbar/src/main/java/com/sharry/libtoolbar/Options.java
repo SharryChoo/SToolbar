@@ -1,4 +1,4 @@
-package com.sharry.libtoolbar.options;
+package com.sharry.libtoolbar;
 
 import android.view.View;
 
@@ -15,25 +15,22 @@ import static androidx.annotation.Dimension.DP;
  */
 public class Options {
 
-    /*
-      Constant associated with options.
-     */
-    public static final int INVALIDATE = -1;
-
     // Widget padding
     @Dimension(unit = DP)
-    public int paddingLeft;
+    int paddingLeft;
     @Dimension(unit = DP)
-    public int paddingTop;
+    int paddingTop;
     @Dimension(unit = DP)
-    public int paddingRight;
+    int paddingRight;
     @Dimension(unit = DP)
-    public int paddingBottom;
-    // Widget size
-    public int width = INVALIDATE;
-    public int height = INVALIDATE;
+    int paddingBottom;
+    // Layout params
+    @Dimension(unit = DP)
+    int width;
+    @Dimension(unit = DP)
+    int height;
     // listener callback.
-    public View.OnClickListener listener;
+    View.OnClickListener listener;
 
     Options() {
 

@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sharry.libtoolbar.SToolbar
 import com.sharry.libtoolbar.Style
-import com.sharry.libtoolbar.options.ImageOptions
-import com.sharry.libtoolbar.options.TextOptions
+import com.sharry.libtoolbar.ImageOptions
+import com.sharry.libtoolbar.TextOptions
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 .addRightMenu(
                         ImageOptions.Builder()
                                 .setDrawableResId(R.drawable.icon_right)
+                                .setWidth(30).setHeight(30)
                                 .setListener { showMsg("U click right image") }
                                 .build()
                 )
