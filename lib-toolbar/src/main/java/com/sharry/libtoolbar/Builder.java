@@ -24,7 +24,7 @@ import androidx.core.content.ContextCompat;
 
 import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.SP;
-import static com.sharry.libtoolbar.SToolbar.DEFAULT_INTERVAL;
+import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
 import static com.sharry.libtoolbar.options.Options.INVALIDATE;
 
@@ -43,7 +43,8 @@ public class Builder {
 
     private int mBgColor = INVALIDATE;
     private int mBgDrawableResId = INVALIDATE;
-    private int mItemHorizontalInterval = DEFAULT_INTERVAL;
+    private int mMinimumHeight = INVALIDATE;
+    private int mItemHorizontalInterval = INVALIDATE;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
     private TextOptions mTitleTextOp;
@@ -83,6 +84,14 @@ public class Builder {
      */
     public Builder setItemHorizontalInterval(@Dimension(unit = DP) int horizontalInterval) {
         mItemHorizontalInterval = horizontalInterval;
+        return this;
+    }
+
+    /**
+     * Set minimumHeight associated with this toolbar.
+     */
+    public Builder setMinimumHeight(@Dimension(unit = DP) int minimumHeight) {
+        mMinimumHeight = minimumHeight;
         return this;
     }
 
@@ -252,7 +261,12 @@ public class Builder {
         toolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         // 2. Set arguments.
-        toolbar.setItemHorizontalInterval(mItemHorizontalInterval);
+        if (INVALIDATE != mMinimumHeight) {
+            toolbar.setMinimumHeight(dp2px(mContext, mMinimumHeight));
+        }
+        if (INVALIDATE != mItemHorizontalInterval) {
+            toolbar.setItemHorizontalInterval(mItemHorizontalInterval);
+        }
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);
         }

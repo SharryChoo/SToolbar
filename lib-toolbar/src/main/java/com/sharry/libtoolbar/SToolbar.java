@@ -200,17 +200,19 @@ public class SToolbar extends Toolbar {
         // 1. Add left menu container associated with this toolbar.
         mLeftMenuContainer = new LinearLayout(context);
         LayoutParams leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                mMinimumHeight);
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         leftParams.gravity = Gravity.START | Gravity.TOP;
         mLeftMenuContainer.setLayoutParams(leftParams);
+        mLeftMenuContainer.setMinimumHeight(mMinimumHeight);
         mLeftMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(mLeftMenuContainer);
         // 2. Add right menu container associated with this toolbar.
         mRightMenuContainer = new LinearLayout(context);
         LayoutParams rightParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                mMinimumHeight);
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         rightParams.gravity = Gravity.END | Gravity.TOP;
         mRightMenuContainer.setLayoutParams(rightParams);
+        mRightMenuContainer.setMinimumHeight(mMinimumHeight);
         mRightMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(mRightMenuContainer);
         // 3. Add center item container associated with this toolbar.
@@ -442,6 +444,15 @@ public class SToolbar extends Toolbar {
             return;
         }
         super.addView(child, index, params);
+    }
+
+    @Override
+    public void setMinimumHeight(int minimumHeight) {
+        mMinimumHeight = minimumHeight;
+        // Reset container minimumHeight
+        mLeftMenuContainer.setMinimumHeight(mMinimumHeight);
+        mRightMenuContainer.setMinimumHeight(mMinimumHeight);
+        mCenterContainer.setMinimumHeight(mMinimumHeight);
     }
 
     /**
