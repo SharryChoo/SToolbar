@@ -64,7 +64,7 @@ public class Options {
             op.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
-        private Builder(@NonNull TextOptions other) {
+        private Builder(@NonNull Options other) {
             this();
             op.from(other);
         }
