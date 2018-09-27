@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import com.sharry.libtoolbar.options.ImageOption;
-import com.sharry.libtoolbar.options.Option;
-import com.sharry.libtoolbar.options.TextOption;
+import com.sharry.libtoolbar.options.ImageOptions;
+import com.sharry.libtoolbar.options.Options;
+import com.sharry.libtoolbar.options.TextOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.SP;
 import static com.sharry.libtoolbar.SToolbar.DEFAULT_INTERVAL;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
-import static com.sharry.libtoolbar.options.Option.INVALIDATE;
+import static com.sharry.libtoolbar.options.Options.INVALIDATE;
 
 /**
  * Build SToolbar more easy.
@@ -46,12 +46,12 @@ public class Builder {
     private int mItemHorizontalInterval = DEFAULT_INTERVAL;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
-    private Option mTitleTextOp;
-    private Option mTitleImageOp;
+    private TextOptions mTitleTextOp;
+    private ImageOptions mTitleImageOp;
     private View mCustomTitleView;
 
-    private List<Option> mMenuLeftOps;
-    private List<Option> mMenuRightOps;
+    private List<Options> mMenuLeftOpsSet;
+    private List<Options> mMenuRightOpsSet;
 
     /**
      * 给 Activity 添加 Toolbar
@@ -132,18 +132,18 @@ public class Builder {
      * Set text associated with this toolbar title.
      */
     public Builder setTitleText(CharSequence text) {
-        this.setTitleText(text, TextOption.DEFAULT_TITLE_TEXT_SIZE);
+        this.setTitleText(text, TextOptions.DEFAULT_TITLE_TEXT_SIZE);
         return this;
     }
 
     public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize) {
-        this.setTitleText(text, textSize, TextOption.DEFAULT_TEXT_COLOR);
+        this.setTitleText(text, textSize, TextOptions.DEFAULT_TEXT_COLOR);
         return this;
     }
 
     public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                TextOption.Builder()
+                TextOptions.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -152,8 +152,8 @@ public class Builder {
         return this;
     }
 
-    public Builder setTitleText(@NonNull Option option) {
-        mTitleTextOp = option;
+    public Builder setTitleText(@NonNull TextOptions options) {
+        mTitleTextOp = options;
         return this;
     }
 
@@ -167,7 +167,7 @@ public class Builder {
 
     public Builder setTitleImage(@DrawableRes int drawableRes, int width, int height) {
         this.setTitleImage(
-                ImageOption.Builder()
+                ImageOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidth(width)
                         .setHeight(height)
@@ -176,8 +176,8 @@ public class Builder {
         return this;
     }
 
-    public Builder setTitleImage(@NonNull Option option) {
-        mTitleImageOp = option;
+    public Builder setTitleImage(@NonNull ImageOptions options) {
+        mTitleImageOp = options;
         return this;
     }
 
@@ -194,7 +194,7 @@ public class Builder {
      */
     public Builder addBackIcon(@DrawableRes int drawableRes) {
         return addLeftMenu(
-                ImageOption.Builder()
+                ImageOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new View.OnClickListener() {
                             @Override
@@ -209,22 +209,22 @@ public class Builder {
     /**
      * Add sub item associated with this toolbar left menu.
      */
-    public Builder addLeftMenu(@NonNull Option option) {
-        if (null == mMenuLeftOps) {
-            mMenuLeftOps = new ArrayList<>();
+    public Builder addLeftMenu(@NonNull Options options) {
+        if (null == mMenuLeftOpsSet) {
+            mMenuLeftOpsSet = new ArrayList<>();
         }
-        mMenuLeftOps.add(option);
+        mMenuLeftOpsSet.add(options);
         return this;
     }
 
     /**
      * Add sub item associated with this toolbar right menu.
      */
-    public Builder addRightMenu(Option option) {
-        if (null == mMenuRightOps) {
-            mMenuRightOps = new ArrayList<>();
+    public Builder addRightMenu(Options options) {
+        if (null == mMenuRightOpsSet) {
+            mMenuRightOpsSet = new ArrayList<>();
         }
-        mMenuRightOps.add(option);
+        mMenuRightOpsSet.add(options);
         return this;
     }
 
@@ -274,14 +274,14 @@ public class Builder {
             toolbar.addCustomTitle(mCustomTitleView);
         }
         // 4. Add left menu item associated with the toolbar.
-        if (isNotEmpty(mMenuLeftOps)) {
-            for (Option leftOp : mMenuLeftOps) {
+        if (isNotEmpty(mMenuLeftOpsSet)) {
+            for (Options leftOp : mMenuLeftOpsSet) {
                 toolbar.addLeftMenu(leftOp);
             }
         }
         // 5. Add right menu item associated with the toolbar.
-        if (isNotEmpty(mMenuRightOps)) {
-            for (Option rightOp : mMenuRightOps) {
+        if (isNotEmpty(mMenuRightOpsSet)) {
+            for (Options rightOp : mMenuRightOpsSet) {
                 toolbar.addRightMenu(rightOp);
             }
         }

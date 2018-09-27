@@ -12,20 +12,22 @@ import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.SP;
 
 /**
+ * Options for TextView
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/27 13:15
  */
-public class TextOption extends Option {
+public class TextOptions extends Options {
 
     /**
-     * U can get ImageOption.Builder from this factory method.
+     * U can get ImageOptions.Builder from this factory method.
      */
     public static Builder Builder() {
         return new Builder();
     }
 
-    public static Builder Builder(@NonNull Option other) {
+    public static Builder Builder(@NonNull Options other) {
         return new Builder(other);
     }
 
@@ -44,7 +46,7 @@ public class TextOption extends Option {
      */
     public CharSequence text;
     @Dimension(unit = SP)
-    public int textSize = DEFAULT_MENU_TEXT_SIZE;
+    public int textSize;
     @ColorInt
     public int textColor = DEFAULT_TEXT_COLOR;
     public int maxEms = 8;
@@ -52,17 +54,17 @@ public class TextOption extends Option {
     public TextUtils.TruncateAt ellipsize = TextUtils.TruncateAt.END;
 
     /**
-     * U can get TextOption instance from {@link Builder#build()}
+     * U can get TextOptions instance from {@link Builder#build()}
      */
-    private TextOption() {
+    private TextOptions() {
 
     }
 
     @Override
-    protected void apply(Option other) {
+    protected void apply(Options other) {
         super.apply(other);
-        if (other instanceof TextOption) {
-            TextOption op = (TextOption) other;
+        if (other instanceof TextOptions) {
+            TextOptions op = (TextOptions) other;
             this.text = op.text;
             this.textSize = op.textSize;
             this.textColor = op.textColor;
@@ -73,17 +75,17 @@ public class TextOption extends Option {
     }
 
     /**
-     * Builder TextOption instance more easier.
+     * Builder TextOptions instance more easier.
      */
     public static class Builder {
 
-        private TextOption op;
+        private TextOptions op;
 
         private Builder() {
-            op = new TextOption();
+            op = new TextOptions();
         }
 
-        private Builder(@NonNull Option other) {
+        private Builder(@NonNull Options other) {
             this();
             op.apply(other);
         }
@@ -153,7 +155,7 @@ public class TextOption extends Option {
             return this;
         }
 
-        public TextOption build() {
+        public TextOptions build() {
             return op;
         }
 

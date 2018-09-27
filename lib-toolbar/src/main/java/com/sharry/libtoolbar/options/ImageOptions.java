@@ -10,20 +10,22 @@ import androidx.annotation.NonNull;
 import static androidx.annotation.Dimension.DP;
 
 /**
+ * Options for ImageView
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/27 13:15
  */
-public class ImageOption extends Option {
+public class ImageOptions extends Options {
 
     /**
-     * U can get ImageOption.Builder from this factory method.
+     * U can get ImageOptions.Builder from this factory method.
      */
     public static Builder Builder() {
         return new Builder();
     }
 
-    public static Builder Builder(@NonNull Option other) {
+    public static Builder Builder(@NonNull Options other) {
         return new Builder(other);
     }
 
@@ -35,34 +37,34 @@ public class ImageOption extends Option {
     public ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
 
     /**
-     * U can get ImageOption instance from {@link Builder#build()}
+     * U can get ImageOptions instance from {@link Builder#build()}
      */
-    private ImageOption() {
+    private ImageOptions() {
 
     }
 
     @Override
-    protected void apply(Option other) {
+    protected void apply(Options other) {
         super.apply(other);
-        if (other instanceof ImageOption) {
-            ImageOption op = (ImageOption) other;
+        if (other instanceof ImageOptions) {
+            ImageOptions op = (ImageOptions) other;
             this.drawableResId = op.drawableResId;
             this.scaleType = op.scaleType;
         }
     }
 
     /**
-     * Builder Option instance more easier.
+     * Builder Options instance more easier.
      */
     public static class Builder {
 
-        private ImageOption op;
+        private ImageOptions op;
 
         private Builder() {
-            op = new ImageOption();
+            op = new ImageOptions();
         }
 
-        private Builder(@NonNull Option other) {
+        private Builder(@NonNull Options other) {
             this();
             op.apply(other);
         }
@@ -112,7 +114,7 @@ public class ImageOption extends Option {
             return this;
         }
 
-        public ImageOption build() {
+        public ImageOptions build() {
             return op;
         }
 

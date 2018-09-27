@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sharry.libtoolbar.SToolbar
 import com.sharry.libtoolbar.Style
-import com.sharry.libtoolbar.options.ImageOption
-import com.sharry.libtoolbar.options.TextOption
+import com.sharry.libtoolbar.options.ImageOptions
+import com.sharry.libtoolbar.options.TextOptions
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,19 +28,19 @@ class MainActivity : AppCompatActivity() {
                 .addCustomTitle(titleView)
                 .addBackIcon(R.drawable.icon_back)
                 .addLeftMenu(
-                        TextOption.Builder()
+                        TextOptions.Builder()
                                 .setText("left")
                                 .setListener { showMsg("U click left text") }
                                 .build()
                 )
                 .addRightMenu(
-                        TextOption.Builder()
+                        TextOptions.Builder()
                                 .setText("right")
                                 .setListener { showMsg("U click right text") }
                                 .build()
                 )
                 .addRightMenu(
-                        ImageOption.Builder()
+                        ImageOptions.Builder()
                                 .setDrawableResId(R.drawable.icon_right)
                                 .setListener { showMsg("U click right image") }
                                 .build()

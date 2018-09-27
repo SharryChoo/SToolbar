@@ -13,7 +13,7 @@ import static androidx.annotation.Dimension.DP;
  * @version 1.0
  * @since 2018/9/25 22:20
  */
-public class Option {
+public class Options {
 
     /*
       Constant associated with options.
@@ -35,11 +35,14 @@ public class Option {
     // listener callback.
     public View.OnClickListener listener;
 
-    Option() {
+    Options() {
 
     }
 
-    protected void apply(Option other) {
+    /**
+     * Inject value from other options
+     */
+    protected void apply(Options other) {
         if (null == other) {
             throw new NullPointerException("Please ensure parameter other nonnull.");
         }
