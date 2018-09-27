@@ -8,17 +8,13 @@
 
     <com.sharry.libtoolbar.SToolbar
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:itemHorizontalInterval="10dp"
         app:backIcon="@drawable/icon_back"
-        app:menuLeftText="left"
+        app:itemHorizontalInterval="10dp"
         app:menuRightIcon="@drawable/icon_right"
-        app:menuRightText="right"
         app:menuTextSize="13dp"
-        app:titleGravity="Center"
-        app:statusBarStyle="Default"
-        app:titleImage="@drawable/icon_right"
+        app:titleGravity="Left"
         app:titleText="Sharry"
         app:titleTextSize="18dp" />
 

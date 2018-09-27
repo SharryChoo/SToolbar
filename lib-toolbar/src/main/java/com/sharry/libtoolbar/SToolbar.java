@@ -28,6 +28,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import static androidx.annotation.Dimension.DP;
+import static androidx.annotation.Dimension.PX;
 import static androidx.annotation.Dimension.SP;
 import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
@@ -70,8 +71,10 @@ public class SToolbar extends Toolbar {
     private int mTitleTextColor = TextOptions.DEFAULT_TEXT_COLOR;
     private int mMenuTextSize = TextOptions.DEFAULT_MENU_TEXT_SIZE;
     private int mMenuTextColor = TextOptions.DEFAULT_TEXT_COLOR;
-    private int mMinimumHeight = Options.INVALIDATE;                // Minimum Toolbar height.
-    private int mItemHorizontalInterval;                    // Default padding will be using when create View.
+    @Dimension(unit = PX)
+    private int mMinimumHeight;                                     // Minimum Toolbar height.
+    @Dimension(unit = DP)
+    private int mItemHorizontalInterval;                            // Default padding will be using when create View.
 
     // Toolbar support container.
     private LinearLayout mLeftMenuContainer;
@@ -193,8 +196,6 @@ public class SToolbar extends Toolbar {
 
     private void initViews(Context context) {
         // Set initialize layout params.
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
         removeAllViews();
         // 1. Add left menu container associated with this toolbar.
         mLeftMenuContainer = new LinearLayout(context);
@@ -233,12 +234,10 @@ public class SToolbar extends Toolbar {
         super.setLayoutParams(params);
     }
 
-    /*=========================================  背景色与沉浸式状态栏 ======================================*/
-
     /**
      * Set app bar style associated with this Activity.
      */
-    public void setStatusBarStyle(final Style style) {
+    public void setStatusBarStyle(Style style) {
         AppBarHelper.with(getContext()).setStatusBarStyle(style).apply();
         if (isLollipop() && (style == Style.TRANSPARENT || style == Style.TRANSLUCENCE)) {
             // Setup padding.
@@ -262,8 +261,6 @@ public class SToolbar extends Toolbar {
     public void setBackgroundDrawableRes(@DrawableRes int drawableRes) {
         setBackgroundResource(drawableRes);
     }
-
-    /*========================================= 标题部分 ==================================================*/
 
     /**
      * Set gravity for the title associated with these LayoutParams.
@@ -370,9 +367,6 @@ public class SToolbar extends Toolbar {
         return mTitleImage;
     }
 
-
-    /* ========================================== 左部菜单 ====================================================*/
-
     /**
      * Add back icon associated with this toolbar left menu.
      */
@@ -397,27 +391,7 @@ public class SToolbar extends Toolbar {
      */
     public void addLeftMenu(Options options) {
         ensure(options);
-        View leftMenuView = null;
-        if (options instanceof TextOptions) {
-            leftMenuView = createTextView();
-            complementTextView((TextView) leftMenuView,
-                    TextOptions.Builder(options)
-                            .setTextSize(0 != ((TextOptions) options).textSize ?
-                                    ((TextOptions) options).textSize : mMenuTextSize)
-                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-        } else if (options instanceof ImageOptions) {
-            leftMenuView = createImageView();
-            complementImageView(
-                    (ImageView) leftMenuView,
-                    ImageOptions.Builder(options)
-                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-        }
+        View leftMenuView = createLeftMenuViewByOptions(options);
         if (null != leftMenuView) {
             addLeftView(leftMenuView);
         }
@@ -430,35 +404,12 @@ public class SToolbar extends Toolbar {
         mLeftMenuContainer.addView(view);
     }
 
-
-    /* ========================================== 右部菜单 ====================================================*/
-
     /**
      * Add text/image sub item associated with this toolbar right menu.
      */
     public void addRightMenu(Options options) {
         ensure(options);
-        View rightMenuView = null;
-        if (options instanceof TextOptions) {
-            rightMenuView = createTextView();
-            complementTextView(
-                    (TextView) rightMenuView,
-                    TextOptions.Builder(options)
-                            .setTextSize(0 != ((TextOptions) options).textSize ?
-                                    ((TextOptions) options).textSize : mMenuTextSize)
-                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-        } else if (options instanceof ImageOptions) {
-            rightMenuView = createImageView();
-            complementImageView((ImageView) rightMenuView,
-                    ImageOptions.Builder(options)
-                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
-                                    : mItemHorizontalInterval)
-                            .build()
-            );
-        }
+        View rightMenuView = createRightMenuViewByOptions(options);
         if (null != rightMenuView) {
             addRightView(rightMenuView);
         }
@@ -498,6 +449,66 @@ public class SToolbar extends Toolbar {
      */
     void setItemHorizontalInterval(int itemHorizontalInterval) {
         mItemHorizontalInterval = itemHorizontalInterval;
+    }
+
+    /**
+     * Create left menu view from here.
+     */
+    private View createLeftMenuViewByOptions(Options options) {
+        if (options instanceof TextOptions) {
+            TextView textView = createTextView();
+            complementTextView(
+                    textView,
+                    TextOptions.Builder(options)
+                            .setTextSize(0 != ((TextOptions) options).textSize ?
+                                    ((TextOptions) options).textSize : mMenuTextSize)
+                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
+                                    : mItemHorizontalInterval)
+                            .build()
+            );
+            return textView;
+        } else if (options instanceof ImageOptions) {
+            ImageView imageView = createImageView();
+            complementImageView(
+                    imageView,
+                    ImageOptions.Builder(options)
+                            .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft
+                                    : mItemHorizontalInterval)
+                            .build()
+            );
+            return imageView;
+        }
+        return null;
+    }
+
+    /**
+     * Create right menu view from here.
+     */
+    private View createRightMenuViewByOptions(Options options) {
+        if (options instanceof TextOptions) {
+            TextView textView = createTextView();
+            complementTextView(
+                    textView,
+                    TextOptions.Builder(options)
+                            .setTextSize(0 != ((TextOptions) options).textSize ?
+                                    ((TextOptions) options).textSize : mMenuTextSize)
+                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
+                                    : mItemHorizontalInterval)
+                            .build()
+            );
+            return textView;
+        } else if (options instanceof ImageOptions) {
+            ImageView imageView = createImageView();
+            complementImageView(
+                    imageView,
+                    ImageOptions.Builder(options)
+                            .setPaddingRight(0 != options.paddingRight ? options.paddingRight
+                                    : mItemHorizontalInterval)
+                            .build()
+            );
+            return imageView;
+        }
+        return null;
     }
 
     /**
@@ -594,6 +605,9 @@ public class SToolbar extends Toolbar {
         }
     }
 
+    /**
+     * Ensure options.
+     */
     private void ensure(Options options) {
         if (null == options) {
             throw new NullPointerException("Please ensure parameter options nonnull.");
