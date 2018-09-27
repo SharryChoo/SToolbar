@@ -19,17 +19,6 @@ import static androidx.annotation.Dimension.DP;
  */
 public class ImageOptions extends Options {
 
-    /**
-     * U can get ImageOptions.Builder from this factory method.
-     */
-    public static Builder Builder() {
-        return new Builder();
-    }
-
-    public static Builder Builder(@NonNull ImageOptions other) {
-        return new Builder(other);
-    }
-
     /*
       Fields associated with image menu.
     */
@@ -42,6 +31,13 @@ public class ImageOptions extends Options {
      */
     private ImageOptions() {
 
+    }
+
+    /**
+     * U can rebuild this instance from here.
+     */
+    public Builder newBuilder() {
+        return new Builder(this);
     }
 
     @Override
@@ -61,15 +57,14 @@ public class ImageOptions extends Options {
 
         private ImageOptions op;
 
-        private Builder() {
+        public Builder() {
             op = new ImageOptions();
             op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             op.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
         private Builder(@NonNull ImageOptions other) {
-            this();
-            op.from(other);
+            op = other;
         }
 
         public Builder setDrawableResId(@DrawableRes int drawableResId) {

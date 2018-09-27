@@ -31,17 +31,6 @@ public class TextOptions extends Options {
     static final int DEFAULT_LINES = 1;
     static final TextUtils.TruncateAt DEFAULT_ELLIPSIZE = TextUtils.TruncateAt.END;
 
-    /**
-     * U can get ImageOptions.Builder from this factory method.
-     */
-    public static Builder Builder() {
-        return new Builder();
-    }
-
-    static Builder Builder(@NonNull TextOptions other) {
-        return new Builder(other);
-    }
-
     /*
       Fields associated with text menu.
      */
@@ -59,6 +48,13 @@ public class TextOptions extends Options {
      */
     private TextOptions() {
 
+    }
+
+    /**
+     * U can rebuild this instance from here.
+     */
+    public Builder newBuilder() {
+        return new Builder(this);
     }
 
     @Override
@@ -82,15 +78,14 @@ public class TextOptions extends Options {
 
         private TextOptions op;
 
-        private Builder() {
+        public Builder() {
             op = new TextOptions();
             op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             op.height = ViewGroup.LayoutParams.MATCH_PARENT;
         }
 
         private Builder(@NonNull TextOptions other) {
-            this();
-            op.from(other);
+            op = other;
         }
 
         public Builder setText(CharSequence text) {

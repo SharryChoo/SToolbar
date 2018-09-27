@@ -135,20 +135,20 @@ public class SToolbar extends Toolbar {
         }
         int leftMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID);
         if (View.NO_ID != leftMenuIconResId) {
-            addLeftMenuImage(ImageOptions.Builder().setDrawableResId(leftMenuIconResId).build());
+            addLeftMenuImage(new ImageOptions.Builder().setDrawableResId(leftMenuIconResId).build());
         }
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
-            addLeftMenuText(TextOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addLeftMenuText(new TextOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         // 添加右部菜单
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
-            addRightMenuText(TextOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addRightMenuText(new TextOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
-            addRightMenuImage(ImageOptions.Builder().setDrawableResId(rightMenuIconResId).build());
+            addRightMenuImage(new ImageOptions.Builder().setDrawableResId(rightMenuIconResId).build());
         }
         array.recycle();
     }
@@ -262,17 +262,16 @@ public class SToolbar extends Toolbar {
     }
 
     public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
-        this.setTitleText(TextOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
+        this.setTitleText(new TextOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
     }
 
     public void setTitleText(TextOptions options) {
         ensure(options);
-        options = TextOptions.Builder(options)
+        complementTextView(getTitleText(), options.newBuilder()
                 .setTextSize(0 != options.textSize ? options.textSize : mTitleTextSize)
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
                 .setPaddingRight(0 != options.paddingRight ? options.paddingRight : mItemHorizontalInterval)
-                .build();
-        complementTextView(getTitleText(), options);
+                .build());
     }
 
     /**
@@ -284,16 +283,15 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
-        this.setTitleImage(ImageOptions.Builder().setDrawableResId(resId).setWidth(width).setHeight(height).build());
+        this.setTitleImage(new ImageOptions.Builder().setDrawableResId(resId).setWidth(width).setHeight(height).build());
     }
 
     public void setTitleImage(ImageOptions options) {
         ensure(options);
-        options = ImageOptions.Builder(options)
+        complementImageView(getTitleImage(), options.newBuilder()
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
                 .setPaddingRight(0 != options.paddingRight ? options.paddingRight : mItemHorizontalInterval)
-                .build();
-        complementImageView(getTitleImage(), options);
+                .build());
     }
 
     /**
@@ -331,7 +329,7 @@ public class SToolbar extends Toolbar {
      */
     public void addBackIcon(@DrawableRes int drawableRes) {
         this.addLeftMenuImage(
-                ImageOptions.Builder()
+                new ImageOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new OnClickListener() {
                             @Override
@@ -349,7 +347,7 @@ public class SToolbar extends Toolbar {
      * Add text sub item associated with this toolbar left menu.
      */
     public void addLeftMenuText(TextOptions options) {
-        addLeftView(createTextView(), TextOptions.Builder(options)
+        addLeftView(createTextView(), options.newBuilder()
                 .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
                 .build());
@@ -359,7 +357,7 @@ public class SToolbar extends Toolbar {
      * Add image sub item associated with this toolbar left menu.
      */
     public void addLeftMenuImage(ImageOptions options) {
-        addLeftView(createImageView(), ImageOptions.Builder(options)
+        addLeftView(createImageView(), options.newBuilder()
                 .setPaddingLeft(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
                 .build());
     }
@@ -385,7 +383,7 @@ public class SToolbar extends Toolbar {
      * Add text sub item associated with this toolbar right menu.
      */
     public void addRightMenuText(TextOptions options) {
-        addRightView(createTextView(), TextOptions.Builder(options)
+        addRightView(createTextView(), options.newBuilder()
                 .setTextSize(0 != options.textSize ? options.textSize : mMenuTextSize)
                 .setPaddingRight(0 != options.paddingRight ? options.paddingRight : mItemHorizontalInterval)
                 .build());
@@ -395,7 +393,7 @@ public class SToolbar extends Toolbar {
      * Add image sub item associated with this toolbar right menu.
      */
     public void addRightMenuImage(ImageOptions options) {
-        addRightView(createImageView(), ImageOptions.Builder(options)
+        addRightView(createImageView(), options.newBuilder()
                 .setPaddingRight(0 != options.paddingLeft ? options.paddingLeft : mItemHorizontalInterval)
                 .build());
     }
