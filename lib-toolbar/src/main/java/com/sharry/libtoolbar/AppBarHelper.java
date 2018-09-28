@@ -23,7 +23,7 @@ class AppBarHelper {
     /**
      * Get AppBarHelper instance with this factory method.
      */
-    public static AppBarHelper with(Context context) {
+    static AppBarHelper with(Context context) {
         return new AppBarHelper(context);
     }
 
@@ -45,7 +45,7 @@ class AppBarHelper {
      * 设置StatusBar的风格
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AppBarHelper setStatusBarStyle(Style style) {
+    AppBarHelper setStatusBarStyle(Style style) {
         if (!Utils.isLollipop()) return this;
         switch (style) {
             // 设置状态栏为全透明
@@ -84,7 +84,7 @@ class AppBarHelper {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AppBarHelper setStatusBarColor(int color) {
+    AppBarHelper setStatusBarColor(int color) {
         if (!Utils.isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setStatusBarColor(color);
@@ -95,7 +95,7 @@ class AppBarHelper {
      * 设置NavigationBar的风格
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AppBarHelper setNavigationBarStyle(Style style) {
+    AppBarHelper setNavigationBarStyle(Style style) {
         if (!Utils.isLollipop()) return this;
         switch (style) {
             // 设置导航栏为全透明
@@ -133,7 +133,7 @@ class AppBarHelper {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AppBarHelper setNavigationBarColor(int color) {
+    AppBarHelper setNavigationBarColor(int color) {
         if (!Utils.isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setNavigationBarColor(color);
@@ -144,7 +144,7 @@ class AppBarHelper {
      * 隐藏所有Bar(全屏模式)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AppBarHelper setAllBarsHide() {
+    AppBarHelper setAllBarsHide() {
         if (!Utils.isLollipop()) return this;
         int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -157,7 +157,7 @@ class AppBarHelper {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void apply() {
+    void apply() {
         if (!Utils.isLollipop()) return;
         if (mOptions != DEFAULT_OPTIONS) {
             View decorView = mWindow.getDecorView();
