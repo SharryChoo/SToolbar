@@ -3,7 +3,11 @@ package com.sharry.libtoolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import androidx.annotation.Dimension;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import static androidx.annotation.Dimension.PX;
@@ -15,6 +19,12 @@ import static androidx.annotation.Dimension.PX;
  */
 public class ViewOptions implements Options<View> {
 
+    @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Visibility {
+    }
+
+    private int visibility;
     // Widget padding
     @Dimension(unit = PX)
     int paddingLeft = 0;
@@ -26,9 +36,9 @@ public class ViewOptions implements Options<View> {
     int paddingBottom = 0;
     // Layout params
     @Dimension(unit = PX)
-    int width = 0;
+    int widthExcludePadding = 0;
     @Dimension(unit = PX)
-    int height = 0;
+    int heightExcludePadding = 0;
     // listener callback.
     View.OnClickListener listener;
 
@@ -41,13 +51,14 @@ public class ViewOptions implements Options<View> {
 
     @Override
     public void completion(View view) {
+        view.setVisibility(visibility);
         // Set padding.
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         // Set the layout parameters associated with this textView.
-        int validWidth = Utils.isLayoutParamsSpecialValue(width) ? width :
-                width + view.getPaddingLeft() + view.getPaddingRight();
-        int validHeight = Utils.isLayoutParamsSpecialValue(height) ? height :
-                height + view.getPaddingTop() + view.getPaddingBottom();
+        int validWidth = Utils.isLayoutParamsSpecialValue(widthExcludePadding) ? widthExcludePadding :
+                widthExcludePadding + view.getPaddingLeft() + view.getPaddingRight();
+        int validHeight = Utils.isLayoutParamsSpecialValue(heightExcludePadding) ? heightExcludePadding :
+                heightExcludePadding + view.getPaddingTop() + view.getPaddingBottom();
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (null == params) {
             params = new ViewGroup.LayoutParams(validWidth, validHeight);
@@ -68,12 +79,17 @@ public class ViewOptions implements Options<View> {
 
         public Builder() {
             op = new ViewOptions();
-            op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            op.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            op.widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
+            op.heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
         private Builder(@NonNull ViewOptions other) {
             op = other;
+        }
+
+        public Builder setVisibility(@Visibility int visibility) {
+            op.visibility = visibility;
+            return this;
         }
 
         public Builder setPaddingLeft(@Dimension(unit = PX) int paddingLeft) {
@@ -96,13 +112,13 @@ public class ViewOptions implements Options<View> {
             return this;
         }
 
-        public Builder setWidth(@Dimension(unit = PX) int width) {
-            op.width = width;
+        public Builder setWidthExcludePadding(@Dimension(unit = PX) int widthExcludePadding) {
+            op.widthExcludePadding = widthExcludePadding;
             return this;
         }
 
-        public Builder setHeight(@Dimension(unit = PX) int height) {
-            op.height = height;
+        public Builder setHeightExcludePadding(@Dimension(unit = PX) int widthExcludePadding) {
+            op.heightExcludePadding = widthExcludePadding;
             return this;
         }
 
@@ -114,6 +130,5 @@ public class ViewOptions implements Options<View> {
         public Options build() {
             return op;
         }
-
     }
 }

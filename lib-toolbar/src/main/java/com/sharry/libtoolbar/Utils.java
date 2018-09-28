@@ -74,7 +74,7 @@ class Utils {
     }
 
     /**
-     * Get action bar height associated with the app.
+     * Get action bar heightExcludePadding associated with the app.
      */
     static int getActionBarHeight(Context context) {
         TypedValue typedValue = new TypedValue();
@@ -85,7 +85,7 @@ class Utils {
     }
 
     /**
-     * Get status bar height associated with the app.
+     * Get status bar heightExcludePadding associated with the app.
      */
     static int getStatusBarHeight(Context context) {
         int resourceId = context.getResources().getIdentifier("status_bar_height",

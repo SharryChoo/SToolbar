@@ -32,7 +32,7 @@ import static androidx.annotation.Dimension.SP;
  * 1. 可以直接在 Xml 文件中直接使用
  * 2. 可以使用 Builder 动态的植入 {@link Builder}
  *
- * @author Sharry <a href="SharryChooChn@Gmail.com">Contact me.</a>
+ * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
  * @version 3.2
  * @since 2018/8/27 23:20
  */
@@ -197,7 +197,7 @@ public class SToolbar extends Toolbar {
 
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
-        // Lock height always is WRAP_CONTENT.
+        // Lock heightExcludePadding always is WRAP_CONTENT.
         if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
@@ -302,7 +302,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
-        this.setTitleImage(new ImageViewOptions.Builder().setDrawableResId(resId).setWidth(width).setHeight(height).build());
+        this.setTitleImage(new ImageViewOptions.Builder().setDrawableResId(resId).setWidthWithoutPadding(width).setHeightWithoutPadding(height).build());
     }
 
     public void setTitleImage(@NonNull ImageViewOptions ops) {

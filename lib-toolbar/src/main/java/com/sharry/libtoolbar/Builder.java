@@ -183,8 +183,8 @@ public class Builder {
         return setTitleImage(
                 new ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
-                        .setWidth(Utils.dp2px(mContext, width))
-                        .setHeight(Utils.dp2px(mContext, height))
+                        .setWidthWithoutPadding(Utils.dp2px(mContext, width))
+                        .setHeightWithoutPadding(Utils.dp2px(mContext, height))
                         .build()
         );
     }

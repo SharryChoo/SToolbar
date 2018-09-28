@@ -30,9 +30,9 @@ public class ImageViewOptions implements Options<ImageView> {
     int paddingRight = 0;
     // Layout params
     @Dimension(unit = PX)
-    int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
     @Dimension(unit = PX)
-    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
     // listener callback.
     View.OnClickListener listener;
 
@@ -48,10 +48,10 @@ public class ImageViewOptions implements Options<ImageView> {
         // Set padding.
         view.setPadding(paddingLeft, 0, paddingRight, 0);
         // Set the layout parameters associated with this textView.
-        int validWidth = Utils.isLayoutParamsSpecialValue(width) ? width :
-                width + view.getPaddingLeft() + view.getPaddingRight();
-        int validHeight = Utils.isLayoutParamsSpecialValue(height) ? height :
-                height + view.getPaddingTop() + view.getPaddingBottom();
+        int validWidth = Utils.isLayoutParamsSpecialValue(widthExcludePadding) ? widthExcludePadding :
+                widthExcludePadding + view.getPaddingLeft() + view.getPaddingRight();
+        int validHeight = Utils.isLayoutParamsSpecialValue(heightExcludePadding) ? heightExcludePadding :
+                heightExcludePadding + view.getPaddingTop() + view.getPaddingBottom();
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (null == params) {
             params = new ViewGroup.LayoutParams(validWidth, validHeight);
@@ -104,13 +104,13 @@ public class ImageViewOptions implements Options<ImageView> {
             return this;
         }
 
-        public Builder setWidth(@Dimension(unit = PX) int width) {
-            op.width = width;
+        public Builder setWidthWithoutPadding(@Dimension(unit = PX) int widthExcludePadding) {
+            op.widthExcludePadding = widthExcludePadding;
             return this;
         }
 
-        public Builder setHeight(@Dimension(unit = PX) int height) {
-            op.height = height;
+        public Builder setHeightWithoutPadding(@Dimension(unit = PX) int heightExcludePadding) {
+            op.heightExcludePadding = heightExcludePadding;
             return this;
         }
 
