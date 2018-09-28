@@ -6,8 +6,6 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>

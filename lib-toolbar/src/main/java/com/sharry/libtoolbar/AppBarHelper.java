@@ -11,9 +11,6 @@ import android.view.Window;
 
 import java.lang.ref.SoftReference;
 
-import static com.sharry.libtoolbar.Utils.alphaColor;
-import static com.sharry.libtoolbar.Utils.isLollipop;
-
 /**
  * 变更 App bar 的风格的帮助类
  *
@@ -49,7 +46,7 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setStatusBarStyle(Style style) {
-        if (!isLollipop()) return this;
+        if (!Utils.isLollipop()) return this;
         switch (style) {
             // 设置状态栏为全透明
             case TRANSPARENT: {
@@ -64,7 +61,7 @@ class AppBarHelper {
                 int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
                 mOptions = mOptions | option;
-                mWindow.setStatusBarColor(alphaColor(Color.BLACK, 0.3f));
+                mWindow.setStatusBarColor(Utils.alphaColor(Color.BLACK, 0.3f));
                 break;
             }
             // 隐藏状态栏
@@ -88,7 +85,7 @@ class AppBarHelper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setStatusBarColor(int color) {
-        if (!isLollipop()) return this;
+        if (!Utils.isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setStatusBarColor(color);
         return this;
@@ -99,7 +96,7 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setNavigationBarStyle(Style style) {
-        if (!isLollipop()) return this;
+        if (!Utils.isLollipop()) return this;
         switch (style) {
             // 设置导航栏为全透明
             case TRANSPARENT: {
@@ -114,7 +111,7 @@ class AppBarHelper {
                 int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
                 mOptions = mOptions | option;
-                mWindow.setNavigationBarColor(alphaColor(Color.BLACK, 0.3f));
+                mWindow.setNavigationBarColor(Utils.alphaColor(Color.BLACK, 0.3f));
                 break;
             }
             //隐藏导航栏
@@ -137,7 +134,7 @@ class AppBarHelper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setNavigationBarColor(int color) {
-        if (!isLollipop()) return this;
+        if (!Utils.isLollipop()) return this;
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setNavigationBarColor(color);
         return this;
@@ -148,7 +145,7 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBarHelper setAllBarsHide() {
-        if (!isLollipop()) return this;
+        if (!Utils.isLollipop()) return this;
         int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -161,7 +158,7 @@ class AppBarHelper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void apply() {
-        if (!isLollipop()) return;
+        if (!Utils.isLollipop()) return;
         if (mOptions != DEFAULT_OPTIONS) {
             View decorView = mWindow.getDecorView();
             decorView.setSystemUiVisibility(mOptions);

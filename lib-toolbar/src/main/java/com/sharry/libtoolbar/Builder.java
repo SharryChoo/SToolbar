@@ -21,8 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.SP;
-import static com.sharry.libtoolbar.Utils.dp2px;
-import static com.sharry.libtoolbar.Utils.isNotEmpty;
 
 /**
  * Build SToolbar more easier.
@@ -185,8 +183,8 @@ public class Builder {
         return setTitleImage(
                 new ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
-                        .setWidth(dp2px(mContext, width))
-                        .setHeight(dp2px(mContext, height))
+                        .setWidth(Utils.dp2px(mContext, width))
+                        .setHeight(Utils.dp2px(mContext, height))
                         .build()
         );
     }
@@ -300,10 +298,10 @@ public class Builder {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         // 2. Set arguments.
         if (INVALIDATE != mMinimumHeight) {
-            toolbar.setMinimumHeight(dp2px(mContext, mMinimumHeight));
+            toolbar.setMinimumHeight(Utils.dp2px(mContext, mMinimumHeight));
         }
         if (INVALIDATE != mItemHorizontalInterval) {
-            toolbar.setSubItemInterval(dp2px(mContext, mItemHorizontalInterval));
+            toolbar.setSubItemInterval(Utils.dp2px(mContext, mItemHorizontalInterval));
         }
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);
@@ -322,13 +320,13 @@ public class Builder {
         if (null != mTitleImageOps) {
             toolbar.setTitleImage(mTitleImageOps);
         }
-        if (isNotEmpty(mTitleEntities)) {
+        if (Utils.isNotEmpty(mTitleEntities)) {
             for (Entity titleEntity : mTitleEntities) {
                 toolbar.addTitleView(titleEntity.view, titleEntity.op);
             }
         }
         // 4. Add left menu items associated with the toolbar.
-        if (isNotEmpty(mMenuLeftEntities)) {
+        if (Utils.isNotEmpty(mMenuLeftEntities)) {
             for (Entity leftItem : mMenuLeftEntities) {
                 if (null != leftItem.view && null != leftItem.op) {
                     toolbar.addLeftMenuView(leftItem.view, leftItem.op);
@@ -349,7 +347,7 @@ public class Builder {
             }
         }
         // 5. Add right menu items associated with the toolbar.
-        if (isNotEmpty(mMenuRightEntities)) {
+        if (Utils.isNotEmpty(mMenuRightEntities)) {
             for (Entity rightEntity : mMenuRightEntities) {
                 if (null != rightEntity.view && null != rightEntity.op) {
                     toolbar.addRightMenuView(rightEntity.view, rightEntity.op);

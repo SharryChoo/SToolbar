@@ -25,10 +25,6 @@ import androidx.core.content.ContextCompat;
 import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.PX;
 import static androidx.annotation.Dimension.SP;
-import static com.sharry.libtoolbar.Utils.dp2px;
-import static com.sharry.libtoolbar.Utils.getStatusBarHeight;
-import static com.sharry.libtoolbar.Utils.isLollipop;
-import static com.sharry.libtoolbar.Utils.px2dp;
 
 /**
  * SToolbar 的最小高度为系统 ActionBar 的高度
@@ -36,7 +32,7 @@ import static com.sharry.libtoolbar.Utils.px2dp;
  * 1. 可以直接在 Xml 文件中直接使用
  * 2. 可以使用 Builder 动态的植入 {@link Builder}
  *
- * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="SharryChooChn@Gmail.com">Contact me.</a>
  * @version 3.2
  * @since 2018/8/27 23:20
  */
@@ -155,14 +151,14 @@ public class SToolbar extends Toolbar {
     }
 
     private void initArgs(Context context, TypedArray array) {
-        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, dp2px(context, 56));
+        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, Utils.dp2px(context, 56));
         mSubItemInterval = array.getDimensionPixelSize(R.styleable.SToolbar_subItemInterval,
-                dp2px(context, DEFAULT_INTERVAL));
+                Utils.dp2px(context, DEFAULT_INTERVAL));
         mTitleTextColor = array.getColor(R.styleable.SToolbar_titleTextColor, mTitleTextColor);
-        mTitleTextSize = px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_titleTextSize,
-                dp2px(context, mTitleTextSize)));
-        mMenuTextSize = px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_menuTextSize,
-                dp2px(context, mMenuTextSize)));
+        mTitleTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_titleTextSize,
+                Utils.dp2px(context, mTitleTextSize)));
+        mMenuTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_menuTextSize,
+                Utils.dp2px(context, mMenuTextSize)));
         mMenuTextColor = array.getColor(R.styleable.SToolbar_menuTextColor, mMenuTextColor);
     }
 
@@ -213,9 +209,9 @@ public class SToolbar extends Toolbar {
      */
     public void setStatusBarStyle(Style style) {
         AppBarHelper.with(getContext()).setStatusBarStyle(style).apply();
-        if (isLollipop() && (style == Style.TRANSPARENT || style == Style.TRANSLUCENCE)) {
+        if (Utils.isLollipop() && (style == Style.TRANSPARENT || style == Style.TRANSLUCENCE)) {
             // Setup padding.
-            setPadding(getPaddingLeft(), getPaddingTop() + getStatusBarHeight(getContext()),
+            setPadding(getPaddingLeft(), getPaddingTop() + Utils.getStatusBarHeight(getContext()),
                     getPaddingRight(), getPaddingBottom());
         }
     }
