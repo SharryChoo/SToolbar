@@ -45,6 +45,8 @@ public class Builder {
     private int mItemHorizontalInterval = INVALIDATE;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
+    private TextViewOptions mTitleTextOps;
+    private ImageViewOptions mTitleImageOps;
     private List<Entity> mTitleEntities = new ArrayList<>();
     private List<Entity> mMenuLeftEntities = new ArrayList<>();
     private List<Entity> mMenuRightEntities = new ArrayList<>();
@@ -166,43 +168,43 @@ public class Builder {
         return this;
     }
 
-    public Builder setTitleText(@NonNull TextViewOptions options) {
-        return setTitleView(null, options);
+    public Builder setTitleText(@NonNull TextViewOptions ops) {
+        mTitleTextOps = ops;
+        return this;
     }
 
     /**
      * Set image associated with this toolbar title.
      */
     public Builder setTitleImage(@DrawableRes int drawableRes) {
-        this.setTitleImage(drawableRes, INVALIDATE, INVALIDATE);
-        return this;
+        return setTitleImage(drawableRes, INVALIDATE, INVALIDATE);
     }
 
     public Builder setTitleImage(@DrawableRes int drawableRes, @Dimension(unit = DP) int width,
                                  @Dimension(unit = DP) int height) {
-        this.setTitleImage(
+        return setTitleImage(
                 new ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidth(dp2px(mContext, width))
                         .setHeight(dp2px(mContext, height))
                         .build()
         );
+    }
+
+    public Builder setTitleImage(@NonNull ImageViewOptions ops) {
+        mTitleImageOps = ops;
         return this;
     }
 
-    public Builder setTitleImage(@NonNull ImageViewOptions options) {
-        return setTitleView(null, options);
-    }
-
     /**
-     * Set add custom view associated with this toolbar title.
+     * Add custom view associated with this toolbar title.
      */
-    public Builder setTitleView(@NonNull View view) {
-        return setTitleView(view, null);
+    public Builder addTitleView(@NonNull View view) {
+        return addTitleView(view, null);
     }
 
-    public Builder setTitleView(View view, Options options) {
-        mTitleEntities.add(new Entity(view, options));
+    public Builder addTitleView(View view, Options ops) {
+        mTitleEntities.add(new Entity(view, ops));
         return this;
     }
 
@@ -226,40 +228,40 @@ public class Builder {
     /**
      * Add sub item associated with this toolbar left menu.
      */
-    public Builder addLeftMenuText(@NonNull TextViewOptions options) {
-        return addLeftMenuView(null, options);
+    public Builder addLeftMenuText(@NonNull TextViewOptions ops) {
+        return addLeftMenuView(null, ops);
     }
 
-    public Builder addLeftMenuImage(@NonNull ImageViewOptions options) {
-        return addLeftMenuView(null, options);
+    public Builder addLeftMenuImage(@NonNull ImageViewOptions ops) {
+        return addLeftMenuView(null, ops);
     }
 
     public Builder addLeftMenuView(@NonNull View view) {
         return addLeftMenuView(view, null);
     }
 
-    public Builder addLeftMenuView(@Nullable View view, @Nullable Options options) {
-        mMenuLeftEntities.add(new Entity(view, options));
+    public Builder addLeftMenuView(@Nullable View view, @Nullable Options ops) {
+        mMenuLeftEntities.add(new Entity(view, ops));
         return this;
     }
 
     /**
      * Add sub item associated with this toolbar right menu.
      */
-    public Builder addRightMenuText(@NonNull TextViewOptions options) {
-        return addRightMenuView(null, options);
+    public Builder addRightMenuText(@NonNull TextViewOptions ops) {
+        return addRightMenuView(null, ops);
     }
 
-    public Builder addRightMenuImage(@NonNull ImageViewOptions options) {
-        return addRightMenuView(null, options);
+    public Builder addRightMenuImage(@NonNull ImageViewOptions ops) {
+        return addRightMenuView(null, ops);
     }
 
     public Builder addRightMenuView(@NonNull View view) {
         return addRightMenuView(view, null);
     }
 
-    public Builder addRightMenuView(@NonNull View view, @NonNull Options options) {
-        mMenuRightEntities.add(new Entity(view, options));
+    public Builder addRightMenuView(@NonNull View view, @NonNull Options ops) {
+        mMenuRightEntities.add(new Entity(view, ops));
         return this;
     }
 
@@ -314,24 +316,15 @@ public class Builder {
         }
         // 3. Setup title items associated with the toolbar.
         toolbar.setTitleGravity(mTitleGravity);
+        if (null != mTitleTextOps) {
+            toolbar.setTitleText(mTitleTextOps);
+        }
+        if (null != mTitleImageOps) {
+            toolbar.setTitleImage(mTitleImageOps);
+        }
         if (isNotEmpty(mTitleEntities)) {
             for (Entity titleEntity : mTitleEntities) {
-                if (null != titleEntity.view && null != titleEntity.op) {
-                    toolbar.addTitle(titleEntity.view, titleEntity.op);
-                } else if (null != titleEntity.op) {
-                    if (titleEntity.op instanceof TextViewOptions) {
-                        toolbar.setTitleText((TextViewOptions) titleEntity.op);
-                    } else if (titleEntity.op instanceof ImageViewOptions) {
-                        toolbar.setTitleImage((ImageViewOptions) titleEntity.op);
-                    } else {
-                        throw new NullPointerException("U setup options cannot support auto generate view, " +
-                                " option is :" + titleEntity.op);
-                    }
-                } else if (null != titleEntity.view) {
-                    toolbar.addTitle(titleEntity.view);
-                } else {
-                    throw new NullPointerException("Please ensure options mapper view nonnull");
-                }
+                toolbar.addTitleView(titleEntity.view, titleEntity.op);
             }
         }
         // 4. Add left menu items associated with the toolbar.
@@ -345,13 +338,13 @@ public class Builder {
                     } else if (leftItem.op instanceof ImageViewOptions) {
                         toolbar.addLeftMenuImage((ImageViewOptions) leftItem.op);
                     } else {
-                        throw new NullPointerException("U setup options cannot support auto generate view, " +
+                        throw new NullPointerException("U setup ops cannot support auto generate view, " +
                                 " option is :" + leftItem.op);
                     }
                 } else if (null != leftItem.view) {
                     toolbar.addLeftMenuView(leftItem.view);
                 } else {
-                    throw new NullPointerException("Please ensure options mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops mapper view nonnull");
                 }
             }
         }
@@ -366,13 +359,13 @@ public class Builder {
                     } else if (rightEntity.op instanceof ImageViewOptions) {
                         toolbar.addRightMenuImage((ImageViewOptions) rightEntity.op);
                     } else {
-                        throw new NullPointerException("U setup options cannot support auto generate view, " +
+                        throw new NullPointerException("U setup ops cannot support auto generate view, " +
                                 " option is :" + rightEntity.op);
                     }
                 } else if (null != rightEntity.view) {
                     toolbar.addRightMenuView(rightEntity.view);
                 } else {
-                    throw new NullPointerException("Please ensure options mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops mapper view nonnull");
                 }
             }
         }

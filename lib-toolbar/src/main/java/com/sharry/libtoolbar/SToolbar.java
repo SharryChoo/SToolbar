@@ -250,6 +250,28 @@ public class SToolbar extends Toolbar {
     }
 
     /**
+     * Get text title associated with this toolbar.
+     */
+    public TextView getTitleText() {
+        if (null == mTitleText) {
+            mTitleText = createTextView();
+            addTitleView(mTitleText);
+        }
+        return mTitleText;
+    }
+
+    /**
+     * Get image title associated with this toolbar.
+     */
+    public ImageView getTitleImage() {
+        if (null == mTitleImage) {
+            mTitleImage = createImageView();
+            addTitleView(mTitleImage);
+        }
+        return mTitleImage;
+    }
+
+    /**
      * Set text associated with this toolbar title.
      */
     public void setTitleText(@StringRes int stringResId) {
@@ -297,41 +319,19 @@ public class SToolbar extends Toolbar {
                 .completion(getTitleImage());
     }
 
-    public void addTitle(@NonNull View view) {
-        addTitle(view, null);
+    public void addTitleView(@NonNull View view) {
+        addTitleView(view, null);
     }
 
     /**
      * Add custom view associated with this toolbar title.
      * U can set view more easier when U use Options.
      */
-    public void addTitle(@NonNull View view, @Nullable Options ops) {
+    public void addTitleView(@NonNull View view, @Nullable Options ops) {
         if (null != ops) {
             ops.completion(view);
         }
         mCenterContainer.addView(view);
-    }
-
-    /**
-     * Get text title associated with this toolbar.
-     */
-    public TextView getTitleText() {
-        if (null == mTitleText) {
-            mTitleText = createTextView();
-            addTitle(mTitleText);
-        }
-        return mTitleText;
-    }
-
-    /**
-     * Get image title associated with this toolbar.
-     */
-    public ImageView getTitleImage() {
-        if (null == mTitleImage) {
-            mTitleImage = createImageView();
-            addTitle(mTitleImage);
-        }
-        return mTitleImage;
     }
 
     /**

@@ -22,10 +22,11 @@ class MainActivity : AppCompatActivity() {
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
                 .setItemHorizontalInterval(10)
-                .setTitleView(titleView, ViewOptions.Builder()
-                        .setListener { showMsg("U click title item") }
-                        .setPaddingRight(100)
-                        .build()
+                .addTitleView(titleView,
+                        ViewOptions.Builder()
+                                .setPaddingBottom(100)
+                                .setListener { showMsg("U click title item") }
+                                .build()
                 )
                 .addBackIcon(R.drawable.icon_back)
                 .addLeftMenuText(
@@ -53,4 +54,5 @@ class MainActivity : AppCompatActivity() {
     private fun showMsg(msg: CharSequence) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
+
 }
