@@ -34,7 +34,7 @@ class AppBarHelper {
 
     private AppBarHelper(Context context) {
         if (context instanceof Activity) {
-            mActivity = new SoftReference<>((Activity) context).get();
+            mActivity = (Activity) context;
             mWindow = mActivity.getWindow();
         } else {
             throw new IllegalArgumentException("Please ensure context instance of Activity.");
