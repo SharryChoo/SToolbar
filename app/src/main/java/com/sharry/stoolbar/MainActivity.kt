@@ -5,10 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.sharry.libtoolbar.ImageOptions
-import com.sharry.libtoolbar.SToolbar
-import com.sharry.libtoolbar.Style
-import com.sharry.libtoolbar.TextOptions
+import com.sharry.libtoolbar.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,24 +22,27 @@ class MainActivity : AppCompatActivity() {
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
                 .setItemHorizontalInterval(10)
-                .setTitleText("Sharry")
+                .setTitleView(titleView, ViewOptions.Builder()
+                        .setListener { showMsg("U click title item") }
+                        .setPaddingRight(100)
+                        .build()
+                )
                 .addBackIcon(R.drawable.icon_back)
-                .addLeftMenu(
-                        TextOptions.Builder()
+                .addLeftMenuText(
+                        TextViewOptions.Builder()
                                 .setText("left")
                                 .setListener { showMsg("U click left text") }
                                 .build()
                 )
-                .addRightMenu(
-                        TextOptions.Builder()
+                .addRightMenuText(
+                        TextViewOptions.Builder()
                                 .setText("right")
                                 .setListener { showMsg("U click right text") }
                                 .build()
                 )
-                .addRightMenu(
-                        ImageOptions.Builder()
+                .addRightMenuImage(
+                        ImageViewOptions.Builder()
                                 .setDrawableResId(R.drawable.icon_right)
-                                .setWidth(30).setHeight(30)
                                 .setListener { showMsg("U click right image") }
                                 .build()
                 )

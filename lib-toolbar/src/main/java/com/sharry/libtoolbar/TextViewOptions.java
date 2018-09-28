@@ -2,28 +2,28 @@ package com.sharry.libtoolbar;
 
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 
-import static androidx.annotation.Dimension.DP;
+import static androidx.annotation.Dimension.PX;
 import static androidx.annotation.Dimension.SP;
 
 /**
- * Options for TextView
- *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
- * @since 2018/9/27 13:15
+ * @since 2018/9/28 8:49
  */
-public class TextOptions extends Options {
+public class TextViewOptions implements Options<TextView> {
 
     /*
-      Constants
-     */
+     Constants
+    */
     static final int DEFAULT_TEXT_COLOR = Color.WHITE;
     static final int DEFAULT_TITLE_TEXT_SIZE = 18;
     static final int DEFAULT_MENU_TEXT_SIZE = 13;
@@ -32,43 +32,55 @@ public class TextOptions extends Options {
     static final TextUtils.TruncateAt DEFAULT_ELLIPSIZE = TextUtils.TruncateAt.END;
 
     /*
-      Fields associated with text menu.
+      Fields
      */
     CharSequence text;
     @Dimension(unit = SP)
-    int textSize;
+    int textSize = DEFAULT_TITLE_TEXT_SIZE;
     @ColorInt
     int textColor = DEFAULT_TEXT_COLOR;
     int maxEms = DEFAULT_MAX_EMS;
     int lines = DEFAULT_LINES;
     TextUtils.TruncateAt ellipsize = DEFAULT_ELLIPSIZE;
+    // Widget padding
+    @Dimension(unit = PX)
+    int paddingLeft = 0;
+    @Dimension(unit = PX)
+    int paddingRight = 0;
+    // listener callback.
+    View.OnClickListener listener = null;
 
-    /**
-     * U can get TextOptions instance from {@link Builder#build()}
-     */
-    private TextOptions() {
-
+    private TextViewOptions() {
     }
 
-    /**
-     * U can rebuild this instance from here.
-     */
     public Builder newBuilder() {
         return new Builder(this);
     }
 
     @Override
-    void from(Options other) {
-        super.from(other);
-        if (other instanceof TextOptions) {
-            TextOptions op = (TextOptions) other;
-            this.text = op.text;
-            this.textSize = op.textSize;
-            this.textColor = op.textColor;
-            this.maxEms = op.maxEms;
-            this.lines = op.lines;
-            this.ellipsize = op.ellipsize;
+    public void completion(TextView textView) {
+        // Set padding.
+        textView.setPadding(paddingLeft, 0, paddingRight, 0);
+        ViewGroup.LayoutParams params = textView.getLayoutParams();
+        if (null == params) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+        } else {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         }
+        textView.setLayoutParams(params);
+        // Set OnClickListener
+        if (null != listener) {
+            textView.setOnClickListener(listener);
+        }
+        // Set some fields associated with this textView.
+        textView.setText(text);
+        textView.setTextColor(textColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        textView.setMaxEms(maxEms);
+        textView.setLines(lines);
+        textView.setEllipsize(ellipsize);
     }
 
     /**
@@ -76,15 +88,13 @@ public class TextOptions extends Options {
      */
     public static class Builder {
 
-        private TextOptions op;
+        private TextViewOptions op;
 
         public Builder() {
-            op = new TextOptions();
-            op.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            op.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            op = new TextViewOptions();
         }
 
-        private Builder(@NonNull TextOptions other) {
+        private Builder(@NonNull TextViewOptions other) {
             op = other;
         }
 
@@ -118,33 +128,13 @@ public class TextOptions extends Options {
             return this;
         }
 
-        public Builder setPaddingLeft(@Dimension(unit = DP) int paddingLeft) {
+        public Builder setPaddingLeft(@Dimension(unit = PX) int paddingLeft) {
             op.paddingLeft = paddingLeft;
             return this;
         }
 
-        public Builder setPaddingTop(@Dimension(unit = DP) int paddingTop) {
-            op.paddingTop = paddingTop;
-            return this;
-        }
-
-        public Builder setPaddingRight(@Dimension(unit = DP) int paddingRight) {
+        public Builder setPaddingRight(@Dimension(unit = PX) int paddingRight) {
             op.paddingRight = paddingRight;
-            return this;
-        }
-
-        public Builder setPaddingBottom(@Dimension(unit = DP) int paddingBottom) {
-            op.paddingBottom = paddingBottom;
-            return this;
-        }
-
-        public Builder setWidth(@Dimension(unit = DP) int width) {
-            op.width = width;
-            return this;
-        }
-
-        public Builder setHeight(@Dimension(unit = DP) int height) {
-            op.height = height;
             return this;
         }
 
@@ -153,10 +143,9 @@ public class TextOptions extends Options {
             return this;
         }
 
-        public TextOptions build() {
+        public TextViewOptions build() {
             return op;
         }
 
     }
-
 }

@@ -3,8 +3,11 @@ package com.sharry.libtoolbar;
 import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
@@ -26,8 +29,19 @@ class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    /**
+     * 判断 Map 是否为空
+     */
     static boolean isNotEmpty(Collection collection) {
         return null != collection && collection.size() != 0;
+    }
+
+    /**
+     * 是否为 LayoutParams 特殊的参数
+     */
+    static boolean isLayoutParamsSpecialValue(int paramsValue) {
+        return ViewGroup.LayoutParams.MATCH_PARENT == paramsValue
+                || ViewGroup.LayoutParams.WRAP_CONTENT == paramsValue;
     }
 
     /**
