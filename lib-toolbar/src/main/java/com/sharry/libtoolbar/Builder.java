@@ -25,9 +25,9 @@ import static com.sharry.libtoolbar.Utils.dp2px;
 import static com.sharry.libtoolbar.Utils.isNotEmpty;
 
 /**
- * Build SToolbar more easy.
+ * Build SToolbar more easier.
  *
- * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="SharryChooChn@Gmail.com">Contact me.</a>
  * @version 2.0
  * @since 2018/8/27 23:36
  */

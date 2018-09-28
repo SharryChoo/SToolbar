@@ -17,7 +17,7 @@ import static com.sharry.libtoolbar.Utils.isLollipop;
 /**
  * 变更 App bar 的风格的帮助类
  *
- * @author Sharry <a href="frankchoochina@gmail.com">Contact me.</a>
+ * @author Sharry <a href="SharryChooChn@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/8/27 23:41
  */

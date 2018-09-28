@@ -78,8 +78,6 @@ public class SToolbar extends Toolbar {
     private LinearLayout mLeftMenuContainer;
     private LinearLayout mCenterContainer;
     private LinearLayout mRightMenuContainer;
-
-    // 提供的标题(文本/图片/自定义)
     private TextView mTitleText;
     private ImageView mTitleImage;
 

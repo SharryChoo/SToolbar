@@ -13,12 +13,12 @@ buildscript {
         buildToolsVersion = '28.0.2'
 
         // Root project dependencies
-        gradleVersion = '3.2.0-rc03'
+        gradleVersion = '3.2.0'
         kotlinVersion = '1.2.61'
         mavenVersion = '1.5'
 
         // App dependencies
-        supportLibraryVersion = '1.0.0-rc02'
+        supportLibraryVersion = '1.0.0'
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
