@@ -40,7 +40,7 @@ public class Builder {
     private int mBgColor = INVALIDATE;
     private int mBgDrawableResId = INVALIDATE;
     private int mMinimumHeight = INVALIDATE;
-    private int mItemHorizontalInterval = INVALIDATE;
+    private int mSubItemInterval = INVALIDATE;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
     private TextViewOptions mTitleTextOps;
@@ -53,7 +53,7 @@ public class Builder {
         View view;
         Options op;
 
-        public Entity(View view, Options op) {
+        Entity(View view, Options op) {
             this.view = view;
             this.op = op;
         }
@@ -87,8 +87,8 @@ public class Builder {
     /**
      * Set interval associated with this toolbar sub item.
      */
-    public Builder setItemHorizontalInterval(@Dimension(unit = DP) int horizontalInterval) {
-        mItemHorizontalInterval = horizontalInterval;
+    public Builder setSubItemInterval(@Dimension(unit = DP) int subItemInterval) {
+        mSubItemInterval = subItemInterval;
         return this;
     }
 
@@ -157,7 +157,7 @@ public class Builder {
 
     public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                new TextViewOptions.Builder()
+                TextViewOptions.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -181,7 +181,7 @@ public class Builder {
     public Builder setTitleImage(@DrawableRes int drawableRes, @Dimension(unit = DP) int width,
                                  @Dimension(unit = DP) int height) {
         return setTitleImage(
-                new ImageViewOptions.Builder()
+                ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidthWithoutPadding(Utils.dp2px(mContext, width))
                         .setHeightWithoutPadding(Utils.dp2px(mContext, height))
@@ -211,7 +211,7 @@ public class Builder {
      */
     public Builder addBackIcon(@DrawableRes int drawableRes) {
         return addLeftMenuImage(
-                new ImageViewOptions.Builder()
+                ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new View.OnClickListener() {
                             @Override
@@ -300,8 +300,8 @@ public class Builder {
         if (INVALIDATE != mMinimumHeight) {
             toolbar.setMinimumHeight(Utils.dp2px(mContext, mMinimumHeight));
         }
-        if (INVALIDATE != mItemHorizontalInterval) {
-            toolbar.setSubItemInterval(Utils.dp2px(mContext, mItemHorizontalInterval));
+        if (INVALIDATE != mSubItemInterval) {
+            toolbar.setSubItemInterval(Utils.dp2px(mContext, mSubItemInterval));
         }
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);
@@ -342,7 +342,7 @@ public class Builder {
                 } else if (null != leftItem.view) {
                     toolbar.addLeftMenuView(leftItem.view);
                 } else {
-                    throw new NullPointerException("Please ensure ops mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops or view at least one nonnull");
                 }
             }
         }
@@ -363,7 +363,7 @@ public class Builder {
                 } else if (null != rightEntity.view) {
                     toolbar.addRightMenuView(rightEntity.view);
                 } else {
-                    throw new NullPointerException("Please ensure ops mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops or view at least one nonnull");
                 }
             }
         }

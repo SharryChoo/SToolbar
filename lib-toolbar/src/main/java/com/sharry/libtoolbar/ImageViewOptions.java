@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import static androidx.annotation.Dimension.PX;
 
 /**
+ * Options associated with ImageView.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:50
@@ -18,27 +20,45 @@ import static androidx.annotation.Dimension.PX;
 public class ImageViewOptions implements Options<ImageView> {
 
     /*
+      Constants
+     */
+    static final int UN_INITIALIZE_RES_ID = -1;
+    static final ImageView.ScaleType DEFAULT_SCALE_TYPE = ImageView.ScaleType.CENTER_CROP;
+    static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_Height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_PADDING = 0;
+    /*
       Fields associated with image menu.
     */
     @DrawableRes
-    int drawableResId = View.NO_ID;
-    ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
+    int drawableResId = UN_INITIALIZE_RES_ID;
+    ImageView.ScaleType scaleType = DEFAULT_SCALE_TYPE;
     // Widget padding
     @Dimension(unit = PX)
-    int paddingLeft = 0;
+    int paddingLeft = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingRight = 0;
+    int paddingRight = DEFAULT_PADDING;
     // Layout params
     @Dimension(unit = PX)
-    int widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int widthExcludePadding = DEFAULT_WIDTH;
     @Dimension(unit = PX)
-    int heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int heightExcludePadding = DEFAULT_Height;
     // listener callback.
-    View.OnClickListener listener;
+    View.OnClickListener listener = null;
+
+    /**
+     * U can get Builder instance from here.
+     */
+    public static Builder Builder() {
+        return new Builder();
+    }
 
     private ImageViewOptions() {
     }
 
+    /**
+     * U can rebuild Options instance from here.
+     */
     public Builder newBuilder() {
         return new Builder(this);
     }
@@ -70,18 +90,32 @@ public class ImageViewOptions implements Options<ImageView> {
     }
 
     /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(@NonNull ImageViewOptions other) {
+        this.drawableResId = other.drawableResId;
+        this.scaleType = other.scaleType;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingRight = other.paddingRight;
+        this.heightExcludePadding = other.heightExcludePadding;
+        this.widthExcludePadding = other.widthExcludePadding;
+        this.listener = other.listener;
+    }
+
+    /**
      * Builder Options instance more easier.
      */
     public static class Builder {
 
         private ImageViewOptions op;
 
-        public Builder() {
+        private Builder() {
             op = new ImageViewOptions();
         }
 
         private Builder(@NonNull ImageViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
         public Builder setDrawableResId(@DrawableRes int drawableResId) {

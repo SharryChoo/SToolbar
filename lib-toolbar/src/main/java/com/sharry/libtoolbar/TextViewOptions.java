@@ -15,20 +15,31 @@ import static androidx.annotation.Dimension.PX;
 import static androidx.annotation.Dimension.SP;
 
 /**
+ * Options associated with TextView.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:49
  */
 public class TextViewOptions implements Options<TextView> {
 
+    /**
+     * U can get Builder instance from here.
+     */
+    public static Builder Builder() {
+        return new Builder();
+    }
+
     /*
      Constants
     */
+    static final int UN_INITIALIZE_TEXT_SIZE = 0;
     static final int DEFAULT_TEXT_COLOR = Color.WHITE;
     static final int DEFAULT_TITLE_TEXT_SIZE = 18;
     static final int DEFAULT_MENU_TEXT_SIZE = 13;
     static final int DEFAULT_MAX_EMS = 8;
     static final int DEFAULT_LINES = 1;
+    static final int DEFAULT_PADDING = 0;
     static final TextUtils.TruncateAt DEFAULT_ELLIPSIZE = TextUtils.TruncateAt.END;
 
     /*
@@ -36,7 +47,7 @@ public class TextViewOptions implements Options<TextView> {
      */
     CharSequence text;
     @Dimension(unit = SP)
-    int textSize = DEFAULT_TITLE_TEXT_SIZE;
+    int textSize = UN_INITIALIZE_TEXT_SIZE;
     @ColorInt
     int textColor = DEFAULT_TEXT_COLOR;
     int maxEms = DEFAULT_MAX_EMS;
@@ -44,15 +55,18 @@ public class TextViewOptions implements Options<TextView> {
     TextUtils.TruncateAt ellipsize = DEFAULT_ELLIPSIZE;
     // Widget padding
     @Dimension(unit = PX)
-    int paddingLeft = 0;
+    int paddingLeft = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingRight = 0;
+    int paddingRight = DEFAULT_PADDING;
     // listener callback.
     View.OnClickListener listener = null;
 
     private TextViewOptions() {
     }
 
+    /**
+     * U can rebuild Options instance from here.
+     */
     public Builder newBuilder() {
         return new Builder(this);
     }
@@ -84,21 +98,37 @@ public class TextViewOptions implements Options<TextView> {
     }
 
     /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(@NonNull TextViewOptions other) {
+        this.text = other.text;
+        this.textSize = other.textSize;
+        this.textColor = other.textColor;
+        this.maxEms = other.maxEms;
+        this.lines = other.lines;
+        this.ellipsize = other.ellipsize;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingRight = other.paddingRight;
+        this.listener = other.listener;
+    }
+
+    /**
      * Builder TextOptions instance more easier.
      */
     public static class Builder {
 
         private TextViewOptions op;
 
-        public Builder() {
+        private Builder() {
             op = new TextViewOptions();
         }
 
         private Builder(@NonNull TextViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
-        public Builder setText(CharSequence text) {
+        public Builder setText(@NonNull CharSequence text) {
             op.text = text;
             return this;
         }
@@ -144,6 +174,9 @@ public class TextViewOptions implements Options<TextView> {
         }
 
         public TextViewOptions build() {
+            if (null == op.text) {
+                throw new UnsupportedOperationException("Please ensure text field nonnull.");
+            }
             return op;
         }
 

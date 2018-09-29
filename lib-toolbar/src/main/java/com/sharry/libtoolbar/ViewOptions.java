@@ -13,34 +13,44 @@ import androidx.annotation.NonNull;
 import static androidx.annotation.Dimension.PX;
 
 /**
+ * Options associated with view.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:48
  */
 public class ViewOptions implements Options<View> {
 
+    /*
+      Constants
+     */
+    static final int DEFAULT_VISIBILITY = View.VISIBLE;
+    static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_PADDING = 0;
+
     @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
     @Retention(RetentionPolicy.SOURCE)
     @interface Visibility {
     }
 
-    private int visibility;
+    int visibility = DEFAULT_VISIBILITY;
     // Widget padding
     @Dimension(unit = PX)
-    int paddingLeft = 0;
+    int paddingLeft = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingTop = 0;
+    int paddingTop = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingRight = 0;
+    int paddingRight = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingBottom = 0;
+    int paddingBottom = DEFAULT_PADDING;
     // Layout params
     @Dimension(unit = PX)
-    int widthExcludePadding = 0;
+    int widthExcludePadding = DEFAULT_WIDTH;
     @Dimension(unit = PX)
-    int heightExcludePadding = 0;
+    int heightExcludePadding = DEFAULT_HEIGHT;
     // listener callback.
-    View.OnClickListener listener;
+    View.OnClickListener listener = null;
 
     private ViewOptions() {
     }
@@ -73,18 +83,33 @@ public class ViewOptions implements Options<View> {
         }
     }
 
+    /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(ViewOptions other) {
+        this.visibility = other.visibility;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingTop = other.paddingTop;
+        this.paddingRight = other.paddingRight;
+        this.paddingBottom = other.paddingBottom;
+        this.widthExcludePadding = other.widthExcludePadding;
+        this.heightExcludePadding = other.heightExcludePadding;
+    }
+
+    /**
+     * Builder TextOptions instance more easier.
+     */
     public static class Builder {
 
         private ViewOptions op;
 
         public Builder() {
             op = new ViewOptions();
-            op.widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
-            op.heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
         private Builder(@NonNull ViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
         public Builder setVisibility(@Visibility int visibility) {
