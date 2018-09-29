@@ -9,6 +9,9 @@ import android.view.View;
  */
 public interface Options<T extends View> {
 
-    void completion(T v);
+    /**
+     * U can use this options to completion view
+     */
+    void completion(T view);
 
 }

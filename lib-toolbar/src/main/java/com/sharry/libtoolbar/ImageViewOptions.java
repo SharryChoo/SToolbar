@@ -11,11 +11,17 @@ import androidx.annotation.NonNull;
 import static androidx.annotation.Dimension.PX;
 
 /**
+ * Options associated with ImageView.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:50
  */
 public class ImageViewOptions implements Options<ImageView> {
+
+    public static Builder Builder() {
+        return new Builder();
+    }
 
     /*
       Fields associated with image menu.
@@ -70,18 +76,32 @@ public class ImageViewOptions implements Options<ImageView> {
     }
 
     /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(@NonNull ImageViewOptions other) {
+        this.drawableResId = other.drawableResId;
+        this.scaleType = other.scaleType;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingRight = other.paddingRight;
+        this.heightExcludePadding = other.heightExcludePadding;
+        this.widthExcludePadding = other.widthExcludePadding;
+        this.listener = other.listener;
+    }
+
+    /**
      * Builder Options instance more easier.
      */
     public static class Builder {
 
         private ImageViewOptions op;
 
-        public Builder() {
+        private Builder() {
             op = new ImageViewOptions();
         }
 
         private Builder(@NonNull ImageViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
         public Builder setDrawableResId(@DrawableRes int drawableResId) {

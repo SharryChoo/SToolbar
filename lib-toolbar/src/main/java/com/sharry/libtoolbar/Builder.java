@@ -157,7 +157,7 @@ public class Builder {
 
     public Builder setTitleText(CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
         this.setTitleText(
-                new TextViewOptions.Builder()
+                TextViewOptions.Builder()
                         .setText(text)
                         .setTextSize(textSize)
                         .setTextColor(textColor)
@@ -181,7 +181,7 @@ public class Builder {
     public Builder setTitleImage(@DrawableRes int drawableRes, @Dimension(unit = DP) int width,
                                  @Dimension(unit = DP) int height) {
         return setTitleImage(
-                new ImageViewOptions.Builder()
+                ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setWidthWithoutPadding(Utils.dp2px(mContext, width))
                         .setHeightWithoutPadding(Utils.dp2px(mContext, height))
@@ -211,7 +211,7 @@ public class Builder {
      */
     public Builder addBackIcon(@DrawableRes int drawableRes) {
         return addLeftMenuImage(
-                new ImageViewOptions.Builder()
+                ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new View.OnClickListener() {
                             @Override
@@ -342,7 +342,7 @@ public class Builder {
                 } else if (null != leftItem.view) {
                     toolbar.addLeftMenuView(leftItem.view);
                 } else {
-                    throw new NullPointerException("Please ensure ops mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops or view at least one nonnull");
                 }
             }
         }
@@ -363,7 +363,7 @@ public class Builder {
                 } else if (null != rightEntity.view) {
                     toolbar.addRightMenuView(rightEntity.view);
                 } else {
-                    throw new NullPointerException("Please ensure ops mapper view nonnull");
+                    throw new NullPointerException("Please ensure ops or view at least one nonnull");
                 }
             }
         }

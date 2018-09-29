@@ -132,20 +132,20 @@ public class SToolbar extends Toolbar {
         }
         int leftMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuLeftIcon, View.NO_ID);
         if (View.NO_ID != leftMenuIconResId) {
-            addLeftMenuImage(new ImageViewOptions.Builder().setDrawableResId(leftMenuIconResId).build());
+            addLeftMenuImage(ImageViewOptions.Builder().setDrawableResId(leftMenuIconResId).build());
         }
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
-            addLeftMenuText(new TextViewOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addLeftMenuText(TextViewOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         // 添加右部菜单
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
-            addRightMenuText(new TextViewOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addRightMenuText(TextViewOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
         }
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
-            addRightMenuImage(new ImageViewOptions.Builder().setDrawableResId(rightMenuIconResId).build());
+            addRightMenuImage(ImageViewOptions.Builder().setDrawableResId(rightMenuIconResId).build());
         }
         array.recycle();
     }
@@ -281,7 +281,7 @@ public class SToolbar extends Toolbar {
     }
 
     public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
-        this.setTitleText(new TextViewOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
+        this.setTitleText(TextViewOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
     }
 
     public void setTitleText(@NonNull TextViewOptions ops) {
@@ -302,7 +302,7 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
-        this.setTitleImage(new ImageViewOptions.Builder().setDrawableResId(resId).setWidthWithoutPadding(width).setHeightWithoutPadding(height).build());
+        this.setTitleImage(ImageViewOptions.Builder().setDrawableResId(resId).setWidthWithoutPadding(width).setHeightWithoutPadding(height).build());
     }
 
     public void setTitleImage(@NonNull ImageViewOptions ops) {
@@ -333,7 +333,7 @@ public class SToolbar extends Toolbar {
      */
     public void addBackIcon(@DrawableRes int drawableRes) {
         this.addLeftMenuImage(
-                new ImageViewOptions.Builder()
+                ImageViewOptions.Builder()
                         .setDrawableResId(drawableRes)
                         .setListener(new OnClickListener() {
                             @Override

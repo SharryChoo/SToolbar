@@ -15,6 +15,8 @@ import static androidx.annotation.Dimension.PX;
 import static androidx.annotation.Dimension.SP;
 
 /**
+ * Options associated with TextView.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:49
@@ -30,6 +32,10 @@ public class TextViewOptions implements Options<TextView> {
     static final int DEFAULT_MAX_EMS = 8;
     static final int DEFAULT_LINES = 1;
     static final TextUtils.TruncateAt DEFAULT_ELLIPSIZE = TextUtils.TruncateAt.END;
+
+    public static Builder Builder() {
+        return new Builder();
+    }
 
     /*
       Fields
@@ -84,18 +90,33 @@ public class TextViewOptions implements Options<TextView> {
     }
 
     /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(@NonNull TextViewOptions other) {
+        this.text = other.text;
+        this.textSize = other.textSize;
+        this.textColor = other.textColor;
+        this.maxEms = other.maxEms;
+        this.lines = other.lines;
+        this.ellipsize = other.ellipsize;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingRight = other.paddingRight;
+    }
+
+    /**
      * Builder TextOptions instance more easier.
      */
     public static class Builder {
 
         private TextViewOptions op;
 
-        public Builder() {
+        private Builder() {
             op = new TextViewOptions();
         }
 
         private Builder(@NonNull TextViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
         public Builder setText(CharSequence text) {

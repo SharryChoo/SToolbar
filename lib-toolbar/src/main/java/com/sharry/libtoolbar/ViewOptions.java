@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import static androidx.annotation.Dimension.PX;
 
 /**
+ * Options associated with view.
+ *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
  * @since 2018/9/28 8:48
@@ -24,7 +26,7 @@ public class ViewOptions implements Options<View> {
     @interface Visibility {
     }
 
-    private int visibility;
+    int visibility;
     // Widget padding
     @Dimension(unit = PX)
     int paddingLeft = 0;
@@ -36,9 +38,10 @@ public class ViewOptions implements Options<View> {
     int paddingBottom = 0;
     // Layout params
     @Dimension(unit = PX)
-    int widthExcludePadding = 0;
+    int widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
+    ;
     @Dimension(unit = PX)
-    int heightExcludePadding = 0;
+    int heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
     // listener callback.
     View.OnClickListener listener;
 
@@ -73,18 +76,30 @@ public class ViewOptions implements Options<View> {
         }
     }
 
+    /**
+     * Copy values from other instance.
+     */
+    private void copyFrom(ViewOptions other) {
+        this.visibility = other.visibility;
+        this.paddingLeft = other.paddingLeft;
+        this.paddingTop = other.paddingTop;
+        this.paddingRight = other.paddingRight;
+        this.paddingBottom = other.paddingBottom;
+        this.widthExcludePadding = other.widthExcludePadding;
+        this.heightExcludePadding = other.heightExcludePadding;
+    }
+
     public static class Builder {
 
         private ViewOptions op;
 
         public Builder() {
             op = new ViewOptions();
-            op.widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
-            op.heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
         private Builder(@NonNull ViewOptions other) {
-            op = other;
+            this();
+            op.copyFrom(other);
         }
 
         public Builder setVisibility(@Visibility int visibility) {
