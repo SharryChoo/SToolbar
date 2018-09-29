@@ -40,7 +40,7 @@ public class Builder {
     private int mBgColor = INVALIDATE;
     private int mBgDrawableResId = INVALIDATE;
     private int mMinimumHeight = INVALIDATE;
-    private int mItemHorizontalInterval = INVALIDATE;
+    private int mSubItemInterval = INVALIDATE;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
     private TextViewOptions mTitleTextOps;
@@ -53,7 +53,7 @@ public class Builder {
         View view;
         Options op;
 
-        public Entity(View view, Options op) {
+        Entity(View view, Options op) {
             this.view = view;
             this.op = op;
         }
@@ -87,8 +87,8 @@ public class Builder {
     /**
      * Set interval associated with this toolbar sub item.
      */
-    public Builder setItemHorizontalInterval(@Dimension(unit = DP) int horizontalInterval) {
-        mItemHorizontalInterval = horizontalInterval;
+    public Builder setSubItemInterval(@Dimension(unit = DP) int subItemInterval) {
+        mSubItemInterval = subItemInterval;
         return this;
     }
 
@@ -300,8 +300,8 @@ public class Builder {
         if (INVALIDATE != mMinimumHeight) {
             toolbar.setMinimumHeight(Utils.dp2px(mContext, mMinimumHeight));
         }
-        if (INVALIDATE != mItemHorizontalInterval) {
-            toolbar.setSubItemInterval(Utils.dp2px(mContext, mItemHorizontalInterval));
+        if (INVALIDATE != mSubItemInterval) {
+            toolbar.setSubItemInterval(Utils.dp2px(mContext, mSubItemInterval));
         }
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);

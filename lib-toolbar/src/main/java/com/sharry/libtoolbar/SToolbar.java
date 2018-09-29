@@ -88,10 +88,11 @@ public class SToolbar extends Toolbar {
     public SToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SToolbar);
-        // 初始化参数和视图
+        // Initialize arguments.
         initArgs(context, array);
+        // Initialize views.
         initViews(context);
-        // 设置沉浸式状态栏
+        // Set status bar style.
         switch (array.getInt(R.styleable.SToolbar_statusBarStyle, Style.DEFAULT.getVal())) {
             case 0:
                 setStatusBarStyle(Style.TRANSPARENT);
@@ -105,7 +106,7 @@ public class SToolbar extends Toolbar {
             default:
                 break;
         }
-        // 添加菜单选项
+        // Set title gravity.
         switch (array.getInt(R.styleable.SToolbar_titleGravity, -1)) {
             case 0:
                 setTitleGravity(Gravity.LEFT | Gravity.TOP);
@@ -117,15 +118,15 @@ public class SToolbar extends Toolbar {
                 setTitleGravity(Gravity.CENTER | Gravity.TOP);
                 break;
         }
-        // 文本标题
+        // Add text title.
         String titleText = array.getString(R.styleable.SToolbar_titleText);
         setTitleText(TextUtils.isEmpty(titleText) ? "" : titleText, mTitleTextSize, mTitleTextColor);
-        // 图片标题
+        // Add image title.
         int titleImageResId = array.getResourceId(R.styleable.SToolbar_titleImage, View.NO_ID);
         if (View.NO_ID != titleImageResId) {
             setTitleImage(titleImageResId);
         }
-        // 添加左部菜单
+        // Add left menu sub item.
         int backIconResId = array.getResourceId(R.styleable.SToolbar_backIcon, View.NO_ID);
         if (View.NO_ID != backIconResId) {
             addBackIcon(backIconResId);
@@ -136,12 +137,24 @@ public class SToolbar extends Toolbar {
         }
         String leftMenuText = array.getString(R.styleable.SToolbar_menuLeftText);
         if (null != leftMenuText) {
-            addLeftMenuText(TextViewOptions.Builder().setText(leftMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addLeftMenuText(
+                    TextViewOptions.Builder()
+                            .setText(leftMenuText)
+                            .setTextSize(mMenuTextSize)
+                            .setTextColor(mMenuTextColor)
+                            .build()
+            );
         }
-        // 添加右部菜单
+        // Add right menu sub item.
         String rightMenuText = array.getString(R.styleable.SToolbar_menuRightText);
         if (null != rightMenuText) {
-            addRightMenuText(TextViewOptions.Builder().setText(rightMenuText).setTextSize(mMenuTextSize).setTextColor(mMenuTextColor).build());
+            addRightMenuText(
+                    TextViewOptions.Builder()
+                            .setText(rightMenuText)
+                            .setTextSize(mMenuTextSize)
+                            .setTextColor(mMenuTextColor)
+                            .build()
+            );
         }
         int rightMenuIconResId = array.getResourceId(R.styleable.SToolbar_menuRightIcon, View.NO_ID);
         if (View.NO_ID != rightMenuIconResId) {
@@ -281,14 +294,23 @@ public class SToolbar extends Toolbar {
     }
 
     public void setTitleText(@NonNull CharSequence text, @Dimension(unit = SP) int textSize, @ColorInt int textColor) {
-        this.setTitleText(TextViewOptions.Builder().setText(text).setTextSize(textSize).setTextColor(textColor).build());
+        this.setTitleText(
+                TextViewOptions.Builder()
+                        .setText(text)
+                        .setTextSize(textSize)
+                        .setTextColor(textColor)
+                        .build()
+        );
     }
 
     public void setTitleText(@NonNull TextViewOptions ops) {
         ops.newBuilder()
-                .setTextSize(0 != ops.textSize ? ops.textSize : mTitleTextSize)
-                .setPaddingLeft(0 != ops.paddingLeft ? ops.paddingLeft : mSubItemInterval)
-                .setPaddingRight(0 != ops.paddingRight ? ops.paddingRight : mSubItemInterval)
+                .setTextSize(TextViewOptions.UN_INITIALIZE_TEXT_SIZE != ops.textSize
+                        ? ops.textSize : mTitleTextSize)
+                .setPaddingLeft(TextViewOptions.DEFAULT_PADDING != ops.paddingLeft
+                        ? ops.paddingLeft : mSubItemInterval)
+                .setPaddingRight(TextViewOptions.DEFAULT_PADDING != ops.paddingRight
+                        ? ops.paddingRight : mSubItemInterval)
                 .build()
                 .completion(getTitleText());
     }
@@ -302,13 +324,21 @@ public class SToolbar extends Toolbar {
 
     public void setTitleImage(@DrawableRes int resId, @Dimension(unit = DP) int width,
                               @Dimension(unit = DP) int height) {
-        this.setTitleImage(ImageViewOptions.Builder().setDrawableResId(resId).setWidthWithoutPadding(width).setHeightWithoutPadding(height).build());
+        this.setTitleImage(
+                ImageViewOptions.Builder()
+                        .setDrawableResId(resId)
+                        .setWidthWithoutPadding(width)
+                        .setHeightWithoutPadding(height)
+                        .build()
+        );
     }
 
     public void setTitleImage(@NonNull ImageViewOptions ops) {
         ops.newBuilder()
-                .setPaddingLeft(0 != ops.paddingLeft ? ops.paddingLeft : mSubItemInterval)
-                .setPaddingRight(0 != ops.paddingRight ? ops.paddingRight : mSubItemInterval)
+                .setPaddingLeft(ImageViewOptions.DEFAULT_PADDING != ops.paddingLeft
+                        ? ops.paddingLeft : mSubItemInterval)
+                .setPaddingRight(ImageViewOptions.DEFAULT_PADDING != ops.paddingRight
+                        ? ops.paddingRight : mSubItemInterval)
                 .build()
                 .completion(getTitleImage());
     }
@@ -352,8 +382,10 @@ public class SToolbar extends Toolbar {
      */
     public void addLeftMenuText(@NonNull TextViewOptions ops) {
         addLeftMenuView(createTextView(), ops.newBuilder()
-                .setTextSize(0 != ops.textSize ? ops.textSize : mMenuTextSize)
-                .setPaddingLeft(0 != ops.paddingLeft ? ops.paddingLeft : mSubItemInterval)
+                .setTextSize(TextViewOptions.UN_INITIALIZE_TEXT_SIZE != ops.textSize
+                        ? ops.textSize : mMenuTextSize)
+                .setPaddingLeft(TextViewOptions.DEFAULT_PADDING != ops.paddingLeft
+                        ? ops.paddingLeft : mSubItemInterval)
                 .build());
     }
 
@@ -362,7 +394,8 @@ public class SToolbar extends Toolbar {
      */
     public void addLeftMenuImage(@NonNull ImageViewOptions ops) {
         addLeftMenuView(createImageView(), ops.newBuilder()
-                .setPaddingLeft(0 != ops.paddingLeft ? ops.paddingLeft : mSubItemInterval)
+                .setPaddingLeft(ImageViewOptions.DEFAULT_PADDING != ops.paddingLeft
+                        ? ops.paddingLeft : mSubItemInterval)
                 .build());
     }
 
@@ -388,8 +421,10 @@ public class SToolbar extends Toolbar {
      */
     public void addRightMenuText(@NonNull TextViewOptions ops) {
         addRightMenuView(createTextView(), ops.newBuilder()
-                .setTextSize(0 != ops.textSize ? ops.textSize : mMenuTextSize)
-                .setPaddingRight(0 != ops.paddingRight ? ops.paddingRight : mSubItemInterval)
+                .setTextSize(TextViewOptions.UN_INITIALIZE_TEXT_SIZE != ops.textSize
+                        ? ops.textSize : mMenuTextSize)
+                .setPaddingRight(TextViewOptions.DEFAULT_PADDING != ops.paddingRight
+                        ? ops.paddingRight : mSubItemInterval)
                 .build());
     }
 
@@ -398,7 +433,8 @@ public class SToolbar extends Toolbar {
      */
     public void addRightMenuImage(@NonNull ImageViewOptions ops) {
         addRightMenuView(createImageView(), ops.newBuilder()
-                .setPaddingRight(0 != ops.paddingLeft ? ops.paddingLeft : mSubItemInterval)
+                .setPaddingRight(ImageViewOptions.DEFAULT_PADDING != ops.paddingLeft
+                        ? ops.paddingLeft : mSubItemInterval)
                 .build());
     }
 

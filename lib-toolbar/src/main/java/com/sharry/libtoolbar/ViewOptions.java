@@ -21,29 +21,36 @@ import static androidx.annotation.Dimension.PX;
  */
 public class ViewOptions implements Options<View> {
 
+    /*
+      Constants
+     */
+    static final int DEFAULT_VISIBILITY = View.VISIBLE;
+    static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_PADDING = 0;
+
     @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
     @Retention(RetentionPolicy.SOURCE)
     @interface Visibility {
     }
 
-    int visibility;
+    int visibility = DEFAULT_VISIBILITY;
     // Widget padding
     @Dimension(unit = PX)
-    int paddingLeft = 0;
+    int paddingLeft = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingTop = 0;
+    int paddingTop = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingRight = 0;
+    int paddingRight = DEFAULT_PADDING;
     @Dimension(unit = PX)
-    int paddingBottom = 0;
+    int paddingBottom = DEFAULT_PADDING;
     // Layout params
     @Dimension(unit = PX)
-    int widthExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
-    ;
+    int widthExcludePadding = DEFAULT_WIDTH;
     @Dimension(unit = PX)
-    int heightExcludePadding = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int heightExcludePadding = DEFAULT_HEIGHT;
     // listener callback.
-    View.OnClickListener listener;
+    View.OnClickListener listener = null;
 
     private ViewOptions() {
     }
@@ -89,6 +96,9 @@ public class ViewOptions implements Options<View> {
         this.heightExcludePadding = other.heightExcludePadding;
     }
 
+    /**
+     * Builder TextOptions instance more easier.
+     */
     public static class Builder {
 
         private ViewOptions op;

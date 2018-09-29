@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         SToolbar.Builder(this)
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
-                .setItemHorizontalInterval(10)
+                .setSubItemInterval(10)
                 .addTitleView(titleView,
                         ViewOptions.Builder()
                                 .setPaddingBottom(100)
