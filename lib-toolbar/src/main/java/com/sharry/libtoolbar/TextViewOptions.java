@@ -109,6 +109,7 @@ public class TextViewOptions implements Options<TextView> {
         this.ellipsize = other.ellipsize;
         this.paddingLeft = other.paddingLeft;
         this.paddingRight = other.paddingRight;
+        this.listener = other.listener;
     }
 
     /**
