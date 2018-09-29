@@ -36,7 +36,7 @@ public class TextViewOptions implements Options<TextView> {
      */
     CharSequence text;
     @Dimension(unit = SP)
-    int textSize = DEFAULT_TITLE_TEXT_SIZE;
+    int textSize;
     @ColorInt
     int textColor = DEFAULT_TEXT_COLOR;
     int maxEms = DEFAULT_MAX_EMS;

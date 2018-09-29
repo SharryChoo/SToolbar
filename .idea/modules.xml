@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SToolbar.iml" filepath="$PROJECT_DIR$/SToolbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SToolbar.iml" filepath="$PROJECT_DIR$/SToolbar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" filepath="$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" filepath="$PROJECT_DIR$/lib-toolbar/lib-toolbar.iml" />
     </modules>
   </component>
