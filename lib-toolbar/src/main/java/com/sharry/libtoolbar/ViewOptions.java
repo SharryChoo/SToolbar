@@ -142,8 +142,8 @@ public class ViewOptions implements Options<View> {
             return this;
         }
 
-        public Builder setHeightExcludePadding(@Dimension(unit = PX) int widthExcludePadding) {
-            op.heightExcludePadding = widthExcludePadding;
+        public Builder setHeightExcludePadding(@Dimension(unit = PX) int heightExcludePadding) {
+            op.heightExcludePadding = heightExcludePadding;
             return this;
         }
 
