@@ -1,18 +1,17 @@
 package com.sharry.libtoolbar;
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.annotation.Dimension;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.Dimension;
-import androidx.annotation.NonNull;
-
-import static androidx.annotation.Dimension.PX;
-import static androidx.annotation.Dimension.SP;
+import static android.support.annotation.Dimension.PX;
+import static android.support.annotation.Dimension.SP;
 
 /**
  * Options associated with TextView.

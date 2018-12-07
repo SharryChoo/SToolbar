@@ -14,5 +14,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // App compat 包
-    implementation "androidx.appcompat:appcompat:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 }

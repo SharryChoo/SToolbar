@@ -9,8 +9,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 
-import java.lang.ref.SoftReference;
-
 /**
  * 变更 App bar 的风格的帮助类
  *
