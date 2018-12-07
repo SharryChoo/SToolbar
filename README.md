@@ -22,7 +22,7 @@ dependencies {
     ...
     implementation 'com.github.SharryChoo:SToolbar:+'
     // Dependencies
-    implementation "androidx.appcompat:appcompat:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
 ```
 # How to use
