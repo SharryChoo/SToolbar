@@ -1,5 +1,7 @@
 # Current Version 
 [![](https://jitpack.io/v/SharryChoo/SToolbar.svg)](https://jitpack.io/#SharryChoo/SToolbar)
+- "-x" 表示使用的是 jetpack androidx 的依赖
+- 若使用 AppCompat 将 '-x' 后缀去除即可
 
 # How to integration
 ### Step 1
