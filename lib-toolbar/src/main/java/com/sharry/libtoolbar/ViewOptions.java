@@ -1,16 +1,15 @@
 package com.sharry.libtoolbar;
 
+import android.support.annotation.Dimension;
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import androidx.annotation.Dimension;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-
-import static androidx.annotation.Dimension.PX;
+import static android.support.annotation.Dimension.PX;
 
 /**
  * Options associated with view.
@@ -142,8 +141,8 @@ public class ViewOptions implements Options<View> {
             return this;
         }
 
-        public Builder setHeightExcludePadding(@Dimension(unit = PX) int widthExcludePadding) {
-            op.heightExcludePadding = widthExcludePadding;
+        public Builder setHeightExcludePadding(@Dimension(unit = PX) int heightExcludePadding) {
+            op.heightExcludePadding = heightExcludePadding;
             return this;
         }
 

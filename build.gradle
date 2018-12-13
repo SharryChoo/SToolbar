@@ -7,18 +7,18 @@ buildscript {
     }
     ext {
         // Sdk and tools
-        compileSdkVersion = 28
+        compileSdkVersion = 27
         minSdkVersion = 16
-        targetSdkVersion = 28
-        buildToolsVersion = '28.0.2'
+        targetSdkVersion = 27
+        buildToolsVersion = '27.0.3'
 
         // Root project dependencies
-        gradleVersion = '3.2.0'
+        gradleVersion = '3.0.1'
         kotlinVersion = '1.2.61'
         mavenVersion = '1.5'
 
         // App dependencies
-        supportLibraryVersion = '1.0.0'
+        supportLibraryVersion = '27.1.1'
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"

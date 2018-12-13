@@ -2,6 +2,13 @@ package com.sharry.libtoolbar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.Dimension;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +18,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.Dimension;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import static android.support.annotation.Dimension.DP;
+import static android.support.annotation.Dimension.SP;
 
-import static androidx.annotation.Dimension.DP;
-import static androidx.annotation.Dimension.SP;
 
 /**
  * Build SToolbar more easier.
