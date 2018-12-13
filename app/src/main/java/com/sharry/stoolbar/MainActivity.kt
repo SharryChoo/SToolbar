@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
                 .setStatusBarStyle(Style.TRANSPARENT)
                 .setBackgroundColorRes(R.color.colorAccent)
                 .setSubItemInterval(10)
+                .setDividingLineHeight(5)
+                .setDividingLineColorRes(R.color.colorPrimaryDark)
                 .addTitleView(titleView,
                         ViewOptions.Builder()
                                 .setPaddingBottom(100)

@@ -3,6 +3,10 @@ package com.sharry.libtoolbar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -21,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import static androidx.annotation.Dimension.DP;
 import static androidx.annotation.Dimension.PX;
@@ -38,6 +43,7 @@ import static androidx.annotation.Dimension.SP;
  */
 public class SToolbar extends Toolbar {
 
+
     /**
      * Get Builder instance
      * If U want create CommonToolbar dynamic, U should invoke this method.
@@ -54,9 +60,18 @@ public class SToolbar extends Toolbar {
         return new Builder(contentView);
     }
 
+    /*
+       Constants
+     */
     private static final int LOCKED_CHILDREN_COUNT = 3;
     private static final int DEFAULT_INTERVAL = 5;
 
+    private final Rect mDividingLineRegion = new Rect();
+    private final Paint mDividingLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+
+    /*
+       Fields
+     */
     @Dimension(unit = SP)
     private int mTitleTextSize = TextViewOptions.DEFAULT_TITLE_TEXT_SIZE;
     @Dimension(unit = SP)
@@ -65,12 +80,16 @@ public class SToolbar extends Toolbar {
     private int mMinimumHeight;
     @Dimension(unit = PX)
     private int mSubItemInterval;
+    @Dimension(unit = PX)
+    private int mDividingLineHeight = 0;
     @ColorInt
     private int mTitleTextColor = TextViewOptions.DEFAULT_TEXT_COLOR;
     @ColorInt
     private int mMenuTextColor = TextViewOptions.DEFAULT_TEXT_COLOR;
 
-    // Toolbar support container.
+    /*
+       Views.
+     */
     private LinearLayout mLeftMenuContainer;
     private LinearLayout mCenterContainer;
     private LinearLayout mRightMenuContainer;
@@ -87,11 +106,15 @@ public class SToolbar extends Toolbar {
 
     public SToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setWillNotDraw(false);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SToolbar);
-        // Initialize arguments.
-        initArgs(context, array);
+        // Initialize default arguments before views initialing.
+        initDefaultArgs(context, array);
         // Initialize views.
         initViews(context);
+        // Dividing line
+        setDividingLineColor(array.getColor(R.styleable.SToolbar_dividingLineColor, Color.LTGRAY));
+        setDividingLineHeight(Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_dividingLineHeight, 0)));
         // Set status bar style.
         switch (array.getInt(R.styleable.SToolbar_statusBarStyle, Style.DEFAULT.getVal())) {
             case 0:
@@ -163,49 +186,22 @@ public class SToolbar extends Toolbar {
         array.recycle();
     }
 
-    private void initArgs(Context context, TypedArray array) {
-        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, Utils.dp2px(context, 56));
-        mSubItemInterval = array.getDimensionPixelSize(R.styleable.SToolbar_subItemInterval,
-                Utils.dp2px(context, DEFAULT_INTERVAL));
-        mTitleTextColor = array.getColor(R.styleable.SToolbar_titleTextColor, mTitleTextColor);
-        mTitleTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_titleTextSize,
-                Utils.dp2px(context, mTitleTextSize)));
-        mMenuTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_menuTextSize,
-                Utils.dp2px(context, mMenuTextSize)));
-        mMenuTextColor = array.getColor(R.styleable.SToolbar_menuTextColor, mMenuTextColor);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mDividingLineRegion.left = getPaddingLeft();
+        mDividingLineRegion.right = getMeasuredWidth() - getPaddingRight();
+        mDividingLineRegion.bottom = getMeasuredHeight() - getPaddingBottom();
     }
 
-    private void initViews(Context context) {
-        // Set initialize layout params.
-        removeAllViews();
-        // 1. Add left menu container associated with this toolbar.
-        mLeftMenuContainer = new LinearLayout(context);
-        LayoutParams leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        leftParams.gravity = Gravity.START | Gravity.TOP;
-        mLeftMenuContainer.setLayoutParams(leftParams);
-        mLeftMenuContainer.setMinimumHeight(mMinimumHeight);
-        mLeftMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
-        addView(mLeftMenuContainer);
-        // 2. Add right menu container associated with this toolbar.
-        mRightMenuContainer = new LinearLayout(context);
-        LayoutParams rightParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        rightParams.gravity = Gravity.END | Gravity.TOP;
-        mRightMenuContainer.setLayoutParams(rightParams);
-        mRightMenuContainer.setMinimumHeight(mMinimumHeight);
-        mRightMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
-        addView(mRightMenuContainer);
-        // 3. Add center item container associated with this toolbar.
-        mCenterContainer = new LinearLayout(context);
-        LayoutParams centerParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        centerParams.gravity = Gravity.CENTER | Gravity.TOP;
-        mCenterContainer.setMinimumHeight(mMinimumHeight);
-        mCenterContainer.setPadding(mSubItemInterval, 0, mSubItemInterval, 0);
-        mCenterContainer.setLayoutParams(centerParams);
-        mCenterContainer.setGravity(Gravity.CENTER_VERTICAL);
-        addView(mCenterContainer);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mDividingLineHeight > 0) {
+            ViewCompat.setElevation(this, 0);
+            mDividingLineRegion.top = mDividingLineRegion.bottom - mDividingLineHeight;
+            canvas.drawRect(mDividingLineRegion, mDividingLinePaint);
+        }
     }
 
     @Override
@@ -243,6 +239,29 @@ public class SToolbar extends Toolbar {
      */
     public void setBackgroundDrawableRes(@DrawableRes int drawableRes) {
         setBackgroundResource(drawableRes);
+    }
+
+
+    /**
+     * Set the color to a given resource. The colorResId should refer to
+     * a color int.
+     */
+    public void setDividingLineColorRes(@ColorRes int colorRes) {
+        setDividingLineColor(ContextCompat.getColor(getContext(), colorRes));
+    }
+
+    /**
+     * Set the color to dividing line.
+     */
+    public void setDividingLineColor(@ColorInt int color) {
+        mDividingLinePaint.setColor(color);
+    }
+
+    /**
+     * Set diving line height.
+     */
+    public void setDividingLineHeight(@Dimension(unit = DP) int dividingLineHeight) {
+        this.mDividingLineHeight = Utils.dp2px(getContext(), dividingLineHeight);
     }
 
     /**
@@ -492,6 +511,51 @@ public class SToolbar extends Toolbar {
      */
     void setSubItemInterval(int subItemInterval) {
         mSubItemInterval = subItemInterval;
+    }
+
+    private void initDefaultArgs(Context context, TypedArray array) {
+        mMinimumHeight = array.getDimensionPixelSize(R.styleable.SToolbar_minHeight, Utils.dp2px(context, 56));
+        mSubItemInterval = array.getDimensionPixelSize(R.styleable.SToolbar_subItemInterval,
+                Utils.dp2px(context, DEFAULT_INTERVAL));
+        mTitleTextColor = array.getColor(R.styleable.SToolbar_titleTextColor, mTitleTextColor);
+        mTitleTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_titleTextSize,
+                Utils.dp2px(context, mTitleTextSize)));
+        mMenuTextSize = Utils.px2dp(context, array.getDimensionPixelSize(R.styleable.SToolbar_menuTextSize,
+                Utils.dp2px(context, mMenuTextSize)));
+        mMenuTextColor = array.getColor(R.styleable.SToolbar_menuTextColor, mMenuTextColor);
+    }
+
+    private void initViews(Context context) {
+        // Set initialize layout params.
+        removeAllViews();
+        // 1. Add left menu container associated with this toolbar.
+        mLeftMenuContainer = new LinearLayout(context);
+        LayoutParams leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        leftParams.gravity = Gravity.START | Gravity.TOP;
+        mLeftMenuContainer.setLayoutParams(leftParams);
+        mLeftMenuContainer.setMinimumHeight(mMinimumHeight);
+        mLeftMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
+        addView(mLeftMenuContainer);
+        // 2. Add right menu container associated with this toolbar.
+        mRightMenuContainer = new LinearLayout(context);
+        LayoutParams rightParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        rightParams.gravity = Gravity.END | Gravity.TOP;
+        mRightMenuContainer.setLayoutParams(rightParams);
+        mRightMenuContainer.setMinimumHeight(mMinimumHeight);
+        mRightMenuContainer.setGravity(Gravity.CENTER_VERTICAL);
+        addView(mRightMenuContainer);
+        // 3. Add center item container associated with this toolbar.
+        mCenterContainer = new LinearLayout(context);
+        LayoutParams centerParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        centerParams.gravity = Gravity.CENTER | Gravity.TOP;
+        mCenterContainer.setMinimumHeight(mMinimumHeight);
+        mCenterContainer.setPadding(mSubItemInterval, 0, mSubItemInterval, 0);
+        mCenterContainer.setLayoutParams(centerParams);
+        mCenterContainer.setGravity(Gravity.CENTER_VERTICAL);
+        addView(mCenterContainer);
     }
 
     /**
