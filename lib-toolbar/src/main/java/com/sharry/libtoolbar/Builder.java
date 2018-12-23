@@ -130,7 +130,7 @@ public class Builder {
     /**
      * Set dividing line associated with this toolbar.
      */
-    public Builder setDividingLineHeight(int height) {
+    public Builder setDividingLineHeight(@Dimension(unit = DP) int height) {
         this.mDividingLineHeight = height;
         return this;
     }
@@ -147,7 +147,7 @@ public class Builder {
      * Set dividing line color associated with this toolbar.
      */
     public Builder setDividingLineColor(@ColorInt int dividingLineColor) {
-        this.mDividingLineHeight = dividingLineColor;
+        this.mDividingLineColor = dividingLineColor;
         return this;
     }
 

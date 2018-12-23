@@ -1,5 +1,6 @@
 package com.sharry.stoolbar
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,10 +21,11 @@ class MainActivity : AppCompatActivity() {
                 window.decorView as ViewGroup, false)
         SToolbar.Builder(this)
                 .setStatusBarStyle(Style.TRANSPARENT)
-                .setBackgroundColorRes(R.color.colorAccent)
+//                .setBackgroundColorRes(R.color.colorAccent)
+                .setBackgroundColor(Color.WHITE)
                 .setSubItemInterval(10)
                 .setDividingLineHeight(5)
-                .setDividingLineColorRes(R.color.colorPrimaryDark)
+                .setDividingLineColorRes(R.color.colorAccent)
                 .addTitleView(titleView,
                         ViewOptions.Builder()
                                 .setPaddingBottom(100)
