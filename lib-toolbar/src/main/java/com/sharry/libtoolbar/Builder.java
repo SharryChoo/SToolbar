@@ -2,6 +2,7 @@ package com.sharry.libtoolbar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Dimension;
@@ -41,6 +42,8 @@ public class Builder {
     private int mBgDrawableResId = INVALIDATE;
     private int mMinimumHeight = INVALIDATE;
     private int mSubItemInterval = INVALIDATE;
+    private int mDividingLineHeight = 0;
+    private int mDividingLineColor = Color.LTGRAY;
 
     private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
     private TextViewOptions mTitleTextOps;
@@ -48,16 +51,6 @@ public class Builder {
     private List<Entity> mTitleEntities = new ArrayList<>();
     private List<Entity> mMenuLeftEntities = new ArrayList<>();
     private List<Entity> mMenuRightEntities = new ArrayList<>();
-
-    private static class Entity {
-        View view;
-        Options op;
-
-        Entity(View view, Options op) {
-            this.view = view;
-            this.op = op;
-        }
-    }
 
     /**
      * 给 Activity 添加 Toolbar
@@ -131,6 +124,30 @@ public class Builder {
      */
     public Builder setBackgroundDrawableRes(@DrawableRes int drawableResId) {
         mBgDrawableResId = drawableResId;
+        return this;
+    }
+
+    /**
+     * Set dividing line associated with this toolbar.
+     */
+    public Builder setDividingLineHeight(@Dimension(unit = DP) int height) {
+        this.mDividingLineHeight = height;
+        return this;
+    }
+
+    /**
+     * Set dividing line color associated with this toolbar.
+     */
+    public Builder setDividingLineColorRes(@ColorRes int dividingLineColorRes) {
+        this.mDividingLineColor = ContextCompat.getColor(mContext, dividingLineColorRes);
+        return this;
+    }
+
+    /**
+     * Set dividing line color associated with this toolbar.
+     */
+    public Builder setDividingLineColor(@ColorInt int dividingLineColor) {
+        this.mDividingLineColor = dividingLineColor;
         return this;
     }
 
@@ -312,6 +329,8 @@ public class Builder {
         if (INVALIDATE != mBgDrawableResId) {
             toolbar.setBackgroundDrawableRes(mBgDrawableResId);
         }
+        toolbar.setDividingLineColor(mDividingLineColor);
+        toolbar.setDividingLineHeight(mDividingLineHeight);
         // 3. Setup title items associated with the toolbar.
         toolbar.setTitleGravity(mTitleGravity);
         if (null != mTitleTextOps) {
@@ -382,4 +401,18 @@ public class Builder {
         }
     }
 
+    /**
+     * The entity save an instance of view and the view mapper special Options.
+     */
+    private static class Entity {
+
+        View view;
+        Options op;
+
+        Entity(View view, Options op) {
+            this.view = view;
+            this.op = op;
+        }
+
+    }
 }

@@ -13,6 +13,8 @@
         app:backIcon="@drawable/icon_back"
         app:subItemInterval="10dp"
         app:menuRightIcon="@drawable/icon_right"
+        app:dividingLineColor="@color/colorAccent"
+        app:dividingLineHeight="1dp"
         app:menuTextSize="13dp"
         app:titleGravity="Left"
         app:titleText="Sharry"

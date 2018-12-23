@@ -11,6 +11,8 @@
         </attr>
         <attr name="minHeight" format="dimension" />
         <attr name="subItemInterval" format="dimension" />
+        <attr name="dividingLineColor" format="color"/>
+        <attr name="dividingLineHeight" format="dimension"/>
         <!--Title-->
         <attr name="titleGravity" format="enum">
             <enum name="Left" value="0" />
