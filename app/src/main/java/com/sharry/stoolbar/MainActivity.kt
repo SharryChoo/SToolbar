@@ -1,5 +1,6 @@
 package com.sharry.stoolbar
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -19,12 +20,13 @@ class MainActivity : AppCompatActivity() {
         val titleView = LayoutInflater.from(this).inflate(R.layout.toolbar_title,
                 window.decorView as ViewGroup, false)
         SToolbar.Builder(this)
-                .setStatusBarStyle(Style.TRANSPARENT)
-                .setBackgroundColorRes(R.color.colorAccent)
+                .setStatusBarStyle(Style.TRANSLUCENCE)
+                .setBackgroundColor(Color.WHITE)
                 .setSubItemInterval(10)
                 .addTitleView(titleView,
                         ViewOptions.Builder()
-                                .setPaddingBottom(100)
+                                .setPaddingBottom(20)
+                                .setPaddingTop(20)
                                 .setListener { showMsg("U click title item") }
                                 .build()
                 )
@@ -32,12 +34,14 @@ class MainActivity : AppCompatActivity() {
                 .addLeftMenuText(
                         TextViewOptions.Builder()
                                 .setText("left")
+                                .setTextColor(Color.BLACK)
                                 .setListener { showMsg("U click left text") }
                                 .build()
                 )
                 .addRightMenuText(
                         TextViewOptions.Builder()
                                 .setText("right")
+                                .setTextColor(Color.BLACK)
                                 .setListener { showMsg("U click right text") }
                                 .build()
                 )

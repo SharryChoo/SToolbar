@@ -240,7 +240,6 @@ public class SToolbar extends Toolbar {
         setBackgroundResource(drawableRes);
     }
 
-
     /**
      * Set the color to a given resource. The colorResId should refer to
      * a color int.

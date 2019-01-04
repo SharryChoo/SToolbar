@@ -32,25 +32,37 @@ import static android.support.annotation.Dimension.SP;
  */
 public class Builder {
 
+    /*
+       Constants.
+     */
     private static final int INVALIDATE = -1;
+    private static final int DEFAULT_BACKGROUND_COLOR = Color.WHITE;
+    private static final int DEFAULT_DIVIDING_LINE_HEIGHT = 0;
+    private static final int DEFAULT_DIVIDING_LINE_COLOR = Color.LTGRAY;
+    private static final int DEFAULT_TITLE_GRAVITY = Gravity.CENTER | Gravity.TOP;
 
+    /*
+       Fields.
+     */
     private Context mContext;
     private ViewGroup mContentParent;
     private Style mStyle = Style.DEFAULT;
-
-    private int mBgColor = INVALIDATE;
-    private int mBgDrawableResId = INVALIDATE;
     private int mMinimumHeight = INVALIDATE;
     private int mSubItemInterval = INVALIDATE;
-    private int mDividingLineHeight = 0;
-    private int mDividingLineColor = Color.LTGRAY;
+    private int mBackgroundDrawableResId = INVALIDATE;
+    private int mBackgroundColor = DEFAULT_BACKGROUND_COLOR;
+    private int mDividingLineHeight = DEFAULT_DIVIDING_LINE_HEIGHT;
+    private int mDividingLineColor = DEFAULT_DIVIDING_LINE_COLOR;
+    private int mTitleGravity = DEFAULT_TITLE_GRAVITY;
 
-    private int mTitleGravity = Gravity.CENTER | Gravity.TOP;
+    /*
+       View options.
+     */
     private TextViewOptions mTitleTextOps;
     private ImageViewOptions mTitleImageOps;
-    private List<Entity> mTitleEntities = new ArrayList<>();
-    private List<Entity> mMenuLeftEntities = new ArrayList<>();
-    private List<Entity> mMenuRightEntities = new ArrayList<>();
+    private final List<Entity> mTitleEntities = new ArrayList<>();
+    private final List<Entity> mMenuLeftEntities = new ArrayList<>();
+    private final List<Entity> mMenuRightEntities = new ArrayList<>();
 
     /**
      * 给 Activity 添加 Toolbar
@@ -72,7 +84,7 @@ public class Builder {
             mContentParent = (ViewGroup) contentView;
             mContext = contentView.getContext();
         } else {
-            throw new IllegalArgumentException("Please ensure parameter contentView instanceof " +
+            throw new IllegalArgumentException("Please ensure contentView instanceof " +
                     "LinearLayout, now is: " + contentView);
         }
     }
@@ -106,7 +118,7 @@ public class Builder {
      * a color int.
      */
     public Builder setBackgroundColorRes(@ColorRes int colorResId) {
-        mBgColor = ContextCompat.getColor(mContext, colorResId);
+        mBackgroundColor = ContextCompat.getColor(mContext, colorResId);
         return this;
     }
 
@@ -114,7 +126,7 @@ public class Builder {
      * Set the background color associated with this toolbar.
      */
     public Builder setBackgroundColor(@ColorInt int color) {
-        mBgColor = color;
+        mBackgroundColor = color;
         return this;
     }
 
@@ -123,7 +135,7 @@ public class Builder {
      * a Drawable object or 0 to remove the background.
      */
     public Builder setBackgroundDrawableRes(@DrawableRes int drawableResId) {
-        mBgDrawableResId = drawableResId;
+        mBackgroundDrawableResId = drawableResId;
         return this;
     }
 
@@ -323,11 +335,9 @@ public class Builder {
         if (Style.DEFAULT != mStyle) {
             toolbar.setStatusBarStyle(mStyle);
         }
-        if (INVALIDATE != mBgColor) {
-            toolbar.setBackgroundColor(mBgColor);
-        }
-        if (INVALIDATE != mBgDrawableResId) {
-            toolbar.setBackgroundDrawableRes(mBgDrawableResId);
+        toolbar.setBackgroundColor(mBackgroundColor);
+        if (INVALIDATE != mBackgroundDrawableResId) {
+            toolbar.setBackgroundDrawableRes(mBackgroundDrawableResId);
         }
         toolbar.setDividingLineColor(mDividingLineColor);
         toolbar.setDividingLineHeight(mDividingLineHeight);
