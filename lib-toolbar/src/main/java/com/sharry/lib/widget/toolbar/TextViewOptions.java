@@ -1,4 +1,4 @@
-package com.sharry.libtoolbar;
+package com.sharry.lib.widget.toolbar;
 
 import android.graphics.Color;
 import android.text.TextUtils;

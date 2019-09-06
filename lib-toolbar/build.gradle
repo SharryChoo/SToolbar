@@ -2,12 +2,19 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.SharryChoo'
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         vectorDrawables.useSupportLibrary true
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs += 'src/main/java/com/sharry/lib/widget/toolbar/res'
+        }
     }
 }
 

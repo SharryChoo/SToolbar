@@ -1,72 +1,69 @@
-package com.sharry.libtoolbar;
+package com.sharry.lib.widget.toolbar;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.Dimension;
-import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import static androidx.annotation.Dimension.PX;
 
 /**
- * Options associated with ImageView.
+ * Options associated with view.
  *
  * @author Sharry <a href="SharryChooCHN@Gmail.com">Contact me.</a>
  * @version 1.0
- * @since 2018/9/28 8:50
+ * @since 2018/9/28 8:48
  */
-public class ImageViewOptions implements Options<ImageView> {
+public class ViewOptions implements Options<View> {
 
     /*
       Constants
      */
-    static final int UN_INITIALIZE_RES_ID = -1;
-    static final ImageView.ScaleType DEFAULT_SCALE_TYPE = ImageView.ScaleType.CENTER_CROP;
+    static final int DEFAULT_VISIBILITY = View.VISIBLE;
     static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
-    static final int DEFAULT_Height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
     static final int DEFAULT_PADDING = 0;
-    /*
-      Fields associated with image menu.
-    */
-    @DrawableRes
-    int drawableResId = UN_INITIALIZE_RES_ID;
-    ImageView.ScaleType scaleType = DEFAULT_SCALE_TYPE;
+
+    @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Visibility {
+    }
+
+    int visibility = DEFAULT_VISIBILITY;
     // Widget padding
     @Dimension(unit = PX)
     int paddingLeft = DEFAULT_PADDING;
     @Dimension(unit = PX)
+    int paddingTop = DEFAULT_PADDING;
+    @Dimension(unit = PX)
     int paddingRight = DEFAULT_PADDING;
+    @Dimension(unit = PX)
+    int paddingBottom = DEFAULT_PADDING;
     // Layout params
     @Dimension(unit = PX)
     int widthExcludePadding = DEFAULT_WIDTH;
     @Dimension(unit = PX)
-    int heightExcludePadding = DEFAULT_Height;
+    int heightExcludePadding = DEFAULT_HEIGHT;
     // listener callback.
     View.OnClickListener listener = null;
 
-    /**
-     * U can get Builder instance from here.
-     */
-    public static Builder Builder() {
-        return new Builder();
+    private ViewOptions() {
     }
 
-    private ImageViewOptions() {
-    }
-
-    /**
-     * U can rebuild Options instance from here.
-     */
     public Builder newBuilder() {
         return new Builder(this);
     }
 
     @Override
-    public void completion(ImageView view) {
+    public void completion(View view) {
+        view.setVisibility(visibility);
         // Set padding.
-        view.setPadding(paddingLeft, 0, paddingRight, 0);
+        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         // Set the layout parameters associated with this textView.
         int validWidth = Utils.isLayoutParamsSpecialValue(widthExcludePadding) ? widthExcludePadding :
                 widthExcludePadding + view.getPaddingLeft() + view.getPaddingRight();
@@ -84,47 +81,39 @@ public class ImageViewOptions implements Options<ImageView> {
         if (null != listener) {
             view.setOnClickListener(listener);
         }
-        // Set some fields associated with this imageView.
-        view.setImageResource(drawableResId);
-        view.setScaleType(scaleType);
     }
 
     /**
      * Copy values from other instance.
      */
-    private void copyFrom(@NonNull ImageViewOptions other) {
-        this.drawableResId = other.drawableResId;
-        this.scaleType = other.scaleType;
+    private void copyFrom(ViewOptions other) {
+        this.visibility = other.visibility;
         this.paddingLeft = other.paddingLeft;
+        this.paddingTop = other.paddingTop;
         this.paddingRight = other.paddingRight;
-        this.heightExcludePadding = other.heightExcludePadding;
+        this.paddingBottom = other.paddingBottom;
         this.widthExcludePadding = other.widthExcludePadding;
-        this.listener = other.listener;
+        this.heightExcludePadding = other.heightExcludePadding;
     }
 
     /**
-     * Builder Options instance more easier.
+     * Builder TextOptions instance more easier.
      */
     public static class Builder {
 
-        private ImageViewOptions op;
+        private ViewOptions op;
 
-        private Builder() {
-            op = new ImageViewOptions();
+        public Builder() {
+            op = new ViewOptions();
         }
 
-        private Builder(@NonNull ImageViewOptions other) {
+        private Builder(@NonNull ViewOptions other) {
             this();
             op.copyFrom(other);
         }
 
-        public Builder setDrawableResId(@DrawableRes int drawableResId) {
-            op.drawableResId = drawableResId;
-            return this;
-        }
-
-        public Builder setScaleType(ImageView.ScaleType scaleType) {
-            op.scaleType = scaleType;
+        public Builder setVisibility(@Visibility int visibility) {
+            op.visibility = visibility;
             return this;
         }
 
@@ -133,17 +122,27 @@ public class ImageViewOptions implements Options<ImageView> {
             return this;
         }
 
+        public Builder setPaddingTop(@Dimension(unit = PX) int paddingTop) {
+            op.paddingTop = paddingTop;
+            return this;
+        }
+
         public Builder setPaddingRight(@Dimension(unit = PX) int paddingRight) {
             op.paddingRight = paddingRight;
             return this;
         }
 
-        public Builder setWidthWithoutPadding(@Dimension(unit = PX) int widthExcludePadding) {
+        public Builder setPaddingBottom(@Dimension(unit = PX) int paddingBottom) {
+            op.paddingBottom = paddingBottom;
+            return this;
+        }
+
+        public Builder setWidthExcludePadding(@Dimension(unit = PX) int widthExcludePadding) {
             op.widthExcludePadding = widthExcludePadding;
             return this;
         }
 
-        public Builder setHeightWithoutPadding(@Dimension(unit = PX) int heightExcludePadding) {
+        public Builder setHeightExcludePadding(@Dimension(unit = PX) int heightExcludePadding) {
             op.heightExcludePadding = heightExcludePadding;
             return this;
         }
@@ -153,9 +152,8 @@ public class ImageViewOptions implements Options<ImageView> {
             return this;
         }
 
-        public ImageViewOptions build() {
+        public Options build() {
             return op;
         }
-
     }
 }

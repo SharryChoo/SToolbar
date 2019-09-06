@@ -1,4 +1,4 @@
-package com.sharry.libtoolbar;
+package com.sharry.lib.widget.toolbar;
 
 import android.app.Activity;
 import android.content.Context;
