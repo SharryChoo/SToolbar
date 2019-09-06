@@ -1,4 +1,4 @@
-package com.sharry.libtoolbar;
+package com.sharry.lib.widget.toolbar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -44,7 +44,9 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     AppBarHelper setStatusBarStyle(Style style) {
-        if (!Utils.isLollipop()) return this;
+        if (!Utils.isLollipop()) {
+            return this;
+        }
         switch (style) {
             // 设置状态栏为全透明
             case TRANSPARENT: {
@@ -77,13 +79,17 @@ class AppBarHelper {
                 int color = typedValue.data;
                 mWindow.setStatusBarColor(color);
             }
+            default:
+                break;
         }
         return this;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     AppBarHelper setStatusBarColor(int color) {
-        if (!Utils.isLollipop()) return this;
+        if (!Utils.isLollipop()) {
+            return this;
+        }
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setStatusBarColor(color);
         return this;
@@ -94,7 +100,9 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     AppBarHelper setNavigationBarStyle(Style style) {
-        if (!Utils.isLollipop()) return this;
+        if (!Utils.isLollipop()) {
+            return this;
+        }
         switch (style) {
             // 设置导航栏为全透明
             case TRANSPARENT: {
@@ -118,6 +126,7 @@ class AppBarHelper {
                 mOptions = mOptions | option;
                 break;
             }
+            default:
             case DEFAULT: {
                 mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
                 //获取当前Activity主题中的color
@@ -126,13 +135,16 @@ class AppBarHelper {
                 int color = typedValue.data;
                 mWindow.setNavigationBarColor(color);
             }
+            break;
         }
         return this;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     AppBarHelper setNavigationBarColor(int color) {
-        if (!Utils.isLollipop()) return this;
+        if (!Utils.isLollipop()) {
+            return this;
+        }
         mOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         mWindow.setNavigationBarColor(color);
         return this;
@@ -143,7 +155,9 @@ class AppBarHelper {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     AppBarHelper setAllBarsHide() {
-        if (!Utils.isLollipop()) return this;
+        if (!Utils.isLollipop()) {
+            return this;
+        }
         int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -156,7 +170,9 @@ class AppBarHelper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void apply() {
-        if (!Utils.isLollipop()) return;
+        if (!Utils.isLollipop()) {
+            return;
+        }
         if (mOptions != DEFAULT_OPTIONS) {
             View decorView = mWindow.getDecorView();
             decorView.setSystemUiVisibility(mOptions);

@@ -1,4 +1,4 @@
-package com.sharry.libtoolbar;
+package com.sharry.lib.widget.toolbar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.sharry.toolbar.R;
 
 import static android.support.annotation.Dimension.DP;
 import static android.support.annotation.Dimension.PX;

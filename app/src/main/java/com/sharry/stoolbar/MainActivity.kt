@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import com.sharry.libtoolbar.*
+import com.sharry.lib.widget.toolbar.*
 
 class MainActivity : AppCompatActivity() {
 

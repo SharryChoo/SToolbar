@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.sharry.libtoolbar.SToolbar
+    <com.sharry.lib.widget.toolbar.SToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backIcon="@drawable/icon_back"
