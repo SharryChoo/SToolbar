@@ -16,7 +16,7 @@ allprojects {
 ```
 
 ### Step 2
-Add it in your **module build.gradle** at the end of repositories
+Add it in your **module build.gradle** at the end of dependencies
 ```
 dependencies {
     ...
@@ -26,4 +26,4 @@ dependencies {
 }
 ```
 # How to use
-https://www.jianshu.com/p/e91ed59ecdb4
+https://juejin.im/post/5bb099ff5188255c6a044ce2
